@@ -1,0 +1,24 @@
+version: '3.8'
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    environment:
+      # Add any environment variables your Next.js app needs
+      NODE_ENV: production
+    # volumes:
+    #   - .:/app # Uncomment for development to hot-reload code changes
+
+  nginx:
+    image: nginx:latest
+    ports:
+      - "80:80"
+      - "443:443" # For HTTPS, if you plan to add SSL later
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+    depends_on:
+      - app

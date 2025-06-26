@@ -1,0 +1,145 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id            Int       @id @default(autoincrement())
+  name          String?
+  email         String    @unique
+  emailVerified DateTime?
+  image         String?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  accounts      Account[]
+  sessions      Session[]
+  contexts      Context[]
+
+  Document Document[]
+}
+
+model Account {
+  userId            Int
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String?
+  access_token      String?
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String?
+  session_state     String?
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+  user              User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@id([provider, providerAccountId])
+}
+
+model Session {
+  id           Int      @id @default(autoincrement())
+  sessionToken String   @unique
+  userId       Int
+  expires      DateTime
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model Context {
+  id             Int       @id @default(autoincrement())
+  jobDescription String
+  localLanguage  String    @default("english") @db.VarChar(20)
+  userId         Int
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+  deletedAt      DateTime?
+  
+  user           User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  documents       ContextDocument[]
+  chats           Chat[]
+  candidates      Candidate[]
+
+  @@index([userId])
+  @@index([deletedAt])
+  @@map("contexts")
+}
+
+model Document {
+  id        Int       @id @default(autoincrement())
+  fileName  String   @db.Text
+  filePath  String   @db.Text
+  fileSize  Int
+  fileType  String   @db.Text
+  createdAt DateTime  @default(now())
+  ownerId  Int
+
+  owner    User      @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+  contexts ContextDocument[]
+}
+
+model ContextDocument {
+  id        Int       @id @default(autoincrement())
+  contextId Int
+  documentId Int
+  
+  context   Context   @relation(fields: [contextId], references: [id], onDelete: Cascade)
+  document  Document  @relation(fields: [documentId], references: [id], onDelete: Cascade)
+
+  @@unique([contextId, documentId])
+  @@index([contextId])
+  @@index([documentId])
+  @@map("context_documents")
+}
+
+model Chat {
+  id        Int       @id @default(autoincrement())
+  contextId Int
+  difyConversationId String @unique
+  title     String?   @db.VarChar(255)
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deletedAt DateTime? 
+  
+  context  Context   @relation(fields: [contextId], references: [id], onDelete: Cascade)
+  
+  @@index([contextId, difyConversationId])
+  @@index([difyConversationId])
+  @@map("chats")
+}
+
+model Candidate {
+  id              Int       @id @default(autoincrement())
+  candidateId     String    @unique
+  contextId       Int      
+  
+  name            String    @db.VarChar(255)
+  summary         String    @db.Text
+  skills          String[]
+  experience      String[]
+  
+  overallScore    Float
+  score         Float
+  
+  justification   String    @db.Text
+  keyStrengths    String[]
+  keyWeaknesses   String[]
+  redFlags        String[]
+  
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+  deletedAt       DateTime?
+  
+  context         Context   @relation(fields: [contextId], references: [id], onDelete: Cascade)
+  
+  @@index([contextId, score])
+  @@index([candidateId])
+  @@index([contextId])
+  @@index([deletedAt])
+  @@map("candidates")
+}
