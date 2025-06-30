@@ -1,8 +1,9 @@
 'use client';
 
 import * as React from 'react';
-import { MoreVertical, Eye } from 'lucide-react';
+import { MoreVertical, ExternalLink } from 'lucide-react';
 import { toast } from 'sonner';
+import Link from 'next/link';
 import {
   ColumnDef,
   ColumnFiltersState,
@@ -130,7 +131,11 @@ const createColumns = (onJobPostDeleted?: () => void): ColumnDef<JobPostData>[] 
       header: 'Job Title',
       cell: ({ row }) => (
         <div className="min-w-[200px]">
-          <div className="font-medium">{row.original.title}</div>
+          <Link href={`/job-posts/${row.original.id}`}>
+            <div className="font-medium hover:text-blue-600 hover:underline cursor-pointer">
+              {row.original.title}
+            </div>
+          </Link>
           <div className="text-sm text-muted-foreground truncate max-w-[300px]">
             {row.original.description}
           </div>
@@ -194,18 +199,19 @@ const createColumns = (onJobPostDeleted?: () => void): ColumnDef<JobPostData>[] 
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
-            <DropdownMenuItem>
-              <Eye className="mr-2 h-4 w-4" />
-              View Details
-            </DropdownMenuItem>
-            <DropdownMenuItem>Edit Job Post</DropdownMenuItem>
-            <DropdownMenuItem>View Applications</DropdownMenuItem>
-            <DropdownMenuItem>Duplicate</DropdownMenuItem>
+            <Link href={`/job-posts/${row.original.id}`}>
+              <DropdownMenuItem className="cursor-pointer">
+                <ExternalLink className="mr-2 h-4 w-4" />
+                View Details
+              </DropdownMenuItem>
+            </Link>
+            <DropdownMenuItem className="cursor-pointer">Edit Job Post</DropdownMenuItem>
+            <DropdownMenuItem className="cursor-pointer">View Applications</DropdownMenuItem>
             <DropdownMenuSeparator />
             {row.original.status === 'Active' ? (
-              <DropdownMenuItem>Pause Job Post</DropdownMenuItem>
+              <DropdownMenuItem className="cursor-pointer">Pause Job Post</DropdownMenuItem>
             ) : (
-              <DropdownMenuItem>Activate Job Post</DropdownMenuItem>
+              <DropdownMenuItem className="cursor-pointer">Activate Job Post</DropdownMenuItem>
             )}
             <DropdownMenuSeparator />
             <DeleteAlert

@@ -1,7 +1,6 @@
 'use client';
 
 import * as React from 'react';
-import { Trash2 } from 'lucide-react';
 
 import {
   AlertDialog,
@@ -34,13 +33,12 @@ export function DeleteAlert({ title, description, action, onConfirm }: DeleteAle
     <AlertDialog open={open} onOpenChange={setOpen}>
       {/* Trigger is the dropdown menu item */}
       <DropdownMenuItem
-        className="text-destructive"
+        className="text-destructive cursor-pointer"
         onSelect={(e) => {
           e.preventDefault(); // Prevent dropdown from closing immediately
           setOpen(true);
         }}
       >
-        <Trash2 className="mr-2 h-4 w-4" />
         {action}
       </DropdownMenuItem>
 
