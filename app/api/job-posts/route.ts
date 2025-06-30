@@ -35,3 +35,15 @@ export async function POST(
     return NextResponse.json({ message: 'Invalid request body' }, { status: 400 });
   }
 }
+
+export async function DELETE(
+  req: NextRequest,
+): Promise<NextResponse<JobPostResponseDTO | { message: string }>> {
+  const { id } = await req.json();
+
+  const deletedJobPost = await prisma.jobPost.delete({
+    where: { id },
+  });
+
+  return NextResponse.json(deletedJobPost);
+}

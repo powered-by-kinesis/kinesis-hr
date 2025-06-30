@@ -78,6 +78,28 @@ export class JobPostRepository {
       throw error;
     }
   }
+
+  /**
+   * Delete a job post by ID
+   * @param id - Job post ID to delete
+   * @returns Promise<{ message: string }>
+   */
+  async deleteJobPost(id: number): Promise<{ message: string }> {
+    try {
+      const res = await fetch(`${this.baseUrl}/api/job-posts/${id}`, {
+        method: 'DELETE',
+      });
+
+      if (!res.ok) {
+        throw new Error(`Failed to delete job post: ${res.status} ${res.statusText}`);
+      }
+
+      return await res.json();
+    } catch (error) {
+      console.error('Error deleting job post:', error);
+      throw error;
+    }
+  }
 }
 
 // Export singleton instance

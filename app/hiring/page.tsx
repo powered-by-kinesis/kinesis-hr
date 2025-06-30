@@ -46,6 +46,11 @@ export default function HiringPage() {
   const handleJobPostCreated = React.useCallback(() => {
     fetchData(); // Re-fetch all job posts to get the latest data
   }, [fetchData]);
+
+  // Callback for when job post is deleted
+  const handleJobPostDeleted = React.useCallback(() => {
+    fetchData(); // Re-fetch all job posts to get the latest data
+  }, [fetchData]);
   return (
     <SidebarProvider
       style={
@@ -94,6 +99,7 @@ export default function HiringPage() {
                       <JobPostsTable
                         data={jobPostsData}
                         onJobPostCreated={handleJobPostCreated}
+                        onJobPostDeleted={handleJobPostDeleted}
                       />
                     )}
                   </TabsContent>

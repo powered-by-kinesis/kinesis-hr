@@ -2,6 +2,7 @@
 
 import * as React from 'react';
 import { MoreVertical, Eye } from 'lucide-react';
+import { toast } from 'sonner';
 import {
   ColumnDef,
   ColumnFiltersState,
@@ -45,6 +46,8 @@ import {
 } from '@/components/ui/table';
 import { JobPostResponseDTO } from '@/types/job-post';
 import { CreateJobPostModal } from '@/components/organisms/create-job-post-modal';
+import { DeleteAlert } from '@/components/organisms/delete-alert';
+import { jobPostRepository } from '@/repositories';
 
 type JobPostData = JobPostResponseDTO;
 
@@ -81,129 +84,158 @@ const getEmploymentTypeVariant = (type: string): 'default' | 'secondary' | 'outl
 };
 
 // Define columns for job posts table
-const columns: ColumnDef<JobPostData>[] = [
-  {
-    id: 'select',
-    header: ({ table }) => (
-      <Checkbox
-        checked={
-          table.getIsAllPageRowsSelected() || (table.getIsSomePageRowsSelected() && 'indeterminate')
-        }
-        onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
-        aria-label="Select all"
-      />
-    ),
-    cell: ({ row }) => (
-      <Checkbox
-        checked={row.getIsSelected()}
-        onCheckedChange={(value) => row.toggleSelected(!!value)}
-        aria-label="Select row"
-      />
-    ),
-    enableSorting: false,
-    enableHiding: false,
-  },
-  {
-    accessorKey: 'title',
-    header: 'Job Title',
-    cell: ({ row }) => (
-      <div className="min-w-[200px]">
-        <div className="font-medium">{row.original.title}</div>
-        <div className="text-sm text-muted-foreground truncate max-w-[300px]">
-          {row.original.description}
+const createColumns = (onJobPostDeleted?: () => void): ColumnDef<JobPostData>[] => {
+  // Function to handle job post deletion (called after confirmation)
+  const handleDeleteJobPost = async (id: number) => {
+    try {
+      // Delete job post using repository
+      await jobPostRepository.deleteJobPost(id);
+
+      // Show success toast
+      toast.success('Job post deleted successfully!');
+
+      // Trigger callback to refresh data
+      onJobPostDeleted?.();
+    } catch (error) {
+      console.error('Error deleting job post:', error);
+      toast.error('Failed to delete job post. Please try again.');
+    }
+  };
+
+  return [
+    {
+      id: 'select',
+      header: ({ table }) => (
+        <Checkbox
+          checked={
+            table.getIsAllPageRowsSelected() ||
+            (table.getIsSomePageRowsSelected() && 'indeterminate')
+          }
+          onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
+          aria-label="Select all"
+        />
+      ),
+      cell: ({ row }) => (
+        <Checkbox
+          checked={row.getIsSelected()}
+          onCheckedChange={(value) => row.toggleSelected(!!value)}
+          aria-label="Select row"
+        />
+      ),
+      enableSorting: false,
+      enableHiding: false,
+    },
+    {
+      accessorKey: 'title',
+      header: 'Job Title',
+      cell: ({ row }) => (
+        <div className="min-w-[200px]">
+          <div className="font-medium">{row.original.title}</div>
+          <div className="text-sm text-muted-foreground truncate max-w-[300px]">
+            {row.original.description}
+          </div>
         </div>
-      </div>
-    ),
-    enableHiding: false,
-  },
-  {
-    accessorKey: 'location',
-    header: 'Location',
-    cell: ({ row }) => (
-      <div className="text-muted-foreground">{row.original.location || 'Not specified'}</div>
-    ),
-  },
-  {
-    accessorKey: 'employmentType',
-    header: 'Type',
-    cell: ({ row }) => (
-      <Badge variant={getEmploymentTypeVariant(row.original.employmentType)}>
-        {row.original.employmentType}
-      </Badge>
-    ),
-  },
-  {
-    accessorKey: 'status',
-    header: 'Status',
-    cell: ({ row }) => (
-      <Badge variant={getStatusVariant(row.original.status)}>{row.original.status}</Badge>
-    ),
-  },
-  {
-    accessorKey: 'createdAt',
-    header: 'Created',
-    cell: ({ row }) => {
-      const date =
-        typeof row.original.createdAt === 'string'
-          ? new Date(row.original.createdAt)
-          : row.original.createdAt;
-      return <div className="text-muted-foreground">{date.toLocaleDateString()}</div>;
+      ),
+      enableHiding: false,
     },
-  },
-  {
-    accessorKey: 'updatedAt',
-    header: 'Updated',
-    cell: ({ row }) => {
-      const date =
-        typeof row.original.updatedAt === 'string'
-          ? new Date(row.original.updatedAt)
-          : row.original.updatedAt;
-      return <div className="text-muted-foreground">{date.toLocaleDateString()}</div>;
+    {
+      accessorKey: 'location',
+      header: 'Location',
+      cell: ({ row }) => (
+        <div className="text-muted-foreground">{row.original.location || 'Not specified'}</div>
+      ),
     },
-  },
-  {
-    id: 'actions',
-    cell: ({ row }) => (
-      <DropdownMenu>
-        <DropdownMenuTrigger asChild>
-          <Button variant="ghost" className="h-8 w-8 p-0" size="icon">
-            <MoreVertical className="h-4 w-4" />
-            <span className="sr-only">Open menu</span>
-          </Button>
-        </DropdownMenuTrigger>
-        <DropdownMenuContent align="end">
-          <DropdownMenuItem>
-            <Eye className="mr-2 h-4 w-4" />
-            View Details
-          </DropdownMenuItem>
-          <DropdownMenuItem>Edit Job Post</DropdownMenuItem>
-          <DropdownMenuItem>View Applications</DropdownMenuItem>
-          <DropdownMenuItem>Duplicate</DropdownMenuItem>
-          <DropdownMenuSeparator />
-          {row.original.status === 'Active' ? (
-            <DropdownMenuItem>Pause Job Post</DropdownMenuItem>
-          ) : (
-            <DropdownMenuItem>Activate Job Post</DropdownMenuItem>
-          )}
-          <DropdownMenuSeparator />
-          <DropdownMenuItem className="text-destructive">Delete Job Post</DropdownMenuItem>
-        </DropdownMenuContent>
-      </DropdownMenu>
-    ),
-  },
-];
+    {
+      accessorKey: 'employmentType',
+      header: 'Type',
+      cell: ({ row }) => (
+        <Badge variant={getEmploymentTypeVariant(row.original.employmentType)}>
+          {row.original.employmentType}
+        </Badge>
+      ),
+    },
+    {
+      accessorKey: 'status',
+      header: 'Status',
+      cell: ({ row }) => (
+        <Badge variant={getStatusVariant(row.original.status)}>{row.original.status}</Badge>
+      ),
+    },
+    {
+      accessorKey: 'createdAt',
+      header: 'Created',
+      cell: ({ row }) => {
+        const date =
+          typeof row.original.createdAt === 'string'
+            ? new Date(row.original.createdAt)
+            : row.original.createdAt;
+        return <div className="text-muted-foreground">{date.toLocaleDateString()}</div>;
+      },
+    },
+    {
+      accessorKey: 'updatedAt',
+      header: 'Updated',
+      cell: ({ row }) => {
+        const date =
+          typeof row.original.updatedAt === 'string'
+            ? new Date(row.original.updatedAt)
+            : row.original.updatedAt;
+        return <div className="text-muted-foreground">{date.toLocaleDateString()}</div>;
+      },
+    },
+    {
+      id: 'actions',
+      cell: ({ row }) => (
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button variant="ghost" className="h-8 w-8 p-0" size="icon">
+              <MoreVertical className="h-4 w-4" />
+              <span className="sr-only">Open menu</span>
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end">
+            <DropdownMenuItem>
+              <Eye className="mr-2 h-4 w-4" />
+              View Details
+            </DropdownMenuItem>
+            <DropdownMenuItem>Edit Job Post</DropdownMenuItem>
+            <DropdownMenuItem>View Applications</DropdownMenuItem>
+            <DropdownMenuItem>Duplicate</DropdownMenuItem>
+            <DropdownMenuSeparator />
+            {row.original.status === 'Active' ? (
+              <DropdownMenuItem>Pause Job Post</DropdownMenuItem>
+            ) : (
+              <DropdownMenuItem>Activate Job Post</DropdownMenuItem>
+            )}
+            <DropdownMenuSeparator />
+            <DeleteAlert
+              title="Delete Job Post"
+              description={`Are you sure you want to delete "${row.original.title}"? This action cannot be undone.`}
+              action="Delete Job Post"
+              onConfirm={() => handleDeleteJobPost(row.original.id)}
+            />
+          </DropdownMenuContent>
+        </DropdownMenu>
+      ),
+    },
+  ];
+};
 
 interface JobPostsTableProps {
   data: JobPostData[];
   onJobPostCreated?: () => void; // Callback for when new job post is created
+  onJobPostDeleted?: () => void; // Callback for when job post is deleted
 }
 
-export function JobPostsTable({ data, onJobPostCreated }: JobPostsTableProps) {
+export function JobPostsTable({ data, onJobPostCreated, onJobPostDeleted }: JobPostsTableProps) {
   const [rowSelection, setRowSelection] = React.useState({});
   const [columnVisibility, setColumnVisibility] = React.useState<VisibilityState>({});
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([]);
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [globalFilter, setGlobalFilter] = React.useState('');
+
+  // Create columns with delete callback
+  const columns = React.useMemo(() => createColumns(onJobPostDeleted), [onJobPostDeleted]);
 
   const table = useReactTable({
     data,
