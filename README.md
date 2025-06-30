@@ -191,8 +191,8 @@ graph TB
 1. **Clone the repository**
 
    ```bash
-   git clone https://github.com/neotechpark/hackathon2505_018_agusheryanto182.git
-   cd fullstack
+   git clone https://github.com/powered-by-kinesis/kinesis-hr.git
+   cd kinesis-hr
    ```
 
 2. **Install dependencies**
@@ -280,4 +280,4 @@ graph TB
 
 ---
 
-_Made with ❤️ by Team hackathon2505_018_agusheryanto182 at NeoTeckPark Hackathon_
+_Made with ❤️ by Team KinesisHR_
