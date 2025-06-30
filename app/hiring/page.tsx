@@ -1,3 +1,6 @@
+'use client';
+
+import * as React from 'react';
 import { AppSidebar } from '@/components/organisms/app-sidebar';
 import { CandidatesTable } from '@/components/organisms/candidates-table';
 import { JobPostsTable } from '@/components/organisms/job-posts-table';
@@ -6,15 +9,43 @@ import { SidebarInset, SidebarProvider } from '@/components/ui/sidebar';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 
-// Import repositories
+// Import repositories and types
 import { jobPostRepository, applicantRepository } from '@/repositories';
+import { JobPostResponseDTO } from '@/types/job-post';
+import { ApplicantResponseDTO } from '@/types/applicant';
 
-export default async function HiringPage() {
-  // Fetch data from database using repositories
-  const [jobPostsData, candidatesData] = await Promise.all([
-    jobPostRepository.getAllJobPosts(),
-    applicantRepository.getAllApplicants(),
-  ]);
+export default function HiringPage() {
+  // State for storing fetched data
+  const [jobPostsData, setJobPostsData] = React.useState<JobPostResponseDTO[]>([]);
+  const [candidatesData, setCandidatesData] = React.useState<ApplicantResponseDTO[]>([]);
+  const [isLoading, setIsLoading] = React.useState(true);
+
+  // Function to fetch all data
+  const fetchData = React.useCallback(async () => {
+    try {
+      setIsLoading(true);
+      const [jobPosts, candidates] = await Promise.all([
+        jobPostRepository.getAllJobPosts(),
+        applicantRepository.getAllApplicants(),
+      ]);
+      setJobPostsData(jobPosts);
+      setCandidatesData(candidates);
+    } catch (error) {
+      console.error('Error fetching data:', error);
+    } finally {
+      setIsLoading(false);
+    }
+  }, []);
+
+  // Fetch data on component mount
+  React.useEffect(() => {
+    fetchData();
+  }, [fetchData]);
+
+  // Callback for when new job post is created
+  const handleJobPostCreated = React.useCallback(() => {
+    fetchData(); // Re-fetch all job posts to get the latest data
+  }, [fetchData]);
   return (
     <SidebarProvider
       style={
@@ -55,11 +86,26 @@ export default async function HiringPage() {
                   </TabsList>
 
                   <TabsContent value="job-openings" className="mt-6">
-                    <JobPostsTable data={jobPostsData} />
+                    {isLoading ? (
+                      <div className="flex items-center justify-center py-12">
+                        <div className="text-muted-foreground">Loading job posts...</div>
+                      </div>
+                    ) : (
+                      <JobPostsTable
+                        data={jobPostsData}
+                        onJobPostCreated={handleJobPostCreated}
+                      />
+                    )}
                   </TabsContent>
 
                   <TabsContent value="candidates" className="mt-6">
-                    <CandidatesTable data={candidatesData} />
+                    {isLoading ? (
+                      <div className="flex items-center justify-center py-12">
+                        <div className="text-muted-foreground">Loading candidates...</div>
+                      </div>
+                    ) : (
+                      <CandidatesTable data={candidatesData} />
+                    )}
                   </TabsContent>
 
                   <TabsContent value="talents" className="mt-6">

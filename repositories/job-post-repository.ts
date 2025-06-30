@@ -1,6 +1,7 @@
 // Job Post Repository - handles all job post related API calls
 
 import { JobPostResponseDTO } from '@/types/job-post';
+import { CreateJobPostRequestDTO } from '@/types/job-post/CreateJobPostRequestDTO';
 
 export class JobPostRepository {
   private baseUrl: string;
@@ -35,9 +36,7 @@ export class JobPostRepository {
    * @param jobPostData - Job post data to create
    * @returns Promise<JobPost>
    */
-  async createJobPost(
-    jobPostData: Omit<JobPostResponseDTO, 'id' | 'createdAt' | 'updatedAt'>,
-  ): Promise<JobPostResponseDTO> {
+  async createJobPost(jobPostData: CreateJobPostRequestDTO): Promise<JobPostResponseDTO> {
     try {
       const res = await fetch(`${this.baseUrl}/api/job-posts`, {
         method: 'POST',

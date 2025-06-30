@@ -3,7 +3,11 @@ import prisma from '@/lib/prisma';
 import { CreateJobPostRequestDTO, JobPostResponseDTO } from '@/types/job-post';
 
 export async function GET(_req: NextRequest): Promise<NextResponse<JobPostResponseDTO[]>> {
-  const jobPosts = await prisma.jobPost.findMany();
+  const jobPosts = await prisma.jobPost.findMany({
+    orderBy: {
+      createdAt: 'desc',
+    },
+  });
   return NextResponse.json(jobPosts);
 }
 

@@ -1,7 +1,7 @@
 'use client';
 
 import * as React from 'react';
-import { MoreVertical, Plus, Eye } from 'lucide-react';
+import { MoreVertical, Eye } from 'lucide-react';
 import {
   ColumnDef,
   ColumnFiltersState,
@@ -44,6 +44,7 @@ import {
   TableRow,
 } from '@/components/ui/table';
 import { JobPostResponseDTO } from '@/types/job-post';
+import { CreateJobPostModal } from '@/components/organisms/create-job-post-modal';
 
 type JobPostData = JobPostResponseDTO;
 
@@ -194,9 +195,10 @@ const columns: ColumnDef<JobPostData>[] = [
 
 interface JobPostsTableProps {
   data: JobPostData[];
+  onJobPostCreated?: () => void; // Callback for when new job post is created
 }
 
-export function JobPostsTable({ data }: JobPostsTableProps) {
+export function JobPostsTable({ data, onJobPostCreated }: JobPostsTableProps) {
   const [rowSelection, setRowSelection] = React.useState({});
   const [columnVisibility, setColumnVisibility] = React.useState<VisibilityState>({});
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([]);
@@ -255,10 +257,7 @@ export function JobPostsTable({ data }: JobPostsTableProps) {
               {data.length} Total
             </Badge>
           </div>
-          <Button size="sm">
-            <Plus className="mr-2 h-4 w-4" />
-            New Job Post
-          </Button>
+          <CreateJobPostModal onJobPostCreated={onJobPostCreated} />
         </div>
       </div>
 
