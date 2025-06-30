@@ -19,7 +19,12 @@ model User {
   sessions      Session[]
   contexts      Context[]
 
-  Document Document[]
+  documents     Document[]
+
+  applicant     Applicant?
+  stageChanges  ApplicationStageHistory[]
+
+  @@map("users")
 }
 
 model Account {
@@ -39,6 +44,7 @@ model Account {
   user              User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@id([provider, providerAccountId])
+  @@map("accounts")
 }
 
 model Session {
@@ -49,6 +55,8 @@ model Session {
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
   user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("sessions")
 }
 
 model Context {
@@ -61,9 +69,9 @@ model Context {
   deletedAt      DateTime?
   
   user           User      @relation(fields: [userId], references: [id], onDelete: Cascade)
-  documents       ContextDocument[]
-  chats           Chat[]
-  candidates      Candidate[]
+  documents      ContextDocument[]
+  chats          Chat[]
+  candidates     Candidate[]
 
   @@index([userId])
   @@index([deletedAt])
@@ -81,6 +89,8 @@ model Document {
 
   owner    User      @relation(fields: [ownerId], references: [id], onDelete: Cascade)
   contexts ContextDocument[]
+
+  @@map("documents")
 }
 
 model ContextDocument {
@@ -142,4 +152,78 @@ model Candidate {
   @@index([contextId])
   @@index([deletedAt])
   @@map("candidates")
+}
+
+model Applicant {
+  id           Int           @id @default(autoincrement())
+  userId       Int?          @unique
+  fullName     String
+  email        String        @unique
+  phone        String?
+  resumeUrl    String?
+  appliedAt    DateTime      @default(now())
+
+  applications Application[]
+  user         User?         @relation(fields: [userId], references: [id])
+
+  @@map("applicants")
+}
+
+model JobPost {
+  id             Int           @id @default(autoincrement())
+  title          String
+  description    String
+  location       String?
+  employmentType String
+  status         String 
+  createdAt      DateTime      @default(now())
+  updatedAt      DateTime      @updatedAt
+
+  applications   Application[]
+
+  @@map("job_posts")
+  @@index([title])
+  @@index([status])
+}
+
+enum Stage {
+  APPLIED
+  AI_SCREENING
+  REVIEW
+  OFFER
+  HIRED
+  REJECTED
+}
+
+model Application {
+  id             Int                       @id @default(autoincrement())
+  applicantId    Int
+  jobPostId      Int
+  currentStage   Stage                     @default(APPLIED)
+  expectedSalary String
+  appliedAt      DateTime                  @default(now())
+  notes          String?
+
+  applicant      Applicant            @relation(fields: [applicantId], references: [id])
+  jobPost        JobPost                   @relation(fields: [jobPostId], references: [id])
+  stageHistory   ApplicationStageHistory[]
+
+  @@map("applications")
+  @@index([jobPostId])
+}
+
+model ApplicationStageHistory {
+  id            Int          @id @default(autoincrement())
+  applicationId Int
+  stage         Stage
+  changedAt     DateTime     @default(now())
+  changedById   Int?
+  notes         String?
+
+  application   Application  @relation(fields: [applicationId], references: [id])
+  changedBy     User?        @relation(fields: [changedById], references: [id])
+
+  @@index([applicationId])
+  @@index([changedById])
+  @@map("application_stage_history")
 }
