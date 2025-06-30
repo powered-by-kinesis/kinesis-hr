@@ -3,14 +3,13 @@
 import { Button } from '@/components/ui/button';
 import { AuroraText } from '@/components/magicui/aurora-text';
 import { Container } from '@/components/atoms/container';
-import { useRouter } from 'next/navigation';
 
 interface HeroProps {
+  login: () => void;
   isAuthLoading: boolean;
 }
 
-export function Hero({ isAuthLoading }: HeroProps) {
-  const router = useRouter();
+export function Hero({ login, isAuthLoading }: HeroProps) {
   return (
     <section
       id="home"
@@ -31,9 +30,7 @@ export function Hero({ isAuthLoading }: HeroProps) {
         <div className="mt-10 space-x-4">
           <Button
             disabled={isAuthLoading}
-            onClick={() => {
-              router.push('/home');
-            }}
+            onClick={() => login()}
             className="px-6 cursor-pointer text-sm rounded-full bg-gradient-to-br from-blue-500 to-blue-600 text-white hover:bg-gradient-to-br hover:from-blue-600 hover:to-blue-700"
           >
             Get Started
