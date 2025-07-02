@@ -88,12 +88,12 @@ export const AIAssistantSidebar: React.FC<AIAssistantSidebarProps> = ({ classNam
 
     return (
         <div className={cn(
-            "fixed right-0 top-0 h-screen w-96 bg-gray-800 border-l border-gray-800 z-50 flex flex-col overflow-auto",
+            "fixed right-0 top-0 h-screen w-96 bg-card border-l border-gray-800 z-50 flex flex-col overflow-auto",
             "shadow-2xl",
             className
         )}>
             {/* Header */}
-            <div className="flex items-center justify-between p-4 border-b border-gray-800 bg-gray-800">
+            <div className="flex items-center justify-between p-4 border-b border-gray-800 bg-card">
                 <div className="flex items-center gap-3">
                     <div className="relative">
                         <Avatar className="h-8 w-8 bg-blue-600">
@@ -104,7 +104,7 @@ export const AIAssistantSidebar: React.FC<AIAssistantSidebarProps> = ({ classNam
                         <div className="absolute -bottom-1 -right-1 w-3 h-3 bg-blue-500 rounded-full border-2 border-gray-900"></div>
                     </div>
                     <div>
-                        <h3 className="text-white font-semibold text-sm">Ask kin-chan</h3>
+                        <h3 className="text-white font-semibold text-sm">Ask KinesisHR Assistant</h3>
                         <Badge variant="secondary" className="text-xs bg-blue-600 text-white hover:bg-blue-600">
                             beta
                         </Badge>
@@ -115,7 +115,7 @@ export const AIAssistantSidebar: React.FC<AIAssistantSidebarProps> = ({ classNam
                         variant="ghost"
                         size="sm"
                         onClick={() => setIsMinimized(!isMinimized)}
-                        className="text-gray-400 hover:text-white hover:bg-gray-800 p-1 h-8 w-8"
+                        className="text-gray-400 hover:text-white hover:bg-card p-1 h-8 w-8"
                     >
                         {isMinimized ? <Maximize2 className="h-4 w-4" /> : <Minimize2 className="h-4 w-4" />}
                     </Button>
@@ -125,7 +125,7 @@ export const AIAssistantSidebar: React.FC<AIAssistantSidebarProps> = ({ classNam
             {!isMinimized && (
                 <>
                     {/* Quick Questions */}
-                    <div className="p-4 border-b border-gray-800 bg-gray-800">
+                    <div className="p-4 border-b border-gray-800 bg-card">
                         <div className="space-y-2">
                             {quickQuestions.map((question, index) => (
                                 <Button
@@ -133,7 +133,7 @@ export const AIAssistantSidebar: React.FC<AIAssistantSidebarProps> = ({ classNam
                                     variant="outline"
                                     size="sm"
                                     onClick={() => handleQuickQuestion(question)}
-                                    className="w-full justify-start text-left h-auto py-2 px-3 bg-gray-800 border-gray-700 text-gray-300 hover:bg-gray-700 hover:text-white text-xs"
+                                    className="w-full justify-start text-left h-auto py-2 px-3 bg-card border-gray-700 text-gray-300 hover:bg-gray-700 hover:text-white text-xs"
                                 >
                                     {question}
                                 </Button>
@@ -165,7 +165,7 @@ export const AIAssistantSidebar: React.FC<AIAssistantSidebarProps> = ({ classNam
                                                 "max-w-[80%] rounded-lg p-3 text-sm",
                                                 message.type === 'user'
                                                     ? 'bg-blue-600 text-white'
-                                                    : 'bg-gray-800 text-gray-100 border border-gray-700'
+                                                    : 'bg-card text-gray-100 border border-gray-700'
                                             )}
                                         >
                                             {message.content}
@@ -186,7 +186,7 @@ export const AIAssistantSidebar: React.FC<AIAssistantSidebarProps> = ({ classNam
                                                 <Bot className="h-4 w-4" />
                                             </AvatarFallback>
                                         </Avatar>
-                                        <div className="bg-gray-800 text-gray-100 border border-gray-700 rounded-lg p-3 text-sm">
+                                        <div className="bg-card text-gray-100 border border-gray-700 rounded-lg p-3 text-sm">
                                             <div className="flex gap-1">
                                                 <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce"></div>
                                                 <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '0.1s' }}></div>
@@ -200,9 +200,9 @@ export const AIAssistantSidebar: React.FC<AIAssistantSidebarProps> = ({ classNam
                         </ScrollArea>
 
                         {/* Input Area */}
-                        <div className="p-4 border-t border-gray-800 bg-gray-800">
+                        <div className="p-4 border-t border-gray-800 bg-card">
                             {/* Disclaimer */}
-                            <div className="mb-3 p-2 bg-gray-800 rounded-lg border border-gray-700">
+                            <div className="mb-3 p-2 bg-card rounded-lg border border-gray-700">
                                 <div className="flex items-start gap-2">
                                     <div className="text-orange-500 text-xs mt-0.5">⚠️</div>
                                     <div className="text-xs text-gray-400 leading-relaxed">
@@ -220,13 +220,13 @@ export const AIAssistantSidebar: React.FC<AIAssistantSidebarProps> = ({ classNam
                                     onChange={(e) => setInputValue(e.target.value)}
                                     onKeyPress={handleKeyPress}
                                     placeholder="Ask a question..."
-                                    className="flex-1 bg-gray-800 border-gray-700 text-white placeholder:text-gray-400 focus:border-green-500"
+                                    className="flex-1 bg-card border-gray-700 text-white placeholder:text-gray-400 focus:border-blue-500"
                                     disabled={isLoading}
                                 />
                                 <Button
                                     onClick={handleSendMessage}
                                     disabled={!inputValue.trim() || isLoading}
-                                    className="bg-blue-600 hover:bg-green-700 text-white px-3"
+                                    className="bg-blue-600 hover:bg-blue-700 text-white px-3"
                                 >
                                     <Send className="h-4 w-4" />
                                 </Button>

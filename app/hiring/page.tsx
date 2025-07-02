@@ -55,7 +55,7 @@ export default function HiringPage() {
 
   return (
     <>
-      <div className="relative">
+      <div className="relative m-0 p-0">
         <SidebarProvider
           style={
             {
@@ -65,7 +65,7 @@ export default function HiringPage() {
           }
         >
           <AppSidebar variant="inset" />
-          <SidebarInset>
+          <SidebarInset className="md:peer-data-[variant=inset]:m-0">
             <SiteHeader />
             <div className="flex flex-1 flex-col">
               <div className="@container/main flex flex-1 flex-col gap-2">
