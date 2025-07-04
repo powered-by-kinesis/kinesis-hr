@@ -199,12 +199,16 @@ const createColumns = (onJobPostDeleted?: () => void): ColumnDef<JobPostData>[] 
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
-            <Link href={`/job-posts/${row.original.id}`}>
+            <Link href={`/job-posts/${row.original.id}`} target="_blank" rel="noopener noreferrer">
               <DropdownMenuItem className="cursor-pointer">
                 View Details
               </DropdownMenuItem>
             </Link>
-            <DropdownMenuItem className="cursor-pointer">Edit Job Post</DropdownMenuItem>
+            <Link href={`/hiring/jobs/edit/${row.original.id}`}>
+              <DropdownMenuItem className="cursor-pointer">
+                Edit Job Post
+              </DropdownMenuItem>
+            </Link>
             <DropdownMenuItem className="cursor-pointer">View Applications</DropdownMenuItem>
             <DropdownMenuSeparator />
             {row.original.status === 'Active' ? (

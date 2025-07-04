@@ -6,7 +6,6 @@ import { CandidatesTable } from '@/components/organisms/candidates-table';
 import { JobPostsTable } from '@/components/organisms/job-posts-table';
 import { SiteHeader } from '@/components/organisms/site-header';
 import { SidebarInset, SidebarProvider } from '@/components/ui/sidebar';
-import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { AIAssistantSidebar } from '@/components/organisms/ai-assistant-sidebar';
 import { Loading } from '@/components/molecules/loading';
@@ -84,15 +83,9 @@ export default function HiringPage() {
                       <TabsList className="grid grid-cols-2">
                         <TabsTrigger value="job-openings" className="flex items-center gap-2">
                           Job Openings
-                          <Badge variant="secondary" className="text-xs">
-                            {jobPostsData.length}
-                          </Badge>
                         </TabsTrigger>
                         <TabsTrigger value="candidates" className="flex items-center gap-2">
                           Candidates
-                          <Badge variant="secondary" className="text-xs">
-                            {candidatesData.length}
-                          </Badge>
                         </TabsTrigger>
                       </TabsList>
 

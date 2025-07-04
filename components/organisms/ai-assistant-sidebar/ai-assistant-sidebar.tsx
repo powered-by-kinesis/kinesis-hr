@@ -6,7 +6,7 @@ import { Input } from '@/components/ui/input';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Badge } from '@/components/ui/badge';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
-import { Send, Bot, User, Minimize2, Maximize2 } from 'lucide-react';
+import { Send, Bot, User } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 interface Message {
@@ -31,7 +31,7 @@ export const AIAssistantSidebar: React.FC<AIAssistantSidebarProps> = ({ classNam
     ]);
     const [inputValue, setInputValue] = useState('');
     const [isLoading, setIsLoading] = useState(false);
-    const [isMinimized, setIsMinimized] = useState(false);
+    // const [isMinimized, setIsMinimized] = useState(false);
     const messagesEndRef = useRef<HTMLDivElement>(null);
 
     // Auto scroll to bottom when new message is added
@@ -110,7 +110,7 @@ export const AIAssistantSidebar: React.FC<AIAssistantSidebarProps> = ({ classNam
                         </Badge>
                     </div>
                 </div>
-                <div className="flex items-center gap-1">
+                {/* <div className="flex items-center gap-1">
                     <Button
                         variant="ghost"
                         size="sm"
@@ -119,128 +119,128 @@ export const AIAssistantSidebar: React.FC<AIAssistantSidebarProps> = ({ classNam
                     >
                         {isMinimized ? <Maximize2 className="h-4 w-4" /> : <Minimize2 className="h-4 w-4" />}
                     </Button>
-                </div>
+                </div> */}
             </div>
 
-            {!isMinimized && (
-                <>
-                    {/* Quick Questions */}
-                    <div className="p-4 border-b border-gray-800 bg-card">
-                        <div className="space-y-2">
-                            {quickQuestions.map((question, index) => (
-                                <Button
-                                    key={index}
-                                    variant="outline"
-                                    size="sm"
-                                    onClick={() => handleQuickQuestion(question)}
-                                    className="w-full justify-start text-left h-auto py-2 px-3 bg-card border-gray-700 text-gray-300 hover:bg-gray-700 hover:text-white text-xs"
-                                >
-                                    {question}
-                                </Button>
-                            ))}
-                        </div>
+            {/* {!isMinimized && ( */}
+            <>
+                {/* Quick Questions */}
+                <div className="p-4 border-b border-gray-800 bg-card">
+                    <div className="space-y-2">
+                        {quickQuestions.map((question, index) => (
+                            <Button
+                                key={index}
+                                variant="outline"
+                                size="sm"
+                                onClick={() => handleQuickQuestion(question)}
+                                className="w-full justify-start text-left h-auto py-2 px-3 bg-card border-gray-700 text-gray-300 hover:bg-gray-700 hover:text-white text-xs"
+                            >
+                                {question}
+                            </Button>
+                        ))}
                     </div>
+                </div>
 
-                    {/* Messages Area */}
-                    <div className="flex-1 flex flex-col min-h-0">
-                        <ScrollArea className="flex-1 p-4">
-                            <div className="space-y-4">
-                                {messages.map((message) => (
-                                    <div
-                                        key={message.id}
-                                        className={cn(
-                                            "flex gap-3",
-                                            message.type === 'user' ? 'justify-end' : 'justify-start'
-                                        )}
-                                    >
-                                        {message.type === 'assistant' && (
-                                            <Avatar className="h-8 w-8 bg-blue-600 flex-shrink-0">
-                                                <AvatarFallback className="text-white text-sm">
-                                                    <Bot className="h-4 w-4" />
-                                                </AvatarFallback>
-                                            </Avatar>
-                                        )}
-                                        <div
-                                            className={cn(
-                                                "max-w-[80%] rounded-lg p-3 text-sm",
-                                                message.type === 'user'
-                                                    ? 'bg-blue-600 text-white'
-                                                    : 'bg-card text-gray-100 border border-gray-700'
-                                            )}
-                                        >
-                                            {message.content}
-                                        </div>
-                                        {message.type === 'user' && (
-                                            <Avatar className="h-8 w-8 bg-blue-600 flex-shrink-0">
-                                                <AvatarFallback className="text-white text-sm">
-                                                    <User className="h-4 w-4" />
-                                                </AvatarFallback>
-                                            </Avatar>
-                                        )}
-                                    </div>
-                                ))}
-                                {isLoading && (
-                                    <div className="flex gap-3 justify-start">
+                {/* Messages Area */}
+                <div className="flex-1 flex flex-col min-h-0">
+                    <ScrollArea className="flex-1 p-4">
+                        <div className="space-y-4">
+                            {messages.map((message) => (
+                                <div
+                                    key={message.id}
+                                    className={cn(
+                                        "flex gap-3",
+                                        message.type === 'user' ? 'justify-end' : 'justify-start'
+                                    )}
+                                >
+                                    {message.type === 'assistant' && (
                                         <Avatar className="h-8 w-8 bg-blue-600 flex-shrink-0">
                                             <AvatarFallback className="text-white text-sm">
                                                 <Bot className="h-4 w-4" />
                                             </AvatarFallback>
                                         </Avatar>
-                                        <div className="bg-card text-gray-100 border border-gray-700 rounded-lg p-3 text-sm">
-                                            <div className="flex gap-1">
-                                                <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce"></div>
-                                                <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '0.1s' }}></div>
-                                                <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></div>
-                                            </div>
+                                    )}
+                                    <div
+                                        className={cn(
+                                            "max-w-[80%] rounded-lg p-3 text-sm",
+                                            message.type === 'user'
+                                                ? 'bg-blue-600 text-white'
+                                                : 'bg-card text-gray-100 border border-gray-700'
+                                        )}
+                                    >
+                                        {message.content}
+                                    </div>
+                                    {message.type === 'user' && (
+                                        <Avatar className="h-8 w-8 bg-blue-600 flex-shrink-0">
+                                            <AvatarFallback className="text-white text-sm">
+                                                <User className="h-4 w-4" />
+                                            </AvatarFallback>
+                                        </Avatar>
+                                    )}
+                                </div>
+                            ))}
+                            {isLoading && (
+                                <div className="flex gap-3 justify-start">
+                                    <Avatar className="h-8 w-8 bg-blue-600 flex-shrink-0">
+                                        <AvatarFallback className="text-white text-sm">
+                                            <Bot className="h-4 w-4" />
+                                        </AvatarFallback>
+                                    </Avatar>
+                                    <div className="bg-card text-gray-100 border border-gray-700 rounded-lg p-3 text-sm">
+                                        <div className="flex gap-1">
+                                            <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce"></div>
+                                            <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '0.1s' }}></div>
+                                            <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></div>
                                         </div>
                                     </div>
-                                )}
-                                <div ref={messagesEndRef} />
-                            </div>
-                        </ScrollArea>
+                                </div>
+                            )}
+                            <div ref={messagesEndRef} />
+                        </div>
+                    </ScrollArea>
 
-                        {/* Input Area */}
-                        <div className="p-4 border-t border-gray-800 bg-card">
-                            {/* Disclaimer */}
-                            <div className="mb-3 p-2 bg-card rounded-lg border border-gray-700">
-                                <div className="flex items-start gap-2">
-                                    <div className="text-orange-500 text-xs mt-0.5">⚠️</div>
-                                    <div className="text-xs text-gray-400 leading-relaxed">
-                                        Just FYI... You are interacting with an artificial intelligence system and not a human being.
-                                        KinesisHR Assistant can make mistakes. Consider double checking important information.
-                                        HR can access your chat history.
-                                    </div>
+                    {/* Input Area */}
+                    <div className="p-4 border-t border-gray-800 bg-card">
+                        {/* Disclaimer */}
+                        <div className="mb-3 p-2 bg-card rounded-lg border border-gray-700">
+                            <div className="flex items-start gap-2">
+                                <div className="text-orange-500 text-xs mt-0.5">⚠️</div>
+                                <div className="text-xs text-gray-400 leading-relaxed">
+                                    Just FYI... You are interacting with an artificial intelligence system and not a human being.
+                                    KinesisHR Assistant can make mistakes. Consider double checking important information.
+                                    HR can access your chat history.
                                 </div>
                             </div>
+                        </div>
 
-                            {/* Input */}
-                            <div className="flex gap-2 ">
-                                <Input
-                                    value={inputValue}
-                                    onChange={(e) => setInputValue(e.target.value)}
-                                    onKeyPress={handleKeyPress}
-                                    placeholder="Ask a question..."
-                                    className="flex-1 bg-card border-gray-700 text-white placeholder:text-gray-400 focus:border-blue-500"
-                                    disabled={isLoading}
-                                />
-                                <Button
-                                    onClick={handleSendMessage}
-                                    disabled={!inputValue.trim() || isLoading}
-                                    className="bg-blue-600 hover:bg-blue-700 text-white px-3"
-                                >
-                                    <Send className="h-4 w-4" />
-                                </Button>
-                            </div>
+                        {/* Input */}
+                        <div className="flex gap-2 ">
+                            <Input
+                                value={inputValue}
+                                onChange={(e) => setInputValue(e.target.value)}
+                                onKeyPress={handleKeyPress}
+                                placeholder="Ask a question..."
+                                className="flex-1 bg-card border-gray-700 text-white placeholder:text-gray-400 focus:border-blue-500"
+                                disabled={isLoading}
+                            />
+                            <Button
+                                onClick={handleSendMessage}
+                                disabled={!inputValue.trim() || isLoading}
+                                className="bg-blue-600 hover:bg-blue-700 text-white px-3"
+                            >
+                                <Send className="h-4 w-4" />
+                            </Button>
                         </div>
                     </div>
-                </>
-            )}
+                </div>
+            </>
+            {/* )} */}
 
-            {isMinimized && (
+            {/* {isMinimized && (
                 <div className="p-4">
                     <p className="text-gray-400 text-sm text-center">Assistant minimized</p>
                 </div>
-            )}
+            )} */}
         </div>
     );
 }; 
