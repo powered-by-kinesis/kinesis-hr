@@ -20,7 +20,6 @@ interface CandidateDetailsModalProps {
     isOpen: boolean;
     onOpenChange: (open: boolean) => void;
     onRequestInterview?: (candidateId: string) => void;
-    onRegisterForTranscript?: () => void;
 }
 
 // Skill assessment data structure
@@ -85,7 +84,6 @@ export function CandidateDetailsModal({
     isOpen,
     onOpenChange,
     onRequestInterview,
-    onRegisterForTranscript
 }: CandidateDetailsModalProps) {
     if (!candidate) return null;
 
@@ -120,12 +118,6 @@ export function CandidateDetailsModal({
             onRequestInterview(candidate_id);
         }
         onOpenChange(false);
-    };
-
-    const handleRegisterForTranscript = () => {
-        if (onRegisterForTranscript) {
-            onRegisterForTranscript();
-        }
     };
 
     return (
@@ -262,14 +254,8 @@ export function CandidateDetailsModal({
                                             <h4 className="font-medium">TRANSCRIPT</h4>
                                             <div className="bg-gray-50 rounded-lg p-6 text-center space-y-4">
                                                 <div className="text-muted-foreground">
-                                                    <p className="text-sm">Register to access</p>
+                                                    <p className="text-sm">Transcript will be available soon</p>
                                                 </div>
-                                                <Button
-                                                    variant="outline"
-                                                    onClick={handleRegisterForTranscript}
-                                                >
-                                                    Register now
-                                                </Button>
                                             </div>
                                         </div>
                                     </div>

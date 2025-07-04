@@ -212,11 +212,6 @@ export function CandidatesTable({ data }: CandidatesTableProps) {
     alert(`Interview request sent for candidate ${candidateId}!`);
   };
 
-  const handleRegisterForTranscript = () => {
-    console.log('Register for transcript clicked');
-    // In real app, this would open registration flow
-    alert('Registration flow would open here');
-  };
 
   const columns = createColumns(router, handleViewDetails);
 
@@ -374,7 +369,6 @@ export function CandidatesTable({ data }: CandidatesTableProps) {
         isOpen={isModalOpen}
         onOpenChange={setIsModalOpen}
         onRequestInterview={handleRequestInterview}
-        onRegisterForTranscript={handleRegisterForTranscript}
       />
     </div>
   );
