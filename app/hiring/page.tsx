@@ -9,6 +9,7 @@ import { SidebarInset, SidebarProvider } from '@/components/ui/sidebar';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { AIAssistantSidebar } from '@/components/organisms/ai-assistant-sidebar';
+import { Loading } from '@/components/molecules/loading';
 
 // Import repositories and types
 import { jobPostRepository, applicantRepository } from '@/repositories';
@@ -98,7 +99,7 @@ export default function HiringPage() {
                       <TabsContent value="job-openings" className="mt-6">
                         {isLoading ? (
                           <div className="flex items-center justify-center py-12">
-                            <div className="text-muted-foreground">Loading job posts...</div>
+                            <Loading />
                           </div>
                         ) : (
                           <JobPostsTable
@@ -112,7 +113,7 @@ export default function HiringPage() {
                       <TabsContent value="candidates" className="mt-6">
                         {isLoading ? (
                           <div className="flex items-center justify-center py-12">
-                            <div className="text-muted-foreground">Loading candidates...</div>
+                            <Loading />
                           </div>
                         ) : (
                           <CandidatesTable data={candidatesData} />

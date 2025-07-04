@@ -1,9 +1,10 @@
 import { Logo } from '@/components/atoms/logo';
 
-export function Loading() {
+export function Loading({ isCustomBg = false }: { isCustomBg?: boolean }) {
+  const customBg = isCustomBg ? 'inset-0 bg-background/80' : '';
   return (
     <div
-      className="fixed inset-0 bg-background/80  flex items-center justify-center"
+      className={`fixed flex items-center justify-center ${customBg}`}
       style={{
         zIndex: '999',
       }}

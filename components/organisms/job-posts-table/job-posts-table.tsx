@@ -131,8 +131,8 @@ const createColumns = (onJobPostDeleted?: () => void): ColumnDef<JobPostData>[] 
       header: 'Job Title',
       cell: ({ row }) => (
         <div className="min-w-[200px]">
-          <Link href={`/job-posts/${row.original.id}`}>
-            <div className="font-medium hover:text-blue-600 hover:underline cursor-pointer">
+          <Link href={`/job-posts/${row.original.id}`} target="_blank" rel="noopener noreferrer">
+            <div className="font-medium hover:text-blue-500 hover:underline cursor-pointer">
               {row.original.title}
             </div>
           </Link>
@@ -201,7 +201,6 @@ const createColumns = (onJobPostDeleted?: () => void): ColumnDef<JobPostData>[] 
           <DropdownMenuContent align="end">
             <Link href={`/job-posts/${row.original.id}`}>
               <DropdownMenuItem className="cursor-pointer">
-                <ExternalLink className="mr-2 h-4 w-4" />
                 View Details
               </DropdownMenuItem>
             </Link>

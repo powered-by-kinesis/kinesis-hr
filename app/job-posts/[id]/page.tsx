@@ -57,7 +57,7 @@ export default async function JobPostDetailPage({ params }: JobPostDetailPagePro
 
     return (
       <div className="min-h-screen bg-background">
-        <div className="container mx-auto px-4 py-8 max-w-4xl">
+        <div className="container mx-auto px-4 py-8 max-w-7xl">
           <div className="grid gap-8 lg:grid-cols-3">
             {/* Job Details - Left Side */}
             <div className="lg:col-span-2 space-y-6">
