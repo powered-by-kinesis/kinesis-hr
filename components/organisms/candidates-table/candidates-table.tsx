@@ -2,6 +2,7 @@
 
 import * as React from 'react';
 import { MoreVertical } from 'lucide-react';
+import { useRouter } from 'next/navigation';
 import {
   ColumnDef,
   ColumnFiltersState,
@@ -16,6 +17,9 @@ import {
   useReactTable,
   VisibilityState,
 } from '@tanstack/react-table';
+import { CandidateDetailsModal } from '@/components/organisms/candidate-details-modal';
+import { CandidateRankingResponseDTO } from '@/types/candidate-ranking';
+import Link from 'next/link';
 
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -47,7 +51,7 @@ import { ApplicantResponseDTO } from '@/types/applicant';
 
 type CandidateData = ApplicantResponseDTO;
 
-const columns: ColumnDef<CandidateData>[] = [
+const createColumns = (router: any, onViewDetails: (candidateId: number) => void): ColumnDef<CandidateData>[] => [
   {
     id: 'select',
     header: ({ table }) => (
@@ -91,9 +95,11 @@ const columns: ColumnDef<CandidateData>[] = [
     cell: ({ row }) => (
       <div>
         {row.original.resumeUrl ? (
-          <Button variant="link" size="sm" className="h-auto p-0">
-            View Resume
-          </Button>
+          <Link href={row.original.resumeUrl} target="_blank" rel="noopener noreferrer">
+            <div className="font-medium hover:text-blue-500 hover:underline cursor-pointer">
+              View Resume
+            </div>
+          </Link>
         ) : (
           <span className="text-muted-foreground text-sm">No resume</span>
         )}
@@ -113,7 +119,7 @@ const columns: ColumnDef<CandidateData>[] = [
   },
   {
     id: 'actions',
-    cell: () => (
+    cell: ({ row }) => (
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <Button variant="ghost" className="h-8 w-8 p-0" size="icon">
@@ -122,7 +128,12 @@ const columns: ColumnDef<CandidateData>[] = [
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end">
-          <DropdownMenuItem>View Details</DropdownMenuItem>
+          <DropdownMenuItem
+            onClick={() => onViewDetails(row.original.id)}
+            className="cursor-pointer"
+          >
+            View Details
+          </DropdownMenuItem>
           <DropdownMenuItem>Schedule Interview</DropdownMenuItem>
           <DropdownMenuItem>Send Message</DropdownMenuItem>
           <DropdownMenuSeparator />
@@ -138,11 +149,71 @@ interface CandidatesTableProps {
 }
 
 export function CandidatesTable({ data }: CandidatesTableProps) {
+  const router = useRouter();
   const [rowSelection, setRowSelection] = React.useState({});
   const [columnVisibility, setColumnVisibility] = React.useState<VisibilityState>({});
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([]);
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [globalFilter, setGlobalFilter] = React.useState('');
+  const [selectedCandidate, setSelectedCandidate] = React.useState<CandidateRankingResponseDTO | null>(null);
+  const [isModalOpen, setIsModalOpen] = React.useState(false);
+
+  const handleViewDetails = (candidateId: number) => {
+    // In a real app, you would fetch the candidate details by ID
+    // For now, we'll create mock data similar to the previous implementation
+    const mockCandidate: CandidateRankingResponseDTO = {
+      candidate_id: candidateId.toString(),
+      context_id: 1,
+      score: 85,
+      candidate_data: {
+        name: 'C.S.',
+        summary: 'Spearheaded strategic growth in new verticals at top firms, generating significant revenue and achieving sales targets; Boston College alumnus. Extensive account executive experience at top companies, strong soft skills, no founder roles',
+        skills: [
+          'B2B Sales',
+          'Account Management',
+          'HubSpot CRM',
+          'SaaS Solutions',
+          'Lead Generation',
+          'Customer Relationship Management',
+          'Sales Strategy',
+          'Business Development',
+        ],
+        experience: [
+          'Senior Account Executive at TechCorp (2020-2024)',
+          'Account Executive at SalesForce (2018-2020)',
+          'Sales Representative at StartupXYZ (2016-2018)',
+        ],
+      },
+      ai_analysis: {
+        overall_score: 88,
+        justification: 'Strong candidate with extensive B2B sales experience and proven track record in SaaS environment. Excellent communication skills and strategic thinking abilities.',
+        key_strengths: [
+          'Proven sales track record',
+          'Strong communication skills',
+          'Strategic thinking',
+          'SaaS experience',
+          'Account management expertise',
+        ],
+        key_weaknesses: [
+          'No startup experience',
+          'Limited technical background',
+        ],
+        red_flags: [],
+      },
+    };
+
+    setSelectedCandidate(mockCandidate);
+    setIsModalOpen(true);
+  };
+
+  const handleRequestInterview = (candidateId: string) => {
+    console.log('Request interview for candidate:', candidateId);
+    // In real app, this would trigger interview scheduling
+    alert(`Interview request sent for candidate ${candidateId}!`);
+  };
+
+
+  const columns = createColumns(router, handleViewDetails);
 
   const table = useReactTable({
     data,
@@ -291,6 +362,14 @@ export function CandidatesTable({ data }: CandidatesTableProps) {
           </div>
         </div>
       </div>
+
+      {/* Candidate Details Modal */}
+      <CandidateDetailsModal
+        candidate={selectedCandidate}
+        isOpen={isModalOpen}
+        onOpenChange={setIsModalOpen}
+        onRequestInterview={handleRequestInterview}
+      />
     </div>
   );
 }

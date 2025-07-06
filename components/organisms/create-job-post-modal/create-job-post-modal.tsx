@@ -35,22 +35,8 @@ import {
 
 import { CreateJobPostRequestDTO } from '@/types/job-post';
 import { jobPostRepository } from '@/repositories';
-
-// Employment type options
-const EMPLOYMENT_TYPES = [
-  { value: 'Full-time', label: 'Full-time' },
-  { value: 'Part-time', label: 'Part-time' },
-  { value: 'Contract', label: 'Contract' },
-  { value: 'Internship', label: 'Internship' },
-] as const;
-
-// Status options
-const STATUS_OPTIONS = [
-  { value: 'Draft', label: 'Draft' },
-  { value: 'Active', label: 'Active' },
-  { value: 'Paused', label: 'Paused' },
-  { value: 'Closed', label: 'Closed' },
-] as const;
+import { EMPLOYMENT_TYPE_OPTIONS, EmploymentType } from '@/constants/enums/employment-type';
+import { JOB_STATUS_OPTIONS, JobStatus } from '@/constants/enums/job-status';
 
 interface CreateJobPostModalProps {
   onJobPostCreated?: () => void; // Callback to refresh parent data
@@ -67,8 +53,8 @@ export function CreateJobPostModal({ onJobPostCreated }: CreateJobPostModalProps
       title: '',
       description: '',
       location: '',
-      employmentType: '',
-      status: 'Draft', // Default to Draft status
+      employmentType: EmploymentType.FULL_TIME,
+      status: JobStatus.DRAFT,
     },
   });
 
@@ -187,7 +173,7 @@ export function CreateJobPostModal({ onJobPostCreated }: CreateJobPostModalProps
                         </SelectTrigger>
                       </FormControl>
                       <SelectContent>
-                        {EMPLOYMENT_TYPES.map((type) => (
+                        {EMPLOYMENT_TYPE_OPTIONS.map((type) => (
                           <SelectItem key={type.value} value={type.value}>
                             {type.label}
                           </SelectItem>
@@ -212,7 +198,7 @@ export function CreateJobPostModal({ onJobPostCreated }: CreateJobPostModalProps
                         </SelectTrigger>
                       </FormControl>
                       <SelectContent>
-                        {STATUS_OPTIONS.map((status) => (
+                        {JOB_STATUS_OPTIONS.map((status) => (
                           <SelectItem key={status.value} value={status.value}>
                             {status.label}
                           </SelectItem>

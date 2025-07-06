@@ -1,7 +1,9 @@
 'use client';
 
-import { signIn, useSession } from 'next-auth/react';
+import { useSession } from 'next-auth/react';
 import { Loading } from '@/components/molecules/loading';
+import { useRouter } from 'next/navigation';
+import { useEffect } from 'react';
 
 interface RequireAuthProps {
   children: React.ReactNode;
@@ -9,12 +11,21 @@ interface RequireAuthProps {
 
 export function RequireAuth({ children }: RequireAuthProps) {
   const { status } = useSession();
+  const router = useRouter();
 
-  return (
-    <>
-      {status === 'loading' && <Loading />}
-      {status === 'unauthenticated' && signIn('google', { callbackUrl: '/chat' })}
-      {status === 'authenticated' && children}
-    </>
-  );
+  useEffect(() => {
+    if (status === 'unauthenticated') {
+      router.replace('/');
+    }
+  }, [status, router]);
+
+  if (status === 'loading') {
+    return <Loading />;
+  }
+
+  if (status === 'unauthenticated') {
+    return null;
+  }
+
+  return <>{children}</>;
 }

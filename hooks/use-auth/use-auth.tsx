@@ -4,13 +4,13 @@ import { useState } from 'react';
 export function useAuth() {
   const [isAuthLoading, setIsAuthLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const { data: session } = useSession();
+  const { data: session, status } = useSession();
 
-  const login = async () => {
+  const login = async (callbackUrl: string) => {
     try {
       setIsAuthLoading(true);
       setError(null);
-      await signIn('google', { callbackUrl: '/chat' });
+      await signIn('google', { callbackUrl });
     } catch (error) {
       console.error('Login failed:', error);
       setError('Login failed');
@@ -38,6 +38,6 @@ export function useAuth() {
     session,
     login,
     logout,
-    isAuthenticated: !!session,
+    isAuthenticated: status === 'authenticated',
   };
 }

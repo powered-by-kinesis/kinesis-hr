@@ -1,4 +1,6 @@
 import { PrismaClient, Stage } from '@prisma/client';
+import { EmploymentType } from '../constants/enums/employment-type';
+import { JobStatus } from '../constants/enums/job-status';
 
 const prisma = new PrismaClient();
 
@@ -121,8 +123,13 @@ const locations = [
   'Remote',
 ];
 
-const employmentTypes = ['Full-time', 'Part-time', 'Contract', 'Internship'];
-const jobStatuses = ['Active', 'Draft', 'Paused', 'Closed'];
+const employmentTypes = [
+  EmploymentType.FULL_TIME,
+  EmploymentType.PART_TIME,
+  EmploymentType.CONTRACT,
+  EmploymentType.INTERNSHIP,
+];
+const jobStatuses = [JobStatus.PUBLISHED, JobStatus.DRAFT];
 
 // Indonesian names
 const firstNames = [
