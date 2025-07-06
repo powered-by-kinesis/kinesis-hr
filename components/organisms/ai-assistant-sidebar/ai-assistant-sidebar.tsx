@@ -67,8 +67,8 @@ export const AIAssistantSidebar: React.FC<AIAssistantSidebarProps> = ({ classNam
         }, 1000);
     };
 
-    // Handle key press
-    const handleKeyPress = (e: React.KeyboardEvent) => {
+    // Handle key down
+    const handleKeyDown = (e: React.KeyboardEvent) => {
         if (e.key === 'Enter' && !e.shiftKey) {
             e.preventDefault();
             handleSendMessage();
@@ -218,7 +218,7 @@ export const AIAssistantSidebar: React.FC<AIAssistantSidebarProps> = ({ classNam
                             <Input
                                 value={inputValue}
                                 onChange={(e) => setInputValue(e.target.value)}
-                                onKeyPress={handleKeyPress}
+                                onKeyDown={handleKeyDown}
                                 placeholder="Ask a question..."
                                 className="flex-1 bg-card border-gray-700 text-white placeholder:text-gray-400 focus:border-blue-500"
                                 disabled={isLoading}
