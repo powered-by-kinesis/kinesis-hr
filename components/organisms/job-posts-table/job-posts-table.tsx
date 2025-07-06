@@ -49,20 +49,19 @@ import { JobPostResponseDTO } from '@/types/job-post';
 import { CreateJobPostModal } from '@/components/organisms/create-job-post-modal';
 import { DeleteAlert } from '@/components/organisms/delete-alert';
 import { jobPostRepository } from '@/repositories';
+import { JOB_STATUS_LABELS, JobStatus } from '@/constants/enums/job-status';
+import { EMPLOYMENT_TYPE_LABELS, EmploymentType } from '@/constants/enums/employment-type';
+import { formatDate } from '@/utils/format-date';
 
 type JobPostData = JobPostResponseDTO;
 
 // Function to get status badge variant
 const getStatusVariant = (status: string): 'default' | 'secondary' | 'destructive' | 'outline' => {
-  switch (status.toLowerCase()) {
-    case 'active':
+  switch (status) {
+    case JobStatus.PUBLISHED:
       return 'default';
-    case 'draft':
+    case JobStatus.DRAFT:
       return 'secondary';
-    case 'paused':
-      return 'outline';
-    case 'closed':
-      return 'destructive';
     default:
       return 'secondary';
   }
@@ -70,14 +69,16 @@ const getStatusVariant = (status: string): 'default' | 'secondary' | 'destructiv
 
 // Function to get employment type badge color
 const getEmploymentTypeVariant = (type: string): 'default' | 'secondary' | 'outline' => {
-  switch (type.toLowerCase()) {
-    case 'full-time':
+  switch (type) {
+    case EmploymentType.FULL_TIME:
       return 'default';
-    case 'part-time':
+    case EmploymentType.PART_TIME:
       return 'secondary';
-    case 'contract':
+    case EmploymentType.CONTRACT:
       return 'outline';
-    case 'internship':
+    case EmploymentType.INTERNSHIP:
+      return 'outline';
+    case EmploymentType.FREELANCE:
       return 'outline';
     default:
       return 'secondary';
@@ -155,7 +156,7 @@ const createColumns = (onJobPostDeleted?: () => void): ColumnDef<JobPostData>[] 
       header: 'Type',
       cell: ({ row }) => (
         <Badge variant={getEmploymentTypeVariant(row.original.employmentType)}>
-          {row.original.employmentType}
+          {EMPLOYMENT_TYPE_LABELS[row.original.employmentType as EmploymentType]}
         </Badge>
       ),
     },
@@ -163,31 +164,31 @@ const createColumns = (onJobPostDeleted?: () => void): ColumnDef<JobPostData>[] 
       accessorKey: 'status',
       header: 'Status',
       cell: ({ row }) => (
-        <Badge variant={getStatusVariant(row.original.status)}>{row.original.status}</Badge>
+        <Badge variant={getStatusVariant(row.original.status)}>
+          {JOB_STATUS_LABELS[row.original.status as JobStatus]}
+        </Badge>
       ),
     },
     {
       accessorKey: 'createdAt',
       header: 'Created',
       cell: ({ row }) => {
-        const date =
-          typeof row.original.createdAt === 'string'
-            ? new Date(row.original.createdAt)
-            : row.original.createdAt;
-        return <div className="text-muted-foreground">{date.toLocaleDateString()}</div>;
+        return (
+          <div className="text-muted-foreground">{formatDate(row.original.createdAt.toString())}</div>
+        );
       },
     },
-    {
-      accessorKey: 'updatedAt',
-      header: 'Updated',
-      cell: ({ row }) => {
-        const date =
-          typeof row.original.updatedAt === 'string'
-            ? new Date(row.original.updatedAt)
-            : row.original.updatedAt;
-        return <div className="text-muted-foreground">{date.toLocaleDateString()}</div>;
-      },
-    },
+    // {
+    //   accessorKey: 'updatedAt',
+    //   header: 'Updated',
+    //   cell: ({ row }) => {
+    //     const date =
+    //       typeof row.original.updatedAt === 'string'
+    //         ? new Date(row.original.updatedAt)
+    //         : row.original.updatedAt;
+    //     return <div className="text-muted-foreground">{date.toLocaleDateString()}</div>;
+    //   },
+    // },
     {
       id: 'actions',
       cell: ({ row }) => (
@@ -211,7 +212,7 @@ const createColumns = (onJobPostDeleted?: () => void): ColumnDef<JobPostData>[] 
             </Link>
             <DropdownMenuItem className="cursor-pointer">View Applications</DropdownMenuItem>
             <DropdownMenuSeparator />
-            {row.original.status === 'Active' ? (
+            {row.original.status === JobStatus.PUBLISHED ? (
               <DropdownMenuItem className="cursor-pointer">Pause Job Post</DropdownMenuItem>
             ) : (
               <DropdownMenuItem className="cursor-pointer">Activate Job Post</DropdownMenuItem>
@@ -271,8 +272,8 @@ export function JobPostsTable({ data, onJobPostCreated, onJobPostDeleted }: JobP
   });
 
   // Calculate stats
-  const activeJobs = data.filter((job) => job.status === 'Active').length;
-  const draftJobs = data.filter((job) => job.status === 'Draft').length;
+  const publishedJobs = data.filter((job) => job.status === JobStatus.PUBLISHED).length;
+  const draftJobs = data.filter((job) => job.status === JobStatus.DRAFT).length;
 
   return (
     <div className="space-y-4">
@@ -289,7 +290,7 @@ export function JobPostsTable({ data, onJobPostCreated, onJobPostDeleted }: JobP
         <div className="flex items-center space-x-2">
           <div className="flex items-center space-x-2">
             <Badge variant="default" className="text-xs">
-              {activeJobs} Active
+              {publishedJobs} Published
             </Badge>
             <Badge variant="secondary" className="text-xs">
               {draftJobs} Draft

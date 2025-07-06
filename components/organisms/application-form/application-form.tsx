@@ -21,6 +21,8 @@ import { Textarea } from '@/components/ui/textarea';
 
 import { CreateApplicationRequestDTO } from '@/types/application';
 import { JobPostResponseDTO } from '@/types/job-post';
+import { JobStatus } from '@/constants/enums/job-status';
+import { JOB_STATUS_LABELS } from '@/constants/enums/job-status';
 
 interface ApplicationFormProps {
   jobPost: JobPostResponseDTO;
@@ -97,14 +99,14 @@ export function ApplicationForm({ jobPost }: ApplicationFormProps) {
   }
 
   // Show form if job is not active
-  if (jobPost.status !== 'Active') {
+  if (jobPost.status !== JobStatus.PUBLISHED) {
     return (
       <Card>
         <CardHeader>
           <CardTitle>Application Not Available</CardTitle>
           <CardDescription>
-            This job post is currently {jobPost.status.toLowerCase()}. Applications are not being
-            accepted at this time.
+            This job post is currently {JOB_STATUS_LABELS[jobPost.status as JobStatus]}. Applications
+            are not being accepted at this time.
           </CardDescription>
         </CardHeader>
       </Card>

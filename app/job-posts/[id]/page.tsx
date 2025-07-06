@@ -5,36 +5,41 @@ import { CalendarDays, MapPin, Clock, Building2 } from 'lucide-react';
 
 import { jobPostRepository } from '@/repositories';
 import { ApplicationForm } from '@/components/organisms/application-form';
+import { EMPLOYMENT_TYPE_LABELS, EmploymentType } from '@/constants/enums/employment-type';
+import { JOB_STATUS_LABELS, JobStatus } from '@/constants/enums/job-status';
+import { formatDate } from '@/utils/format-date';
 
 // Function to get employment type badge variant
 const getEmploymentTypeBadge = (type: string) => {
-  switch (type.toLowerCase()) {
-    case 'full-time':
-      return <Badge variant="default">{type}</Badge>;
-    case 'part-time':
-      return <Badge variant="secondary">{type}</Badge>;
-    case 'contract':
-      return <Badge variant="outline">{type}</Badge>;
-    case 'internship':
-      return <Badge variant="outline">{type}</Badge>;
+  switch (type) {
+    case EmploymentType.FULL_TIME:
+      return <Badge variant="default">{EMPLOYMENT_TYPE_LABELS[EmploymentType.FULL_TIME]}</Badge>;
+    case EmploymentType.PART_TIME:
+      return <Badge variant="secondary">{EMPLOYMENT_TYPE_LABELS[EmploymentType.PART_TIME]}</Badge>;
+    case EmploymentType.CONTRACT:
+      return <Badge variant="outline">{EMPLOYMENT_TYPE_LABELS[EmploymentType.CONTRACT]}</Badge>;
+    case EmploymentType.INTERNSHIP:
+      return <Badge variant="outline">{EMPLOYMENT_TYPE_LABELS[EmploymentType.INTERNSHIP]}</Badge>;
+    case EmploymentType.FREELANCE:
+      return <Badge variant="outline">{EMPLOYMENT_TYPE_LABELS[EmploymentType.FREELANCE]}</Badge>;
     default:
-      return <Badge variant="secondary">{type}</Badge>;
+      return <Badge variant="secondary">{EMPLOYMENT_TYPE_LABELS[EmploymentType.FULL_TIME]}</Badge>;
   }
 };
 
 // Function to get status badge variant
 const getStatusBadge = (status: string) => {
-  switch (status.toLowerCase()) {
-    case 'active':
-      return <Badge className="bg-green-500 hover:bg-green-600">Active</Badge>;
-    case 'draft':
-      return <Badge variant="secondary">Draft</Badge>;
-    case 'paused':
-      return <Badge variant="outline">Paused</Badge>;
-    case 'closed':
-      return <Badge variant="destructive">Closed</Badge>;
+  switch (status) {
+    case JobStatus.PUBLISHED:
+      return (
+        <Badge className="bg-green-500 hover:bg-green-600">
+          {JOB_STATUS_LABELS[JobStatus.PUBLISHED]}
+        </Badge>
+      );
+    case JobStatus.DRAFT:
+      return <Badge variant="secondary">{JOB_STATUS_LABELS[JobStatus.DRAFT]}</Badge>;
     default:
-      return <Badge variant="secondary">{status}</Badge>;
+      return <Badge variant="secondary">{JOB_STATUS_LABELS[JobStatus.DRAFT]}</Badge>;
   }
 };
 
@@ -75,11 +80,11 @@ export default async function JobPostDetailPage({ params }: JobPostDetailPagePro
                           </div>
                         )}
                         <div className="flex items-center gap-1">
-                          <Clock className="h-4 w-4" />
+                          <Clock className="h-4 w-4 mr-1" />
                           <span>{getEmploymentTypeBadge(jobPost.employmentType)}</span>
                         </div>
                         <div className="flex items-center gap-1">
-                          <Building2 className="h-4 w-4" />
+                          <Building2 className="h-4 w-4 mr-1" />
                           <span>{getStatusBadge(jobPost.status)}</span>
                         </div>
                       </div>
@@ -87,7 +92,7 @@ export default async function JobPostDetailPage({ params }: JobPostDetailPagePro
                   </div>
                   <div className="flex items-center gap-2 text-sm text-muted-foreground">
                     <CalendarDays className="h-4 w-4" />
-                    <span>Posted {new Date(jobPost.createdAt).toLocaleDateString()}</span>
+                    <span>Posted {formatDate(jobPost.createdAt.toString())}</span>
                   </div>
                 </CardHeader>
               </Card>
@@ -117,11 +122,15 @@ export default async function JobPostDetailPage({ params }: JobPostDetailPagePro
                   <div className="grid grid-cols-2 gap-4">
                     <div>
                       <h4 className="font-medium mb-1">Employment Type</h4>
-                      <p className="text-muted-foreground">{jobPost.employmentType}</p>
+                      <p className="text-muted-foreground">
+                        {EMPLOYMENT_TYPE_LABELS[jobPost.employmentType as EmploymentType]}
+                      </p>
                     </div>
                     <div>
                       <h4 className="font-medium mb-1">Status</h4>
-                      <p className="text-muted-foreground">{jobPost.status}</p>
+                      <p className="text-muted-foreground">
+                        {JOB_STATUS_LABELS[jobPost.status as JobStatus]}
+                      </p>
                     </div>
                     {jobPost.location && (
                       <div>
@@ -132,7 +141,7 @@ export default async function JobPostDetailPage({ params }: JobPostDetailPagePro
                     <div>
                       <h4 className="font-medium mb-1">Posted Date</h4>
                       <p className="text-muted-foreground">
-                        {new Date(jobPost.createdAt).toLocaleDateString()}
+                        {formatDate(jobPost.createdAt.toString())}
                       </p>
                     </div>
                   </div>
