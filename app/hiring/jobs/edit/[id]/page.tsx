@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { use, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { AppSidebar } from "@/components/organisms/app-sidebar";
 import { Button } from "@/components/ui/button";
@@ -10,8 +10,9 @@ import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
 import { SiteHeader } from "@/components/organisms/site-header";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
+import { toast } from "sonner";
+import { jobPostRepository } from "@/repositories";
 
-// Define types for form data
 interface JobFormData {
     title: string;
     description: string;
@@ -20,7 +21,13 @@ interface JobFormData {
     status: string;
 }
 
-export default function EditJobPage() {
+interface EditJobPageProps {
+    params: Promise<{
+        id: string;
+    }>;
+}
+
+export default function EditJobPage({ params }: EditJobPageProps) {
     const router = useRouter();
     const [formData, setFormData] = useState<JobFormData>({
         title: "",
@@ -31,6 +38,29 @@ export default function EditJobPage() {
     });
 
     const [currentTab, setCurrentTab] = useState('job-information');
+    const unwrappedParams = use(params);
+
+    useEffect(() => {
+        const fetchJobPost = async () => {
+            try {
+                const jobPost = await jobPostRepository.getJobPostById(parseInt(unwrappedParams.id));
+                setFormData({
+                    title: jobPost.title,
+                    description: jobPost.description,
+                    location: jobPost.location || "",
+                    employmentType: jobPost.employmentType,
+                    status: jobPost.status,
+                });
+            } catch (error) {
+                console.error("Error fetching job post:", error);
+                toast.error("Failed to load job post data");
+                router.push("/hiring"); // Redirect back on error
+            }
+        };
+
+        fetchJobPost();
+    }, [unwrappedParams, router]);
+
     // Navigation items for the left sidebar
     const navItems = {
         "job-information": {
@@ -80,7 +110,6 @@ export default function EditJobPage() {
                             <div className="flex justify-between items-center mb-8">
                                 <h1 className="text-2xl font-bold">
                                     Edit Job Opening
-                                    <span className="text-gray-500 ml-4">{formData.title}</span>
                                 </h1>
                                 <Button
                                     variant="ghost"

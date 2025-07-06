@@ -1,7 +1,7 @@
 'use client';
 
 import * as React from 'react';
-import { MoreVertical, ExternalLink } from 'lucide-react';
+import { MoreVertical } from 'lucide-react';
 import { toast } from 'sonner';
 import Link from 'next/link';
 import {
