@@ -1,6 +1,6 @@
 import { Logo } from '@/components/atoms/logo';
 
-export function Loading({ isCustomBg = false }: { isCustomBg?: boolean }) {
+export function Loading({ isCustomBg = true }: { isCustomBg?: boolean }) {
   const customBg = isCustomBg ? 'inset-0 bg-background/80' : '';
   return (
     <div
