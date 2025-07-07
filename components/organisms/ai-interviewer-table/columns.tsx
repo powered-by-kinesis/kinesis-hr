@@ -9,13 +9,14 @@ import { DataTableColumnHeader } from "../data-table/data-table-column-header";
 import { Badge } from "@/components/ui/badge";
 import { SkillLevel } from "@/constants/enums/skill-level";
 import { formatDate } from "@/utils/format-date";
+import { InterviewType } from "@/constants/enums/interview-type";
 
-export const getBadge = (skillLevel: SkillLevel) => {
+const getSkillLevelBadge = (skillLevel: SkillLevel) => {
   switch (skillLevel) {
     case SkillLevel.NOVICE:
       return <Badge variant="outline" className="bg-gray-900 text-white">Novice</Badge>;
     case SkillLevel.INTERMEDIATE:
-      return <Badge variant="outline" className="bg-blue-900 text-white">Intermediate</Badge>;
+      return <Badge variant="outline" className="bg-blue-900 text-white">Intermediate</Badge>
     case SkillLevel.PROFICIENT:
       return <Badge variant="outline" className="bg-green-900 text-white">Proficient</Badge>;
     case SkillLevel.ADVANCED:
@@ -24,6 +25,21 @@ export const getBadge = (skillLevel: SkillLevel) => {
       return <Badge variant="outline" className="bg-red-900 text-white">Expert</Badge>;
     default:
       return <Badge variant="outline" className="bg-gray-900 text-white">Novice</Badge>;
+  }
+};
+
+const getInterviewTypeBadge = (interviewType: InterviewType) => {
+  switch (interviewType) {
+    case InterviewType.BASIC:
+      return <Badge variant="outline" className="bg-gray-900 text-white">Basic</Badge>;
+    case InterviewType.ADVANCED:
+      return <Badge variant="outline" className="bg-blue-900 text-white">Advanced</Badge>;
+    case InterviewType.TECHNICAL:
+      return <Badge variant="outline" className="bg-green-900 text-white">Technical</Badge>;
+    case InterviewType.BEHAVIORAL:
+      return <Badge variant="outline" className="bg-yellow-900 text-white">Behavioral</Badge>;
+    default:
+      return <Badge variant="outline" className="bg-gray-900 text-white">Basic</Badge>;
   }
 };
 
@@ -61,7 +77,7 @@ export const getCandidatesTableColumns = (onViewDetails: (candidateId: number) =
     {
       accessorKey: 'interviewType',
       header: ({ column }) => <DataTableColumnHeader column={column} title="Interview Type" />,
-      cell: ({ row }) => <div className="text-muted-foreground">{row.original.interviewType}</div>,
+      cell: ({ row }) => <div className="text-muted-foreground">{getInterviewTypeBadge(row.original.interviewType)}</div>,
     },
     {
       accessorKey: 'dateTaken',
@@ -71,22 +87,22 @@ export const getCandidatesTableColumns = (onViewDetails: (candidateId: number) =
     {
       accessorKey: 'hardSkills',
       header: ({ column }) => <DataTableColumnHeader column={column} title="Hard Skills" />,
-      cell: ({ row }) => <div className="text-muted-foreground">{getBadge(row.original.hardSkills)}</div>,
+      cell: ({ row }) => <div className="text-muted-foreground">{getSkillLevelBadge(row.original.hardSkills)}</div>,
     },
     {
       accessorKey: 'softSkills',
       header: ({ column }) => <DataTableColumnHeader column={column} title="Soft Skills" />,
-      cell: ({ row }) => <div className="text-muted-foreground">{getBadge(row.original.softSkills)}</div>,
+      cell: ({ row }) => <div className="text-muted-foreground">{getSkillLevelBadge(row.original.softSkills)}</div>,
     },
     {
       accessorKey: 'technicalSkills',
       header: ({ column }) => <DataTableColumnHeader column={column} title="Technical Skills" />,
-      cell: ({ row }) => <div className="text-muted-foreground">{getBadge(row.original.technicalSkills)}</div>,
+      cell: ({ row }) => <div className="text-muted-foreground">{getSkillLevelBadge(row.original.technicalSkills)}</div>,
     },
     {
       accessorKey: 'overallLevel',
       header: ({ column }) => <DataTableColumnHeader column={column} title="Overall Level" />,
-      cell: ({ row }) => <div className="text-muted-foreground">{getBadge(row.original.overallLevel)}</div>,
+      cell: ({ row }) => <div className="text-muted-foreground">{getSkillLevelBadge(row.original.overallLevel)}</div>,
     },
     // {
     //   accessorKey: 'overallFeedback',
