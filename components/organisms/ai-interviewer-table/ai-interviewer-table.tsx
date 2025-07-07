@@ -6,17 +6,17 @@ import { CandidateRankingResponseDTO } from '@/types/candidate-ranking';
 import { ApplicantResponseDTO } from '@/types/applicant';
 import { getCandidatesTableColumns } from './columns';
 import { DataTable } from '@/components/organisms/data-table/data-table';
-
+import { StatusOptions } from '@/types/status-options';
+import { INTERVIEW_TYPE_OPTIONS } from '@/constants/enums/interview-type';
+import { SKILL_LEVEL_OPTIONS } from '@/constants/enums/skill-level';
 
 type CandidateData = ApplicantResponseDTO;
 
-
-
-interface CandidatesTableProps {
+interface AiInterviewerTableProps {
   data: CandidateData[];
 }
 
-export function CandidatesTable({ data }: CandidatesTableProps) {
+export function AiInterviewerTable({ data }: AiInterviewerTableProps) {
   const [selectedCandidate, setSelectedCandidate] =
     React.useState<CandidateRankingResponseDTO | null>(null);
   const [isModalOpen, setIsModalOpen] = React.useState(false);
@@ -75,10 +75,37 @@ export function CandidatesTable({ data }: CandidatesTableProps) {
   };
 
   const columns = getCandidatesTableColumns(handleViewDetails);
+  const statusOptions: StatusOptions[] = [
+    {
+      column: 'interviewType',
+      title: 'Interview Type',
+      options: INTERVIEW_TYPE_OPTIONS as unknown as StatusOptions['options'],
+    },
+    // {
+    //   column: 'softSkills',
+    //   title: 'Soft Skills',
+    //   options: SKILL_LEVEL_OPTIONS as unknown as StatusOptions['options'],
+    // },
+    // {
+    //   column: 'hardSkills',
+    //   title: 'Hard Skills',
+    //   options: SKILL_LEVEL_OPTIONS as unknown as StatusOptions['options'],
+    // },
+    // {
+    //   column: 'technicalResults',
+    //   title: 'Technical Results',
+    //   options: SKILL_LEVEL_OPTIONS as unknown as StatusOptions['options'],
+    // },
+    {
+      column: 'overallLevel',
+      title: 'Overall Level',
+      options: SKILL_LEVEL_OPTIONS as unknown as StatusOptions['options'],
+    },
+  ];
 
   return (
     <>
-      <DataTable columns={columns} data={data} searchColumn="fullName" />
+      <DataTable columns={columns} data={data} searchColumn="fullName" options={statusOptions} />
 
       <CandidateDetailsModal
         candidate={selectedCandidate}
