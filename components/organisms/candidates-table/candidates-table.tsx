@@ -52,7 +52,10 @@ import { ApplicantResponseDTO } from '@/types/applicant';
 
 type CandidateData = ApplicantResponseDTO;
 
-const createColumns = (router: any, onViewDetails: (candidateId: number) => void): ColumnDef<CandidateData>[] => [
+const createColumns = (
+  router: any,
+  onViewDetails: (candidateId: number) => void,
+): ColumnDef<CandidateData>[] => [
   {
     id: 'select',
     header: ({ table }) => (
@@ -156,7 +159,8 @@ export function CandidatesTable({ data }: CandidatesTableProps) {
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([]);
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [globalFilter, setGlobalFilter] = React.useState('');
-  const [selectedCandidate, setSelectedCandidate] = React.useState<CandidateRankingResponseDTO | null>(null);
+  const [selectedCandidate, setSelectedCandidate] =
+    React.useState<CandidateRankingResponseDTO | null>(null);
   const [isModalOpen, setIsModalOpen] = React.useState(false);
 
   const handleViewDetails = (candidateId: number) => {
@@ -168,7 +172,8 @@ export function CandidatesTable({ data }: CandidatesTableProps) {
       score: 85,
       candidate_data: {
         name: 'C.S.',
-        summary: 'Spearheaded strategic growth in new verticals at top firms, generating significant revenue and achieving sales targets; Boston College alumnus. Extensive account executive experience at top companies, strong soft skills, no founder roles',
+        summary:
+          'Spearheaded strategic growth in new verticals at top firms, generating significant revenue and achieving sales targets; Boston College alumnus. Extensive account executive experience at top companies, strong soft skills, no founder roles',
         skills: [
           'B2B Sales',
           'Account Management',
@@ -187,7 +192,8 @@ export function CandidatesTable({ data }: CandidatesTableProps) {
       },
       ai_analysis: {
         overall_score: 88,
-        justification: 'Strong candidate with extensive B2B sales experience and proven track record in SaaS environment. Excellent communication skills and strategic thinking abilities.',
+        justification:
+          'Strong candidate with extensive B2B sales experience and proven track record in SaaS environment. Excellent communication skills and strategic thinking abilities.',
         key_strengths: [
           'Proven sales track record',
           'Strong communication skills',
@@ -195,10 +201,7 @@ export function CandidatesTable({ data }: CandidatesTableProps) {
           'SaaS experience',
           'Account management expertise',
         ],
-        key_weaknesses: [
-          'No startup experience',
-          'Limited technical background',
-        ],
+        key_weaknesses: ['No startup experience', 'Limited technical background'],
         red_flags: [],
       },
     };
@@ -212,7 +215,6 @@ export function CandidatesTable({ data }: CandidatesTableProps) {
     // In real app, this would trigger interview scheduling
     alert(`Interview request sent for candidate ${candidateId}!`);
   };
-
 
   const columns = createColumns(router, handleViewDetails);
 

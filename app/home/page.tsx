@@ -26,7 +26,8 @@ export default function HomePage() {
                     This is the home page with AI Assistant sidebar on the right.
                   </p>
                   <p className="text-muted-foreground">
-                    The AI Assistant is fixed and always visible to help you with HR-related questions.
+                    The AI Assistant is fixed and always visible to help you with HR-related
+                    questions.
                   </p>
                 </div>
               </div>

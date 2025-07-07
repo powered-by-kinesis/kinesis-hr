@@ -174,7 +174,9 @@ const createColumns = (onJobPostDeleted?: () => void): ColumnDef<JobPostData>[] 
       header: 'Created',
       cell: ({ row }) => {
         return (
-          <div className="text-muted-foreground">{formatDate(row.original.createdAt.toString())}</div>
+          <div className="text-muted-foreground">
+            {formatDate(row.original.createdAt.toString())}
+          </div>
         );
       },
     },
@@ -201,14 +203,10 @@ const createColumns = (onJobPostDeleted?: () => void): ColumnDef<JobPostData>[] 
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
             <Link href={`/job-posts/${row.original.id}`} target="_blank" rel="noopener noreferrer">
-              <DropdownMenuItem className="cursor-pointer">
-                View Details
-              </DropdownMenuItem>
+              <DropdownMenuItem className="cursor-pointer">View Details</DropdownMenuItem>
             </Link>
             <Link href={`/hiring/jobs/edit/${row.original.id}`}>
-              <DropdownMenuItem className="cursor-pointer">
-                Edit Job Post
-              </DropdownMenuItem>
+              <DropdownMenuItem className="cursor-pointer">Edit Job Post</DropdownMenuItem>
             </Link>
             <DropdownMenuItem className="cursor-pointer">View Applications</DropdownMenuItem>
             <DropdownMenuSeparator />

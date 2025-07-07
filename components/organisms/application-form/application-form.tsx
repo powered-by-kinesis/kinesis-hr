@@ -105,8 +105,8 @@ export function ApplicationForm({ jobPost }: ApplicationFormProps) {
         <CardHeader>
           <CardTitle>Application Not Available</CardTitle>
           <CardDescription>
-            This job post is currently {JOB_STATUS_LABELS[jobPost.status as JobStatus]}. Applications
-            are not being accepted at this time.
+            This job post is currently {JOB_STATUS_LABELS[jobPost.status as JobStatus]}.
+            Applications are not being accepted at this time.
           </CardDescription>
         </CardHeader>
       </Card>
