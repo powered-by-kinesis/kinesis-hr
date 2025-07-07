@@ -2,14 +2,8 @@ import { NextResponse } from 'next/server';
 import prisma from '@/lib/prisma';
 import { UpdateApplicationRequestDTO } from '@/types/application';
 
-interface IParams {
-  params: {
-    id: string;
-  };
-}
-
-export async function GET(request: Request, { params }: IParams) {
-  const { id } = params;
+export async function GET(request: Request, { params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params;
   const application = await prisma.application.findUnique({
     where: {
       id: parseInt(id, 10),
@@ -26,8 +20,8 @@ export async function GET(request: Request, { params }: IParams) {
   return NextResponse.json(application);
 }
 
-export async function PUT(request: Request, { params }: IParams) {
-  const { id } = params;
+export async function PUT(request: Request, { params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params;
   try {
     const body = await request.json();
     const validation = UpdateApplicationRequestDTO.safeParse(body);
@@ -54,8 +48,8 @@ export async function PUT(request: Request, { params }: IParams) {
   }
 }
 
-export async function DELETE(request: Request, { params }: IParams) {
-  const { id } = params;
+export async function DELETE(request: Request, { params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params;
   try {
     await prisma.application.delete({
       where: {

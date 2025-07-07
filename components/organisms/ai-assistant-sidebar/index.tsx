@@ -1,1 +1,1 @@
-export { AIAssistantSidebar } from './ai-assistant-sidebar'; 
+export { AIAssistantSidebar } from './ai-assistant-sidebar';

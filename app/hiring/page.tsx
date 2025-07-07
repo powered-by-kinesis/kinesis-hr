@@ -120,7 +120,9 @@ export default function HiringPage() {
                             <p className="text-muted-foreground mt-2">
                               Talent pool and pipeline management interface will be implemented here
                             </p>
-                            <p className="text-sm text-muted-foreground mt-1">5 talents in pipeline</p>
+                            <p className="text-sm text-muted-foreground mt-1">
+                              5 talents in pipeline
+                            </p>
                           </div>
                         </div>
                       </TabsContent>

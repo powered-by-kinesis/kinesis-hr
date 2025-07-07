@@ -2,15 +2,9 @@ import { NextRequest, NextResponse } from 'next/server';
 import prisma from '@/lib/prisma';
 import { UpdateJobPostRequestDTO, JobPostResponseDTO } from '@/types/job-post';
 
-interface IParams {
-  params: Promise<{
-    id: string;
-  }>;
-}
-
 export async function GET(
   req: NextRequest,
-  { params }: IParams,
+  { params }: { params: Promise<{ id: string }> },
 ): Promise<NextResponse<JobPostResponseDTO | { message: string }>> {
   const { id } = await params;
   const jobPost = await prisma.jobPost.findUnique({
@@ -26,7 +20,7 @@ export async function GET(
 
 export async function PUT(
   req: NextRequest,
-  { params }: IParams,
+  { params }: { params: Promise<{ id: string }> },
 ): Promise<NextResponse<JobPostResponseDTO | { message: string }>> {
   try {
     const { id } = await params;
@@ -54,7 +48,7 @@ export async function PUT(
 
 export async function DELETE(
   req: NextRequest,
-  { params }: IParams,
+  { params }: { params: Promise<{ id: string }> },
 ): Promise<NextResponse<{ message: string }>> {
   const { id } = await params;
   await prisma.jobPost.delete({
