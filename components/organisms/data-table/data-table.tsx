@@ -33,12 +33,14 @@ interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[]
   data: TData[]
   options?: StatusOptions[]
+  searchColumn?: string
 }
 
 export function DataTable<TData, TValue>({
   columns,
   data,
   options,
+  searchColumn,
 }: DataTableProps<TData, TValue>) {
   const [sorting, setSorting] = React.useState<SortingState>([])
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
@@ -71,7 +73,7 @@ export function DataTable<TData, TValue>({
 
   return (
     <div className="space-y-4">
-      <DataTableToolbar table={table} options={options} />
+      <DataTableToolbar table={table} options={options} searchColumn={searchColumn} />
       <div className="rounded-md border">
         <Table>
           <TableHeader>

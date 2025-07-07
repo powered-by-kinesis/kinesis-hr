@@ -34,7 +34,7 @@ export function JobPostsTable({ data, onJobPostCreated, onJobPostDeleted }: JobP
   return (
     <div className="flex flex-col gap-4">
       <CreateJobPostModal onJobPostCreated={onJobPostCreated} isOpen={isCreateJobPostModalOpen} onOpenChange={setIsCreateJobPostModalOpen} />
-      <DataTable columns={columns} data={data} options={statusOptions} />
+      <DataTable columns={columns} data={data} options={statusOptions} searchColumn="title" />
     </div>
   );
 }

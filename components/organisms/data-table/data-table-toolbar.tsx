@@ -12,25 +12,29 @@ import { StatusOptions } from "@/types/status-options"
 interface DataTableToolbarProps<TData> {
   table: Table<TData>
   options?: StatusOptions[]
+  searchColumn?: string
 }
 
 export function DataTableToolbar<TData>({
   table,
   options,
+  searchColumn,
 }: DataTableToolbarProps<TData>) {
   const isFiltered = table.getState().columnFilters.length > 0
 
   return (
     <div className="flex items-center justify-between">
       <div className="flex flex-1 items-center space-x-2">
-        <Input
-          placeholder="Search..."
-          value={(table.getColumn("title")?.getFilterValue() as string) ?? ""}
-          onChange={(event) =>
-            table.getColumn("title")?.setFilterValue(event.target.value)
-          }
-          className="h-8 w-[150px] lg:w-[250px]"
-        />
+        {searchColumn && (
+          <Input
+            placeholder="Search..."
+            value={(table.getColumn(searchColumn ?? "")?.getFilterValue() as string) ?? ""}
+            onChange={(event) =>
+              table.getColumn(searchColumn ?? "")?.setFilterValue(event.target.value)
+            }
+            className="h-8 w-[150px] lg:w-[250px]"
+          />
+        )}
         {options && (
           options.map((option, index) => (
             <DataTableFacetedFilter
