@@ -40,10 +40,11 @@ import { JOB_STATUS_OPTIONS, JobStatus } from '@/constants/enums/job-status';
 
 interface CreateJobPostModalProps {
   onJobPostCreated?: () => void; // Callback to refresh parent data
+  isOpen: boolean;
+  onOpenChange: (open: boolean) => void;
 }
 
-export function CreateJobPostModal({ onJobPostCreated }: CreateJobPostModalProps) {
-  const [open, setOpen] = React.useState(false);
+export function CreateJobPostModal({ onJobPostCreated, isOpen, onOpenChange }: CreateJobPostModalProps) {
   const [isLoading, setIsLoading] = React.useState(false);
 
   // Initialize form with react-hook-form and Zod validation
@@ -71,7 +72,7 @@ export function CreateJobPostModal({ onJobPostCreated }: CreateJobPostModalProps
 
       // Reset form and close modal
       form.reset();
-      setOpen(false);
+      onOpenChange(false);
 
       // Trigger parent data refresh
       onJobPostCreated?.();
@@ -83,18 +84,10 @@ export function CreateJobPostModal({ onJobPostCreated }: CreateJobPostModalProps
     }
   };
 
-  // Reset form when modal closes
-  const handleOpenChange = (newOpen: boolean) => {
-    setOpen(newOpen);
-    if (!newOpen) {
-      form.reset();
-    }
-  };
-
   return (
-    <Dialog open={open} onOpenChange={handleOpenChange}>
+    <Dialog open={isOpen} onOpenChange={onOpenChange}>
       <DialogTrigger asChild>
-        <Button size="sm">
+        <Button size="sm" className='w-fit'>
           <Plus className="mr-2 h-4 w-4" />
           New Job Post
         </Button>
@@ -216,7 +209,7 @@ export function CreateJobPostModal({ onJobPostCreated }: CreateJobPostModalProps
               <Button
                 type="button"
                 variant="outline"
-                onClick={() => setOpen(false)}
+                onClick={() => onOpenChange(false)}
                 disabled={isLoading}
               >
                 Cancel
