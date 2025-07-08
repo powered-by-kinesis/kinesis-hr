@@ -3,54 +3,22 @@
 import { ColumnDef } from "@tanstack/react-table";
 import Link from "next/link";
 
-import { Badge } from "@/components/ui/badge";
 import { Checkbox } from "@/components/ui/checkbox";
 
 import { JobPostResponseDTO } from "@/types/job-post";
 import { EmploymentType } from "@/constants/enums/employment-type";
-import { JobStatus, JOB_STATUS_LABELS } from "@/constants/enums/job-status";
-import { EMPLOYMENT_TYPE_LABELS } from "@/constants/enums/employment-type";
+import { JobStatus } from "@/constants/enums/job-status";
 import { formatDate } from "@/utils/format-date";
 import { DeleteAlert } from "../delete-alert";
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
 import { MoreVertical } from "lucide-react";
 import { jobPostRepository } from '@/repositories';
 import { toast } from "sonner";
 import { DataTableColumnHeader } from "@/components/organisms/data-table/data-table-column-header";
+import { JobBadge, EmploymentTypeBadge } from "@/components/molecules/badge";
 
-// Function to get status badge variant
-const getStatusVariant = (status: string): 'default' | 'secondary' | 'destructive' | 'outline' => {
-  switch (status) {
-    case JobStatus.PUBLISHED:
-      return 'default';
-    case JobStatus.DRAFT:
-      return 'secondary';
-    default:
-      return 'secondary';
-  }
-};
-
-// Function to get employment type badge color
-const getEmploymentTypeVariant = (type: string): 'default' | 'secondary' | 'outline' => {
-  switch (type) {
-    case EmploymentType.FULL_TIME:
-      return 'default';
-    case EmploymentType.PART_TIME:
-      return 'secondary';
-    case EmploymentType.CONTRACT:
-      return 'outline';
-    case EmploymentType.INTERNSHIP:
-      return 'outline';
-    case EmploymentType.FREELANCE:
-      return 'outline';
-    default:
-      return 'secondary';
-  }
-};
-
-
-export const getJobPostsTableColumns = (onJobPostDeleted?: () => void): ColumnDef<JobPostResponseDTO>[] => {
+export const GetJobPostsTableColumns = (onJobPostDeleted?: () => void, onEditJobPost?: (data: JobPostResponseDTO) => void): ColumnDef<JobPostResponseDTO>[] => {
   // Function to handle job post deletion (called after confirmation)
   const handleDeleteJobPost = async (id: number) => {
     try {
@@ -96,7 +64,7 @@ export const getJobPostsTableColumns = (onJobPostDeleted?: () => void): ColumnDe
       header: ({ column }) => <DataTableColumnHeader column={column} title="Job Title" />,
       cell: ({ row }) => (
         <div className="min-w-[200px]">
-          <Link href={`/job-posts/${row.original.id}`} target="_blank" rel="noopener noreferrer">
+          <Link href={`/hiring/jobs/detail/${row.original.id}`}>
             <div className="font-medium hover:text-blue-500 hover:underline cursor-pointer">
               {row.original.title}
             </div>
@@ -119,18 +87,21 @@ export const getJobPostsTableColumns = (onJobPostDeleted?: () => void): ColumnDe
       accessorKey: 'employmentType',
       header: ({ column }) => <DataTableColumnHeader column={column} title="Type" />,
       cell: ({ row }) => (
-        <Badge variant={getEmploymentTypeVariant(row.original.employmentType)}>
-          {EMPLOYMENT_TYPE_LABELS[row.original.employmentType as EmploymentType]}
-        </Badge>
+        <EmploymentTypeBadge employmentType={row.original.employmentType as EmploymentType} />
       ),
     },
     {
       accessorKey: 'status',
       header: ({ column }) => <DataTableColumnHeader column={column} title="Status" />,
       cell: ({ row }) => (
-        <Badge variant={getStatusVariant(row.original.status)}>
-          {JOB_STATUS_LABELS[row.original.status as JobStatus]}
-        </Badge>
+        <JobBadge status={row.original.status as JobStatus} />
+      ),
+    },
+    {
+      accessorKey: 'applications',
+      header: ({ column }) => <DataTableColumnHeader column={column} title="Total Applicants" />,
+      cell: ({ row }) => (
+        <div className="text-muted-foreground">{row.original.applications?.length || 0}</div>
       ),
     },
     {
@@ -156,19 +127,14 @@ export const getJobPostsTableColumns = (onJobPostDeleted?: () => void): ColumnDe
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
             <Link href={`/job-posts/${row.original.id}`} target="_blank" rel="noopener noreferrer">
+              <DropdownMenuItem className="cursor-pointer">View Job Post</DropdownMenuItem>
+            </Link>
+            <Link href={`/hiring/jobs/detail/${row.original.id}`}>
               <DropdownMenuItem className="cursor-pointer">View Details</DropdownMenuItem>
             </Link>
-            <Link href={`/hiring/jobs/edit/${row.original.id}`}>
-              <DropdownMenuItem className="cursor-pointer">Edit Job Post</DropdownMenuItem>
-            </Link>
-            <DropdownMenuItem className="cursor-pointer">View Applications</DropdownMenuItem>
-            <DropdownMenuSeparator />
-            {row.original.status === JobStatus.PUBLISHED ? (
-              <DropdownMenuItem className="cursor-pointer">Pause Job Post</DropdownMenuItem>
-            ) : (
-              <DropdownMenuItem className="cursor-pointer">Activate Job Post</DropdownMenuItem>
-            )}
-            <DropdownMenuSeparator />
+            <DropdownMenuItem className="cursor-pointer" onClick={() => onEditJobPost?.(row.original)}>
+              Edit Job Post
+            </DropdownMenuItem>
             <DeleteAlert
               title="Delete Job Post"
               description={`Are you sure you want to delete "${row.original.title}"? This action cannot be undone.`}

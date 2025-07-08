@@ -21,3 +21,7 @@ export const EMPLOYMENT_TYPE_OPTIONS = [
   { value: EmploymentType.INTERNSHIP, label: EMPLOYMENT_TYPE_LABELS[EmploymentType.INTERNSHIP] },
   { value: EmploymentType.FREELANCE, label: EMPLOYMENT_TYPE_LABELS[EmploymentType.FREELANCE] },
 ] as const;
+
+export const getEmploymentTypeLabel = (employmentType: EmploymentType) => {
+  return EMPLOYMENT_TYPE_LABELS[employmentType];
+};

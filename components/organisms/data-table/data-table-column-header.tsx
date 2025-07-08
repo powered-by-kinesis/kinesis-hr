@@ -40,15 +40,15 @@ export function DataTableColumnHeader<TData, TValue>({
             }
             variant="ghost"
             size="sm"
-            className="-ml-3 h-8 data-[state=open]:bg-accent"
+            className="-ml-3 h-8 data-[state=open]:bg-accent cursor-pointer"
           >
             <span>{title}</span>
             {column.getIsSorted() === "desc" ? (
-              <ArrowDownIcon className="ml-2 h-4 w-4" aria-hidden="true" />
+              <ArrowDownIcon className="ml-2 h-4 w-4 cursor-pointer" aria-hidden="true" />
             ) : column.getIsSorted() === "asc" ? (
-              <ArrowUpIcon className="ml-2 h-4 w-4" aria-hidden="true" />
+              <ArrowUpIcon className="ml-2 h-4 w-4 cursor-pointer" aria-hidden="true" />
             ) : (
-              <ChevronsUpDown className="ml-2 h-4 w-4" aria-hidden="true" />
+              <ChevronsUpDown className="ml-2 h-4 w-4 cursor-pointer" aria-hidden="true" />
             )}
           </Button>
         </DropdownMenuTrigger>
@@ -56,9 +56,10 @@ export function DataTableColumnHeader<TData, TValue>({
           <DropdownMenuItem
             aria-label="Sort ascending"
             onClick={() => column.toggleSorting(false)}
+            className="cursor-pointer"
           >
             <ArrowUpIcon
-              className="mr-2 h-3.5 w-3.5 text-muted-foreground/70"
+              className="mr-2 h-3.5 w-3.5 text-muted-foreground/70 cursor-pointer"
               aria-hidden="true"
             />
             Asc
@@ -66,9 +67,10 @@ export function DataTableColumnHeader<TData, TValue>({
           <DropdownMenuItem
             aria-label="Sort descending"
             onClick={() => column.toggleSorting(true)}
+            className="cursor-pointer"
           >
             <ArrowDownIcon
-              className="mr-2 h-3.5 w-3.5 text-muted-foreground/70"
+              className="mr-2 h-3.5 w-3.5 text-muted-foreground/70 cursor-pointer"
               aria-hidden="true"
             />
             Desc
@@ -77,9 +79,10 @@ export function DataTableColumnHeader<TData, TValue>({
             <DropdownMenuItem
               aria-label="Reset sorting"
               onClick={() => column.clearSorting()}
+              className="cursor-pointer"
             >
               <RotateCcw
-                className="mr-2 h-3.5 w-3.5 text-muted-foreground/70"
+                className="mr-2 h-3.5 w-3.5 text-muted-foreground/70 cursor-pointer"
                 aria-hidden="true"
               />
               Reset Sort
@@ -89,9 +92,10 @@ export function DataTableColumnHeader<TData, TValue>({
           <DropdownMenuItem
             aria-label="Hide column"
             onClick={() => column.toggleVisibility(false)}
+            className="cursor-pointer"
           >
             <EyeOff
-              className="mr-2 h-3.5 w-3.5 text-muted-foreground/70"
+              className="mr-2 h-3.5 w-3.5 text-muted-foreground/70 cursor-pointer"
               aria-hidden="true"
             />
             Hide

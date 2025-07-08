@@ -1,6 +1,8 @@
 import { PrismaClient, Stage } from '@prisma/client';
 import { EmploymentType } from '../constants/enums/employment-type';
 import { JobStatus } from '../constants/enums/job-status';
+import { SalaryType } from '../constants/enums/salary-type';
+import { Currency } from '../constants/enums/currency';
 
 const prisma = new PrismaClient();
 
@@ -131,6 +133,36 @@ const employmentTypes = [
 ];
 const jobStatuses = [JobStatus.PUBLISHED, JobStatus.DRAFT];
 
+const salaryTypes = [SalaryType.HOURLY, SalaryType.MONTHLY, SalaryType.YEARLY];
+
+const currencies = [Currency.IDR, Currency.USD, Currency.SGD];
+
+const salaryMin = [1000000, 2000000, 3000000, 4000000, 5000000];
+
+const salaryMax = [1000000, 2000000, 3000000, 4000000, 5000000];
+
+const departments = [
+  'Engineering',
+  'Product',
+  'Design',
+  'Data',
+  'Marketing',
+  'Sales',
+  'Operations',
+  'Finance',
+  'Legal',
+  'Customer Success',
+  'HR',
+  'IT',
+  'Customer Support',
+  'Business Development',
+  'Customer Service',
+  'Product Management',
+  'Project Management',
+  'Quality Assurance',
+  'Research & Development',
+  'Sales',
+];
 // Indonesian names
 const firstNames = [
   'Ahmad',
@@ -283,6 +315,11 @@ async function main() {
         location: getRandomBoolean(0.9) ? getRandomItem(locations) : null,
         employmentType: getRandomItem(employmentTypes),
         status: getRandomItem(jobStatuses),
+        salaryMin: getRandomItem(salaryMin),
+        salaryMax: getRandomItem(salaryMax),
+        salaryType: getRandomItem(salaryTypes),
+        currency: getRandomItem(currencies),
+        department: getRandomItem(departments),
         createdAt,
         updatedAt,
       },
