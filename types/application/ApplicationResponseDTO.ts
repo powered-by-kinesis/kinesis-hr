@@ -9,7 +9,6 @@ export const ApplicationResponseDTO = z.object({
   expectedSalary: z.string(),
   appliedAt: z.date(),
   notes: z.string().nullable(),
-  applicant: ApplicantResponseDTO,
 });
 
 export type ApplicationResponseDTO = z.infer<typeof ApplicationResponseDTO>;

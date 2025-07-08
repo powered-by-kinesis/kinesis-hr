@@ -162,11 +162,21 @@ model Applicant {
   phone        String?
   resumeUrl    String?
   appliedAt    DateTime      @default(now())
+  summary     String?
+  skills       Json? // Stores [{ name: String, level: String }]
+  experience   Json? // Stores [{ company: String, role: String, startDate: DateTime, endDate: DateTime, description: String }]
+  languages    Json? // Stores [{ language: String, proficiency: String }]
+  location     String?
+  education    Json? // Stores [{ institution: String, degree: String, startDate: DateTime, endDate: DateTime }]
+
+
 
   applications Application[]
+  invitations  InterviewInvitation[] // Add this line
   user         User?         @relation(fields: [userId], references: [id])
 
   @@map("applicants")
+  @@index([userId, email])
 }
 
 model JobPost {
@@ -180,6 +190,7 @@ model JobPost {
   updatedAt      DateTime      @updatedAt
 
   applications   Application[]
+  interviews     Interview[]
 
   @@map("job_posts")
   @@index([title])
@@ -226,4 +237,41 @@ model ApplicationStageHistory {
   @@index([applicationId])
   @@index([changedById])
   @@map("application_stage_history")
+}
+
+model Interview {
+  id                 Int      @id @default(autoincrement())
+  interviewName      String
+  skills             Json // Stores [{ name: String, description: String }]
+  customQuestionList Json // Stores [{ question: String, time: Int }]
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt
+  jobPostId          Int?
+  signedUrl          String @default("")
+
+  invitations     InterviewInvitation[] // Add this line
+  jobPost           JobPost? @relation(fields: [jobPostId], references: [id], onDelete: Cascade)
+
+  @@map("interviews")
+}
+
+enum InterviewInvitationStatus {
+  COMPLETED
+  INVITED
+}
+
+model InterviewInvitation {
+  id          Int       @id @default(autoincrement())
+  token       String    @unique
+  applicantId Int
+  interviewId Int
+  createdAt   DateTime  @default(now())
+  expiresAt   DateTime
+  status      InterviewInvitationStatus     @default(INVITED)
+  dateTaken   DateTime? // Nullable, to be set when the interview is completed
+
+  applicant   Applicant @relation(fields: [applicantId], references: [id])
+  interview   Interview @relation(fields: [interviewId], references: [id], onDelete: Cascade) // Added onDelete: Cascade
+
+  @@map("interview_invitations")
 }
