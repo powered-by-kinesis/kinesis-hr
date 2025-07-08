@@ -1,6 +1,7 @@
 import { z } from 'zod';
 import { Applicant, Application } from '@prisma/client';
-import { ApplicationResponseDTO } from '../application';
+import { TApplicationResponseDTO } from '../application';
+
 
 export const TApplicantResponseDTO = z.object({
   id: z.number(),
@@ -9,7 +10,7 @@ export const TApplicantResponseDTO = z.object({
   phone: z.string().nullable(),
   resumeUrl: z.string().nullable(),
   appliedAt: z.date(),
-  applications: z.array(ApplicationResponseDTO).optional(), // Add applications array
+  applications: z.array(TApplicationResponseDTO).optional(), // Add applications array
 });
 
 export type ApplicantResponseDTO = Applicant & {

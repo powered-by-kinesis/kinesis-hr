@@ -8,6 +8,13 @@ export async function GET(request: Request, { params }: { params: Promise<{ id: 
     where: {
       id: parseInt(id, 10),
     },
+    include: {
+      applications: {
+        include: {
+          jobPost: true,
+        },
+      },
+    },
   });
 
   if (!applicant) {

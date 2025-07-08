@@ -1,13 +1,14 @@
 'use client';
 
-import { useState, useRef, useEffect } from 'react';
+import { useRef, useEffect, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Badge } from '@/components/ui/badge';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
-import { Send, Bot, User } from 'lucide-react';
+import { Send, Bot, User, Minimize2 } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { motion, AnimatePresence } from 'framer-motion';
 
 interface Message {
   id: string;
@@ -18,9 +19,19 @@ interface Message {
 
 interface AIAssistantSidebarProps {
   className?: string;
+  isMinimized: boolean;
+  onMinimize: () => void;
+  onMaximize: () => void;
 }
 
-export const AIAssistantSidebar: React.FC<AIAssistantSidebarProps> = ({ className }) => {
+const quickQuestions = [
+  'What are the best practices for conducting interviews?',
+  'How do I create an effective job posting?',
+  'What are common HR compliance issues?',
+  'How to improve employee retention?',
+];
+
+export const AIAssistantSidebar: React.FC<AIAssistantSidebarProps> = ({ className, isMinimized, onMinimize, onMaximize }) => {
   const [messages, setMessages] = useState<Message[]>([
     {
       id: '1',
@@ -31,44 +42,41 @@ export const AIAssistantSidebar: React.FC<AIAssistantSidebarProps> = ({ classNam
   ]);
   const [inputValue, setInputValue] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  // const [isMinimized, setIsMinimized] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
-  // Auto scroll to bottom when new message is added
   useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+    if (messagesEndRef.current) {
+      messagesEndRef.current.scrollIntoView({ behavior: 'smooth' });
+    }
   }, [messages]);
 
-  // Handle sending message
   const handleSendMessage = async () => {
     if (!inputValue.trim()) return;
 
-    const userMessage: Message = {
+    const newMessage: Message = {
       id: Date.now().toString(),
       type: 'user',
-      content: inputValue,
+      content: inputValue.trim(),
       timestamp: new Date(),
     };
 
-    setMessages((prev) => [...prev, userMessage]);
+    setMessages((prev) => [...prev, newMessage]);
     setInputValue('');
     setIsLoading(true);
 
     // Simulate AI response
     setTimeout(() => {
-      const assistantMessage: Message = {
+      const response: Message = {
         id: (Date.now() + 1).toString(),
         type: 'assistant',
-        content:
-          'I understand your question. Let me help you with that. This is a simulated response from the AI assistant.',
+        content: "I'm a demo AI assistant. In the real app, I'll provide helpful HR-related answers!",
         timestamp: new Date(),
       };
-      setMessages((prev) => [...prev, assistantMessage]);
+      setMessages((prev) => [...prev, response]);
       setIsLoading(false);
     }, 1000);
   };
 
-  // Handle key down
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === 'Enter' && !e.shiftKey) {
       e.preventDefault();
@@ -76,53 +84,93 @@ export const AIAssistantSidebar: React.FC<AIAssistantSidebarProps> = ({ classNam
     }
   };
 
-  // Quick questions
-  const quickQuestions = ['What is my job title?', 'What is my PTO balance?', "Who's out today?"];
-
   const handleQuickQuestion = (question: string) => {
     setInputValue(question);
   };
 
-  return (
-    <div
-      className={cn(
-        'fixed right-0 top-0 h-screen w-96 bg-card border-l border-gray-800 z-50 flex flex-col overflow-auto',
-        'shadow-2xl',
-        className,
-      )}
-    >
-      {/* Header */}
-      <div className="flex items-center justify-between p-4 border-b border-gray-800 bg-card">
-        <div className="flex items-center gap-3">
-          <div className="relative">
-            <Avatar className="h-8 w-8 bg-blue-600">
-              <AvatarFallback className="text-white text-sm">
-                <Bot className="h-4 w-4" />
-              </AvatarFallback>
-            </Avatar>
-            <div className="absolute -bottom-1 -right-1 w-3 h-3 bg-blue-500 rounded-full border-2 border-gray-900"></div>
-          </div>
-          <div>
-            <h3 className="text-white font-semibold text-sm">Ask KinesisHR Assistant</h3>
-            <Badge variant="secondary" className="text-xs bg-blue-600 text-white hover:bg-blue-600">
-              beta
-            </Badge>
-          </div>
-        </div>
-        {/* <div className="flex items-center gap-1">
-                    <Button
-                        variant="ghost"
-                        size="sm"
-                        onClick={() => setIsMinimized(!isMinimized)}
-                        className="text-gray-400 hover:text-white hover:bg-card p-1 h-8 w-8"
-                    >
-                        {isMinimized ? <Maximize2 className="h-4 w-4" /> : <Minimize2 className="h-4 w-4" />}
-                    </Button>
-                </div> */}
-      </div>
+  if (isMinimized) {
+    return (
+      <motion.div
+        className="fixed lg:right-6 lg:bottom-6 right-4 bottom-4 z-50"
+        initial={{ scale: 0 }}
+        animate={{ scale: 1 }}
+        transition={{ type: "spring", bounce: 0.5 }}
+      >
+        <motion.div
+          animate={{
+            y: [0, -10, 0],
+          }}
+          transition={{
+            duration: 2,
+            repeat: Infinity,
+            ease: "easeInOut"
+          }}
+        >
+          <Button
+            variant="ghost"
+            size="icon"
+            className="relative cursor-pointer lg:h-12 lg:w-12 h-10 w-10 rounded-full bg-blue-600 hover:bg-blue-700 text-white shadow-lg group"
+            onClick={onMaximize}
+          >
+            <motion.div
+              animate={{
+                rotate: [0, 10, -10, 0],
+              }}
+              transition={{
+                duration: 2,
+                repeat: Infinity,
+                ease: "easeInOut",
+                times: [0, 0.2, 0.8, 1]
+              }}
+            >
+              <Bot className="lg:h-6 lg:w-6 h-5 w-5" />
+            </motion.div>
+          </Button>
+        </motion.div>
+      </motion.div>
+    );
+  }
 
-      {/* {!isMinimized && ( */}
-      <>
+  return (
+    <AnimatePresence>
+      <motion.div
+        className={cn(
+          'fixed lg:right-0 lg:top-0 right-0 bottom-0 lg:h-screen h-[85vh] w-full lg:w-96 bg-card border-l border-t lg:border-t-0 border-gray-800 z-50 flex flex-col',
+          'shadow-2xl',
+          className,
+        )}
+        initial={{ x: "100%" }}
+        animate={{ x: 0 }}
+        exit={{ x: "100%" }}
+        transition={{ type: "spring", bounce: 0.2 }}
+      >
+        {/* Header */}
+        <div className="flex items-center justify-between p-4 border-b border-gray-800 bg-card">
+          <div className="flex items-center gap-3">
+            <div className="relative">
+              <Avatar className="h-8 w-8 bg-blue-600">
+                <AvatarFallback className="text-white text-sm">
+                  <Bot className="h-4 w-4" />
+                </AvatarFallback>
+              </Avatar>
+            </div>
+            <div>
+              <h3 className="text-white font-semibold text-sm">Ask KinesisHR Assistant</h3>
+              <Badge variant="secondary" className="text-xs bg-blue-600 text-white hover:bg-blue-600">
+                beta
+              </Badge>
+            </div>
+          </div>
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={onMinimize}
+            className="text-gray-400 cursor-pointer hover:text-white hover:bg-card p-1 h-8 w-8"
+          >
+            <Minimize2 className="h-4 w-4" />
+          </Button>
+        </div>
+
         {/* Quick Questions */}
         <div className="p-4 border-b border-gray-800 bg-card">
           <div className="space-y-2">
@@ -219,7 +267,7 @@ export const AIAssistantSidebar: React.FC<AIAssistantSidebarProps> = ({ classNam
             </div>
 
             {/* Input */}
-            <div className="flex gap-2 ">
+            <div className="flex gap-2">
               <Input
                 value={inputValue}
                 onChange={(e) => setInputValue(e.target.value)}
@@ -238,14 +286,7 @@ export const AIAssistantSidebar: React.FC<AIAssistantSidebarProps> = ({ classNam
             </div>
           </div>
         </div>
-      </>
-      {/* )} */}
-
-      {/* {isMinimized && (
-                <div className="p-4">
-                    <p className="text-gray-400 text-sm text-center">Assistant minimized</p>
-                </div>
-            )} */}
-    </div>
+      </motion.div>
+    </AnimatePresence>
   );
 };

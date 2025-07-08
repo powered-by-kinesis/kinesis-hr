@@ -9,6 +9,30 @@ export async function GET(
   const { id } = await params;
   const jobPost = await prisma.jobPost.findUnique({
     where: { id: parseInt(id) },
+    include: {
+      applications: {
+        include: {
+          applicant: true,
+          stageHistory: {
+            include: {
+              changedBy: {
+                select: {
+                  id: true,
+                  name: true,
+                  email: true,
+                },
+              },
+            },
+            orderBy: {
+              changedAt: 'desc',
+            },
+          },
+        },
+        orderBy: {
+          appliedAt: 'desc',
+        },
+      },
+    },
   });
 
   if (!jobPost) {
@@ -25,8 +49,18 @@ export async function PUT(
   try {
     const { id } = await params;
     const body = await req.json();
-    const { title, description, location, employmentType, status } =
-      UpdateJobPostRequestDTO.parse(body);
+    const {
+      title,
+      description,
+      location,
+      employmentType,
+      status,
+      department,
+      salaryMin,
+      salaryMax,
+      salaryType,
+      currency,
+    } = UpdateJobPostRequestDTO.parse(body);
 
     const updatedJobPost = await prisma.jobPost.update({
       where: { id: parseInt(id) },
@@ -36,6 +70,11 @@ export async function PUT(
         location,
         employmentType,
         status,
+        department,
+        salaryMin,
+        salaryMax,
+        salaryType,
+        currency,
       },
     });
 

@@ -7,6 +7,14 @@ export async function GET(_req: NextRequest): Promise<NextResponse<JobPostRespon
     orderBy: {
       createdAt: 'desc',
     },
+    include: {
+      applications: {
+        include: {
+          applicant: true,
+          stageHistory: true,
+        },
+      },
+    },
   });
   return NextResponse.json(jobPosts);
 }
@@ -16,16 +24,31 @@ export async function POST(
 ): Promise<NextResponse<JobPostResponseDTO | { message: string }>> {
   try {
     const body = await req.json();
-    const { title, description, location, employmentType, status } =
-      CreateJobPostRequestDTO.parse(body);
+    const {
+      title,
+      description,
+      department,
+      location,
+      employmentType,
+      status,
+      salaryMin,
+      salaryMax,
+      salaryType,
+      currency,
+    } = CreateJobPostRequestDTO.parse(body);
 
     const newJobPost = await prisma.jobPost.create({
       data: {
         title,
         description,
+        department,
         location,
         employmentType,
         status,
+        salaryMin,
+        salaryMax,
+        salaryType,
+        currency,
       },
     });
 

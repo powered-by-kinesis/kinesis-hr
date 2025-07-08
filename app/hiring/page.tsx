@@ -81,10 +81,10 @@ export default function HiringPage() {
 
                     <Tabs defaultValue="job-openings">
                       <TabsList className="grid grid-cols-2">
-                        <TabsTrigger value="job-openings" className="flex items-center gap-2">
+                        <TabsTrigger value="job-openings" className="flex items-center gap-2 cursor-pointer">
                           Job Openings
                         </TabsTrigger>
-                        <TabsTrigger value="candidates" className="flex items-center gap-2">
+                        <TabsTrigger value="candidates" className="flex items-center gap-2 cursor-pointer">
                           Candidates
                         </TabsTrigger>
                       </TabsList>

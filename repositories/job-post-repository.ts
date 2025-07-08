@@ -2,6 +2,7 @@
 
 import { JobPostResponseDTO } from '@/types/job-post';
 import { CreateJobPostRequestDTO } from '@/types/job-post/CreateJobPostRequestDTO';
+import { UpdateJobPostRequestDTO } from '@/types/job-post/UpdateJobPostRequestDTO';
 
 export class JobPostRepository {
   private baseUrl: string;
@@ -99,6 +100,22 @@ export class JobPostRepository {
       console.error('Error deleting job post:', error);
       throw error;
     }
+  }
+
+  async updateJobPost(id: number, data: UpdateJobPostRequestDTO): Promise<JobPostResponseDTO> {
+    const response = await fetch(`${this.baseUrl}/api/job-posts/${id}`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(data),
+    });
+
+    if (!response.ok) {
+      throw new Error('Failed to update job post');
+    }
+
+    return response.json();
   }
 }
 
