@@ -10,6 +10,8 @@ import { Button } from "@/components/ui/button";
 import { MoreVertical } from "lucide-react";
 import { ApplicantResponseDTO } from '@/types/applicant';
 import { DataTableColumnHeader } from "../data-table/data-table-column-header";
+import { formatDate } from "@/utils/format-date";
+import { toast } from "sonner";
 
 type CandidateData = ApplicantResponseDTO;
 
@@ -21,6 +23,7 @@ export const getCandidatesTableColumns = (onViewDetails: (candidateId: number) =
       id: 'select',
       header: ({ table }) => (
         <Checkbox
+          className="cursor-pointer"
           checked={
             table.getIsAllPageRowsSelected() || (table.getIsSomePageRowsSelected() && 'indeterminate')
           }
@@ -30,6 +33,7 @@ export const getCandidatesTableColumns = (onViewDetails: (candidateId: number) =
       ),
       cell: ({ row }) => (
         <Checkbox
+          className="cursor-pointer"
           checked={row.getIsSelected()}
           onCheckedChange={(value) => row.toggleSelected(!!value)}
           aria-label="Select row"
@@ -41,13 +45,22 @@ export const getCandidatesTableColumns = (onViewDetails: (candidateId: number) =
     {
       accessorKey: 'fullName',
       header: ({ column }) => <DataTableColumnHeader column={column} title="Full Name" />,
-      cell: ({ row }) => <div className="font-medium">{row.original.fullName}</div>,
+      cell: ({ row }) => (
+        <Link href={`/candidates/${row.original.id}`} className="font-medium hover:underline cursor-pointer hover:text-blue-500">
+          {row.original.fullName}
+        </Link>
+      ),
       enableHiding: false,
     },
     {
       accessorKey: 'email',
       header: ({ column }) => <DataTableColumnHeader column={column} title="Email" />,
-      cell: ({ row }) => <div className="text-muted-foreground">{row.original.email}</div>,
+      cell: ({ row }) => (
+        <div className="text-muted-foreground hover:underline cursor-pointer" onClick={() => {
+          window.open(`mailto:${row.original.email}`, '_blank');
+          toast.success('Email opened in new tab');
+        }}>{row.original.email || 'N/A'}</div>
+      ),
     },
     {
       accessorKey: 'phone',
@@ -75,11 +88,7 @@ export const getCandidatesTableColumns = (onViewDetails: (candidateId: number) =
       accessorKey: 'appliedAt',
       header: ({ column }) => <DataTableColumnHeader column={column} title="Applied Date" />,
       cell: ({ row }) => {
-        const date =
-          typeof row.original.appliedAt === 'string'
-            ? new Date(row.original.appliedAt)
-            : row.original.appliedAt;
-        return <div className="text-muted-foreground">{date.toLocaleDateString()}</div>;
+        return <div className="text-muted-foreground">{formatDate(row.original.appliedAt.toString())}</div>;
       },
     },
     {
@@ -87,7 +96,7 @@ export const getCandidatesTableColumns = (onViewDetails: (candidateId: number) =
       cell: ({ row }) => (
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant="ghost" className="h-8 w-8 p-0" size="icon">
+            <Button variant="ghost" className="h-8 w-8 p-0 cursor-pointer" size="icon">
               <MoreVertical className="h-4 w-4" />
               <span className="sr-only">Open menu</span>
             </Button>
@@ -99,10 +108,9 @@ export const getCandidatesTableColumns = (onViewDetails: (candidateId: number) =
             >
               View Details
             </DropdownMenuItem>
-            <DropdownMenuItem>Schedule Interview</DropdownMenuItem>
-            <DropdownMenuItem>Send Message</DropdownMenuItem>
+            <DropdownMenuItem className="cursor-pointer">Schedule Interview</DropdownMenuItem>
             <DropdownMenuSeparator />
-            <DropdownMenuItem className="text-destructive">Reject Candidate</DropdownMenuItem>
+            <DropdownMenuItem className="text-destructive cursor-pointer">Reject Candidate</DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
       ),

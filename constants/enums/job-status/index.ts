@@ -14,3 +14,7 @@ export const JOB_STATUS_OPTIONS = [
   { value: JobStatus.PUBLISHED, label: JOB_STATUS_LABELS[JobStatus.PUBLISHED], icon: CheckCircle2 },
   { value: JobStatus.DRAFT, label: JOB_STATUS_LABELS[JobStatus.DRAFT], icon: FileText },
 ] as const;
+
+export const getJobPostStatusLabel = (jobPostStatus: JobStatus) => {
+  return JOB_STATUS_LABELS[jobPostStatus];
+};
