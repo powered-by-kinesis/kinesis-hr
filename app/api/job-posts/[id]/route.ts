@@ -13,18 +13,10 @@ export async function GET(
       applications: {
         include: {
           applicant: true,
-          stageHistory: {
+          stageHistory: true,
+          documents: {
             include: {
-              changedBy: {
-                select: {
-                  id: true,
-                  name: true,
-                  email: true,
-                },
-              },
-            },
-            orderBy: {
-              changedAt: 'desc',
+              document: true,
             },
           },
         },

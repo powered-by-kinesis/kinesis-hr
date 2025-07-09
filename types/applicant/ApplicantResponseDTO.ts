@@ -6,7 +6,6 @@ export const ApplicantResponseDTO = z.object({
   fullName: z.string(),
   email: z.string(),
   phone: z.string().nullable(),
-  resumeUrl: z.string().nullable(),
   appliedAt: z.date(),
   applications: z.array(ApplicationResponseDTO).optional(),
 });

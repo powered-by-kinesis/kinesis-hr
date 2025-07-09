@@ -15,10 +15,8 @@ cloudinary.config({
 
 export async function POST(req: Request) {
   const session = await getServerSession(authOptions);
-  if (!session?.user?.id) {
-    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-  }
-  const userId = session.user.id;
+  // Session is now optional, but if a user is logged in, we use their ID.
+  const userId = session?.user?.id;
 
   try {
     const formData = await req.formData();
@@ -39,6 +37,7 @@ export async function POST(req: Request) {
           const buffer = Buffer.from(bytes);
           const originalFileName = file.name.split('.')[0];
           const fileExtension = file.name.split('.').pop();
+          const cloudinaryFolder = 'documents/anonymous';
 
           // Upload to Cloudinary
           const result: UploadApiResponse = await new Promise((resolve, reject) => {
@@ -46,7 +45,7 @@ export async function POST(req: Request) {
               .upload_stream(
                 {
                   resource_type: 'raw',
-                  folder: `documents/${userId}`,
+                  folder: cloudinaryFolder,
                   public_id: `${Date.now()}-${originalFileName}.${fileExtension}`,
                   original_filename: file.name,
                   use_filename: true,
@@ -62,14 +61,21 @@ export async function POST(req: Request) {
               .end(buffer);
           });
 
+          const documentData: any = {
+            fileName: file.name,
+            filePath: result.secure_url,
+            fileSize: result.bytes,
+            fileType: result.format || file.type.split('/')[1] || 'pdf',
+          };
+
+          if (userId) {
+            documentData.owner = {
+              connect: { id: userId },
+            };
+          }
+
           const savedDocument = await prisma.document.create({
-            data: {
-              ownerId: userId,
-              fileName: file.name,
-              filePath: result.secure_url,
-              fileSize: result.bytes,
-              fileType: result.format || file.type.split('/')[1] || 'pdf',
-            },
+            data: documentData,
           });
 
           uploadResults.push(savedDocument); // Now returning the saved document from Prisma

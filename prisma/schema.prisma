@@ -85,10 +85,11 @@ model Document {
   fileSize  Int
   fileType  String   @db.Text
   createdAt DateTime  @default(now())
-  ownerId  Int
+  ownerId  Int?
 
-  owner    User      @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+  owner    User?      @relation(fields: [ownerId], references: [id], onDelete: Cascade)
   contexts ContextDocument[]
+  applications ApplicationDocument[]
 
   @@map("documents")
 }
@@ -160,7 +161,6 @@ model Applicant {
   fullName     String
   email        String        @unique
   phone        String?
-  resumeUrl    String?
   appliedAt    DateTime      @default(now())
 
   applications Application[]
@@ -209,12 +209,27 @@ model Application {
   appliedAt      DateTime                  @default(now())
   notes          String?
 
-  applicant      Applicant            @relation(fields: [applicantId], references: [id])
-  jobPost        JobPost                   @relation(fields: [jobPostId], references: [id])
+  applicant      Applicant            @relation(fields: [applicantId], references: [id], onDelete: Cascade)
+  jobPost        JobPost                   @relation(fields: [jobPostId], references: [id], onDelete: Cascade)
   stageHistory   ApplicationStageHistory[]
+  documents      ApplicationDocument[]
 
   @@map("applications")
   @@index([jobPostId])
+}
+
+model ApplicationDocument {
+  id            Int         @id @default(autoincrement())
+  applicationId Int
+  documentId    Int
+  
+  application   Application @relation(fields: [applicationId], references: [id], onDelete: Cascade)
+  document      Document    @relation(fields: [documentId], references: [id], onDelete: Cascade)
+
+  @@unique([applicationId, documentId])
+  @@index([applicationId])
+  @@index([documentId])
+  @@map("application_documents")
 }
 
 model ApplicationStageHistory {
@@ -225,8 +240,8 @@ model ApplicationStageHistory {
   changedById   Int?
   notes         String?
 
-  application   Application  @relation(fields: [applicationId], references: [id])
-  changedBy     User?        @relation(fields: [changedById], references: [id])
+  application   Application  @relation(fields: [applicationId], references: [id], onDelete: Cascade)
+    changedBy     User?        @relation(fields: [changedById], references: [id], onDelete: SetNull)
 
   @@index([applicationId])
   @@index([changedById])

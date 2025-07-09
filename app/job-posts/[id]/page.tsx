@@ -1,166 +1,154 @@
+'use client'; // Required for animations and state
+
 import { notFound } from 'next/navigation';
-import { Badge } from '@/components/ui/badge';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { CalendarDays, MapPin, Clock, Building2 } from 'lucide-react';
+import { motion } from 'framer-motion';
+import { useEffect, useState } from 'react';
+import type { JobPost } from '@prisma/client';
 
 import { jobPostRepository } from '@/repositories';
 import { ApplicationForm } from '@/components/organisms/application-form';
-import { EMPLOYMENT_TYPE_LABELS, EmploymentType } from '@/constants/enums/employment-type';
-import { JOB_STATUS_LABELS, JobStatus } from '@/constants/enums/job-status';
+import {
+  EmploymentType,
+} from '@/constants/enums/employment-type';
+import { JobStatus } from '@/constants/enums/job-status';
 import { formatDate } from '@/utils/format-date';
+import { formatSalary } from '@/utils/format-salary/format-salary';
+import { JobPostHeader } from '@/components/organisms/job-post-details/job-post-header';
+import { JobPostContent } from '@/components/organisms/job-post-details/job-post-content';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Skeleton } from '@/components/ui/skeleton';
+import { useParams } from 'next/navigation';
 
-// Function to get employment type badge variant
-const getEmploymentTypeBadge = (type: string) => {
-  switch (type) {
-    case EmploymentType.FULL_TIME:
-      return <Badge variant="default">{EMPLOYMENT_TYPE_LABELS[EmploymentType.FULL_TIME]}</Badge>;
-    case EmploymentType.PART_TIME:
-      return <Badge variant="secondary">{EMPLOYMENT_TYPE_LABELS[EmploymentType.PART_TIME]}</Badge>;
-    case EmploymentType.CONTRACT:
-      return <Badge variant="outline">{EMPLOYMENT_TYPE_LABELS[EmploymentType.CONTRACT]}</Badge>;
-    case EmploymentType.INTERNSHIP:
-      return <Badge variant="outline">{EMPLOYMENT_TYPE_LABELS[EmploymentType.INTERNSHIP]}</Badge>;
-    case EmploymentType.FREELANCE:
-      return <Badge variant="outline">{EMPLOYMENT_TYPE_LABELS[EmploymentType.FREELANCE]}</Badge>;
-    default:
-      return <Badge variant="secondary">{EMPLOYMENT_TYPE_LABELS[EmploymentType.FULL_TIME]}</Badge>;
-  }
+// Animation variants for Framer Motion
+const containerVariants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.1,
+    },
+  },
 };
 
-// Function to get status badge variant
-const getStatusBadge = (status: string) => {
-  switch (status) {
-    case JobStatus.PUBLISHED:
-      return (
-        <Badge className="bg-green-500 hover:bg-green-600">
-          {JOB_STATUS_LABELS[JobStatus.PUBLISHED]}
-        </Badge>
-      );
-    case JobStatus.DRAFT:
-      return <Badge variant="secondary">{JOB_STATUS_LABELS[JobStatus.DRAFT]}</Badge>;
-    default:
-      return <Badge variant="secondary">{JOB_STATUS_LABELS[JobStatus.DRAFT]}</Badge>;
-  }
+const itemVariants = {
+  hidden: { y: 20, opacity: 0 },
+  visible: {
+    y: 0,
+    opacity: 1,
+    transition: {
+      type: 'spring',
+      stiffness: 100,
+    },
+  },
 };
 
-interface JobPostDetailPageProps {
-  params: Promise<{
-    id: string;
-  }>;
-}
+// Skeleton loader component for a better loading experience
+const JobPostSkeleton = () => (
+  <div className="container mx-auto px-4 py-12 max-w-7xl">
+    <div className="grid gap-10 lg:grid-cols-3">
+      <div className="lg:col-span-2 space-y-8">
+        <Skeleton className="h-48 w-full rounded-xl" />
+        <Skeleton className="h-96 w-full rounded-xl" />
+      </div>
+      <div className="lg:col-span-1">
+        <Skeleton className="h-80 w-full rounded-xl" />
+      </div>
+    </div>
+  </div>
+);
 
-export default async function JobPostDetailPage({ params }: JobPostDetailPageProps) {
-  const { id } = await params;
+export default function JobPostDetailPage() {
+  const params = useParams();
+  const [jobPost, setJobPost] = useState<JobPost | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
 
-  try {
-    const jobPost = await jobPostRepository.getJobPostById(parseInt(id));
+  useEffect(() => {
+    const fetchJobPost = async () => {
+      setIsLoading(true);
+      try {
+        const post = await jobPostRepository.getJobPostById(parseInt(params.id as string));
+        if (!post) {
+          notFound();
+        } else {
+          setJobPost(post);
+        }
+      } catch (error) {
+        console.error('Error fetching job post:', error);
+        notFound();
+      } finally {
+        setIsLoading(false);
+      }
+    };
 
-    // If job post is not found, show 404
-    if (!jobPost) {
-      notFound();
-    }
+    fetchJobPost();
+  }, [params.id]);
 
+  if (isLoading) {
     return (
-      <div className="min-h-screen bg-background">
-        <div className="container mx-auto px-4 py-8 max-w-7xl">
-          <div className="grid gap-8 lg:grid-cols-3">
-            {/* Job Details - Left Side */}
-            <div className="lg:col-span-2 space-y-6">
-              {/* Job Header */}
-              <Card>
-                <CardHeader>
-                  <div className="flex items-start justify-between">
-                    <div className="space-y-2">
-                      <CardTitle className="text-2xl">{jobPost.title}</CardTitle>
-                      <div className="flex items-center gap-4 text-muted-foreground">
-                        {jobPost.location && (
-                          <div className="flex items-center gap-1">
-                            <MapPin className="h-4 w-4" />
-                            <span>{jobPost.location}</span>
-                          </div>
-                        )}
-                        <div className="flex items-center gap-1">
-                          <Clock className="h-4 w-4 mr-1" />
-                          <span>{getEmploymentTypeBadge(jobPost.employmentType)}</span>
-                        </div>
-                        <div className="flex items-center gap-1">
-                          <Building2 className="h-4 w-4 mr-1" />
-                          <span>{getStatusBadge(jobPost.status)}</span>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                    <CalendarDays className="h-4 w-4" />
-                    <span>Posted {formatDate(jobPost.createdAt.toString())}</span>
-                  </div>
-                </CardHeader>
-              </Card>
-
-              {/* Job Description */}
-              <Card>
-                <CardHeader>
-                  <CardTitle>Job Description</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="prose prose-sm max-w-none">
-                    {jobPost.description.split('\n').map((paragraph, index) => (
-                      <p key={index} className="mb-4 last:mb-0">
-                        {paragraph}
-                      </p>
-                    ))}
-                  </div>
-                </CardContent>
-              </Card>
-
-              {/* Job Details */}
-              <Card>
-                <CardHeader>
-                  <CardTitle>Job Details</CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-4">
-                  <div className="grid grid-cols-2 gap-4">
-                    <div>
-                      <h4 className="font-medium mb-1">Employment Type</h4>
-                      <p className="text-muted-foreground">
-                        {EMPLOYMENT_TYPE_LABELS[jobPost.employmentType as EmploymentType]}
-                      </p>
-                    </div>
-                    <div>
-                      <h4 className="font-medium mb-1">Status</h4>
-                      <p className="text-muted-foreground">
-                        {JOB_STATUS_LABELS[jobPost.status as JobStatus]}
-                      </p>
-                    </div>
-                    {jobPost.location && (
-                      <div>
-                        <h4 className="font-medium mb-1">Location</h4>
-                        <p className="text-muted-foreground">{jobPost.location}</p>
-                      </div>
-                    )}
-                    <div>
-                      <h4 className="font-medium mb-1">Posted Date</h4>
-                      <p className="text-muted-foreground">
-                        {formatDate(jobPost.createdAt.toString())}
-                      </p>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-            </div>
-
-            {/* Application Form - Right Side */}
-            <div className="lg:col-span-1">
-              <div className="sticky top-8">
-                <ApplicationForm jobPost={jobPost} />
-              </div>
-            </div>
-          </div>
-        </div>
+      <div className="min-h-screen bg-muted/20 dark:bg-muted/50">
+        <JobPostSkeleton />
       </div>
     );
-  } catch (error) {
-    console.error('Error fetching job post:', error);
-    notFound();
   }
+
+  if (!jobPost) {
+    return null; // notFound() would have been called
+  }
+
+  // Derived data for rendering
+  const formattedSalary = formatSalary(
+    jobPost.salaryMin?.toString(),
+    jobPost.salaryMax?.toString(),
+    jobPost.currency,
+    jobPost.salaryType
+  );
+
+  return (
+    <div className="min-h-screen bg-muted/20 dark:bg-muted/50">
+      <motion.div
+        className="container mx-auto px-4 py-12 max-w-7xl"
+        variants={containerVariants}
+        initial="hidden"
+        animate="visible"
+      >
+        <div className="grid gap-10 lg:grid-cols-3">
+          {/* Left Side: Job Details */}
+          <div className="lg:col-span-2 space-y-8">
+            <motion.div variants={itemVariants}>
+              <JobPostHeader
+                title={jobPost.title}
+                department={jobPost.department}
+                location={jobPost.location}
+                employmentType={jobPost.employmentType as EmploymentType}
+                postedDate={formatDate(jobPost.createdAt.toString())}
+              />
+            </motion.div>
+            <motion.div variants={itemVariants}>
+              <JobPostContent
+                description={jobPost.description}
+                formattedSalary={formattedSalary}
+                statusLabel={jobPost.status as JobStatus}
+              />
+            </motion.div>
+          </div>
+
+          {/* Right Side: Application Form */}
+          <motion.div className="lg:col-span-1" variants={itemVariants}>
+            <div className="sticky top-8">
+              <Card className="shadow-lg">
+                <CardHeader>
+                  <CardTitle className="text-xl font-semibold">
+                    Apply for this Role
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <ApplicationForm jobPost={jobPost} />
+                </CardContent>
+              </Card>
+            </div>
+          </motion.div>
+        </div>
+      </motion.div>
+    </div>
+  );
 }

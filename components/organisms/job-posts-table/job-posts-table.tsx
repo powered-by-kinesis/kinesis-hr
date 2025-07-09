@@ -50,7 +50,7 @@ export function JobPostsTable({ data, onJobPostCreated, onJobPostDeleted }: JobP
 
   return (
     <div className="flex flex-col gap-4">
-      <div className="flex justify-start">
+      <div className="flex justify-end">
         <Button
           size="sm"
           className="w-fit cursor-pointer"

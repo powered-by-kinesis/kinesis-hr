@@ -9,6 +9,7 @@ import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Send, Bot, User, Minimize2 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useAIAssistant } from '@/hooks/use-ai-assistant/use-ai-assistant';
 
 interface Message {
   id: string;
@@ -19,9 +20,6 @@ interface Message {
 
 interface AIAssistantSidebarProps {
   className?: string;
-  isMinimized: boolean;
-  onMinimize: () => void;
-  onMaximize: () => void;
 }
 
 const quickQuestions = [
@@ -31,7 +29,10 @@ const quickQuestions = [
   'How to improve employee retention?',
 ];
 
-export const AIAssistantSidebar: React.FC<AIAssistantSidebarProps> = ({ className, isMinimized, onMinimize, onMaximize }) => {
+export const AIAssistantSidebar: React.FC<AIAssistantSidebarProps> = ({
+  className,
+}) => {
+  const { isMinimized, minimize, maximize } = useAIAssistant();
   const [messages, setMessages] = useState<Message[]>([
     {
       id: '1',
@@ -109,8 +110,8 @@ export const AIAssistantSidebar: React.FC<AIAssistantSidebarProps> = ({ classNam
           <Button
             variant="ghost"
             size="icon"
-            className="relative cursor-pointer lg:h-12 lg:w-12 h-10 w-10 rounded-full bg-blue-600 hover:bg-blue-700 text-white shadow-lg group"
-            onClick={onMaximize}
+            className="relative cursor-pointer lg:h-12 lg:w-12 h-10 w-10 rounded-full bg-primary"
+            onClick={maximize}
           >
             <motion.div
               animate={{
@@ -135,7 +136,7 @@ export const AIAssistantSidebar: React.FC<AIAssistantSidebarProps> = ({ classNam
     <AnimatePresence>
       <motion.div
         className={cn(
-          'fixed lg:right-0 lg:top-0 right-0 bottom-0 lg:h-screen h-[85vh] w-full lg:w-96 bg-card border-l border-t lg:border-t-0 border-gray-800 z-50 flex flex-col',
+          'fixed lg:right-0 lg:top-0 right-0 bottom-0 lg:h-screen h-[85vh] w-full lg:w-96 bg-card border-l border-t lg:border-t-0  z-50 flex flex-col',
           'shadow-2xl',
           className,
         )}
@@ -145,10 +146,10 @@ export const AIAssistantSidebar: React.FC<AIAssistantSidebarProps> = ({ classNam
         transition={{ type: "spring", bounce: 0.2 }}
       >
         {/* Header */}
-        <div className="flex items-center justify-between p-4 border-b border-gray-800 bg-card">
+        <div className="flex items-center justify-between p-4 border-b  bg-card">
           <div className="flex items-center gap-3">
             <div className="relative">
-              <Avatar className="h-8 w-8 bg-blue-600">
+              <Avatar className="h-8 w-8">
                 <AvatarFallback className="text-white text-sm">
                   <Bot className="h-4 w-4" />
                 </AvatarFallback>
@@ -156,7 +157,7 @@ export const AIAssistantSidebar: React.FC<AIAssistantSidebarProps> = ({ classNam
             </div>
             <div>
               <h3 className="text-white font-semibold text-sm">Ask KinesisHR Assistant</h3>
-              <Badge variant="secondary" className="text-xs bg-blue-600 text-white hover:bg-blue-600">
+              <Badge variant="secondary" className="text-xs bg-primary text-primary-foreground hover:bg-primary">
                 beta
               </Badge>
             </div>
@@ -164,7 +165,7 @@ export const AIAssistantSidebar: React.FC<AIAssistantSidebarProps> = ({ classNam
           <Button
             variant="ghost"
             size="sm"
-            onClick={onMinimize}
+            onClick={minimize}
             className="text-gray-400 cursor-pointer hover:text-white hover:bg-card p-1 h-8 w-8"
           >
             <Minimize2 className="h-4 w-4" />
@@ -172,7 +173,7 @@ export const AIAssistantSidebar: React.FC<AIAssistantSidebarProps> = ({ classNam
         </div>
 
         {/* Quick Questions */}
-        <div className="p-4 border-b border-gray-800 bg-card">
+        <div className="p-4 border-b  bg-card">
           <div className="space-y-2">
             {quickQuestions.map((question, index) => (
               <Button
@@ -180,7 +181,7 @@ export const AIAssistantSidebar: React.FC<AIAssistantSidebarProps> = ({ classNam
                 variant="outline"
                 size="sm"
                 onClick={() => handleQuickQuestion(question)}
-                className="w-full justify-start text-left h-auto py-2 px-3 bg-card border-gray-700 text-gray-300 hover:bg-gray-700 hover:text-white text-xs"
+                className="w-full justify-start text-left h-auto py-2 px-3 bg-card  text-gray-300 hover:bg-gray-700 hover:text-white text-xs"
               >
                 {question}
               </Button>
@@ -201,7 +202,7 @@ export const AIAssistantSidebar: React.FC<AIAssistantSidebarProps> = ({ classNam
                   )}
                 >
                   {message.type === 'assistant' && (
-                    <Avatar className="h-8 w-8 bg-blue-600 flex-shrink-0">
+                    <Avatar className="h-8 w-8  flex-shrink-0">
                       <AvatarFallback className="text-white text-sm">
                         <Bot className="h-4 w-4" />
                       </AvatarFallback>
@@ -211,14 +212,14 @@ export const AIAssistantSidebar: React.FC<AIAssistantSidebarProps> = ({ classNam
                     className={cn(
                       'max-w-[80%] rounded-lg p-3 text-sm',
                       message.type === 'user'
-                        ? 'bg-blue-600 text-white'
-                        : 'bg-card text-gray-100 border border-gray-700',
+                        ? 'bg-primary text-primary-foreground'
+                        : 'bg-card text-gray-100 border ',
                     )}
                   >
                     {message.content}
                   </div>
                   {message.type === 'user' && (
-                    <Avatar className="h-8 w-8 bg-blue-600 flex-shrink-0">
+                    <Avatar className="h-8 w-8  flex-shrink-0">
                       <AvatarFallback className="text-white text-sm">
                         <User className="h-4 w-4" />
                       </AvatarFallback>
@@ -228,12 +229,12 @@ export const AIAssistantSidebar: React.FC<AIAssistantSidebarProps> = ({ classNam
               ))}
               {isLoading && (
                 <div className="flex gap-3 justify-start">
-                  <Avatar className="h-8 w-8 bg-blue-600 flex-shrink-0">
+                  <Avatar className="h-8 w-8  flex-shrink-0">
                     <AvatarFallback className="text-white text-sm">
                       <Bot className="h-4 w-4" />
                     </AvatarFallback>
                   </Avatar>
-                  <div className="bg-card text-gray-100 border border-gray-700 rounded-lg p-3 text-sm">
+                  <div className="bg-card text-gray-100 border  rounded-lg p-3 text-sm">
                     <div className="flex gap-1">
                       <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce"></div>
                       <div
@@ -253,9 +254,9 @@ export const AIAssistantSidebar: React.FC<AIAssistantSidebarProps> = ({ classNam
           </ScrollArea>
 
           {/* Input Area */}
-          <div className="p-4 border-t border-gray-800 bg-card">
+          <div className="p-4 border-t  bg-card">
             {/* Disclaimer */}
-            <div className="mb-3 p-2 bg-card rounded-lg border border-gray-700">
+            <div className="mb-3 p-2 bg-card rounded-lg border ">
               <div className="flex items-start gap-2">
                 <div className="text-orange-500 text-xs mt-0.5">⚠️</div>
                 <div className="text-xs text-gray-400 leading-relaxed">
@@ -273,13 +274,13 @@ export const AIAssistantSidebar: React.FC<AIAssistantSidebarProps> = ({ classNam
                 onChange={(e) => setInputValue(e.target.value)}
                 onKeyDown={handleKeyDown}
                 placeholder="Ask a question..."
-                className="flex-1 bg-card border-gray-700 text-white placeholder:text-gray-400 focus:border-blue-500"
+                className="flex-1 bg-card  text-white placeholder:text-gray-400 focus:border-primary focus:ring-primary"
                 disabled={isLoading}
               />
               <Button
                 onClick={handleSendMessage}
                 disabled={!inputValue.trim() || isLoading}
-                className="bg-blue-600 hover:bg-blue-700 text-white px-3"
+                className="bg-primary hover:bg-primary/90 text-primary-foreground px-3 cursor-pointer"
               >
                 <Send className="h-4 w-4" />
               </Button>

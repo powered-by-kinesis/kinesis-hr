@@ -1,59 +1,47 @@
 'use client';
 
 import * as React from 'react';
-import { HelpCircle, Home, Settings, Bot, User } from 'lucide-react';
+import { Home, Bot, User as LucideUser } from 'lucide-react';
 
 import { NavMain } from '@/components/organisms/nav-main';
-import { NavSecondary } from '@/components/organisms/nav-secondary';
 import { NavUser } from '@/components/organisms/nav-user';
 import { Sidebar, SidebarContent, SidebarFooter } from '@/components/ui/sidebar';
+import { useSession } from 'next-auth/react';
 
-const data = {
-  user: {
-    name: 'shadcn',
-    email: 'm@example.com',
-    avatar: '/avatars/shadcn.jpg',
+const navMain = [
+  {
+    title: 'Home',
+    url: '/home',
+    icon: Home,
   },
-  navMain: [
-    {
-      title: 'Home',
-      url: '/home',
-      icon: Home,
-    },
-    {
-      title: 'Hiring',
-      url: '/hiring',
-      icon: User,
-    },
-    {
-      title: 'AI Interviewer',
-      url: '/ai-interviewer',
-      icon: Bot,
-    },
-  ],
-  navSecondary: [
-    {
-      title: 'Settings',
-      url: '/settings',
-      icon: Settings,
-    },
-    {
-      title: 'Get Help',
-      url: '/help',
-      icon: HelpCircle,
-    },
-  ],
-};
+  {
+    title: 'Hiring',
+    url: '/hiring',
+    icon: LucideUser,
+  },
+  {
+    title: 'AI Interviewer',
+    url: '/ai-interviewer',
+    icon: Bot,
+  },
+];
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+  const { data: session } = useSession();
+
+  const user = {
+    name: session?.user?.name || '',
+    email: session?.user?.email || '',
+    avatar: session?.user?.image || '',
+  };
+
   return (
     <Sidebar collapsible="icon" {...props}>
       <SidebarContent>
-        <NavMain items={data.navMain} />
-        <NavSecondary items={data.navSecondary} className="mt-auto" />
+        <NavMain items={navMain} />
       </SidebarContent>
       <SidebarFooter>
-        <NavUser user={data.user} />
+        <NavUser user={user} />
       </SidebarFooter>
     </Sidebar>
   );

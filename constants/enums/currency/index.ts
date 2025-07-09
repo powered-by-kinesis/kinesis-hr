@@ -150,3 +150,26 @@ export const getCurrencyLabel = (currency: Currency) => {
       return 'Unknown';
   }
 };
+
+export const CURRENCY_LOCALE_MAP: Record<Currency, string> = {
+  [Currency.USD]: 'en-US',
+  [Currency.IDR]: 'id-ID',
+  [Currency.JPY]: 'ja-JP',
+  [Currency.SGD]: 'en-SG',
+  [Currency.MYR]: 'ms-MY',
+  [Currency.THB]: 'th-TH',
+  [Currency.VND]: 'vi-VN',
+  [Currency.PHP]: 'en-PH',
+  [Currency.HKD]: 'zh-HK',
+  [Currency.TWD]: 'zh-TW',
+  [Currency.CNY]: 'zh-CN',
+  [Currency.EUR]: 'de-DE', // Example locale, can be any country using EUR
+  [Currency.GBP]: 'en-GB',
+  [Currency.CHF]: 'de-CH',
+  [Currency.AUD]: 'en-AU',
+  [Currency.NZD]: 'en-NZ',
+  [Currency.MXN]: 'es-MX',
+  [Currency.BRL]: 'pt-BR',
+  [Currency.INR]: 'en-IN',
+  [Currency.ZAR]: 'en-ZA',
+};
