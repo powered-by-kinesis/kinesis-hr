@@ -65,7 +65,7 @@ export const GetJobPostsTableColumns = (onJobPostDeleted?: () => void, onEditJob
       cell: ({ row }) => (
         <div className="min-w-[200px]">
           <Link href={`/hiring/jobs/detail/${row.original.id}`}>
-            <div className="font-medium hover:text-blue-500 hover:underline cursor-pointer">
+            <div className="font-medium hover:text-primary hover:underline cursor-pointer">
               {row.original.title}
             </div>
           </Link>
@@ -120,7 +120,7 @@ export const GetJobPostsTableColumns = (onJobPostDeleted?: () => void, onEditJob
       cell: ({ row }) => (
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant="ghost" className="h-8 w-8 p-0" size="icon">
+            <Button variant="ghost" className="h-8 w-8 p-0 cursor-pointer" size="icon">
               <MoreVertical className="h-4 w-4" />
               <span className="sr-only">Open menu</span>
             </Button>

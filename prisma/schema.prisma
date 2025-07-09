@@ -209,8 +209,8 @@ model Application {
   appliedAt      DateTime                  @default(now())
   notes          String?
 
-  applicant      Applicant            @relation(fields: [applicantId], references: [id])
-  jobPost        JobPost                   @relation(fields: [jobPostId], references: [id])
+  applicant      Applicant            @relation(fields: [applicantId], references: [id], onDelete: Cascade)
+  jobPost        JobPost                   @relation(fields: [jobPostId], references: [id], onDelete: Cascade)
   stageHistory   ApplicationStageHistory[]
   documents      ApplicationDocument[]
 
@@ -240,8 +240,8 @@ model ApplicationStageHistory {
   changedById   Int?
   notes         String?
 
-  application   Application  @relation(fields: [applicationId], references: [id])
-  changedBy     User?        @relation(fields: [changedById], references: [id])
+  application   Application  @relation(fields: [applicationId], references: [id], onDelete: Cascade)
+    changedBy     User?        @relation(fields: [changedById], references: [id], onDelete: SetNull)
 
   @@index([applicationId])
   @@index([changedById])

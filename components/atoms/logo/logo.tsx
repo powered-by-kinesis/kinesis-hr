@@ -43,11 +43,11 @@ export function Logo({
         />
 
         <svg viewBox="0 0 24 24" fill="none" className="w-full h-full relative">
-          <path d="M12 3l8 4v10l-8 4-8-4V7l8-4z" className="text-blue-500/10" fill="currentColor" />
+          <path d="M12 3l8 4v10l-8 4-8-4V7l8-4z" className="text-primary/10" fill="currentColor" />
 
           <motion.path
             d="M12 3v18M4 7l16 10M20 7L4 17"
-            className="text-blue-500"
+            className="text-primary"
             stroke="currentColor"
             strokeWidth="0.5"
             strokeLinecap="round"

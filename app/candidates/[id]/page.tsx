@@ -24,6 +24,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { applicantRepository } from '@/repositories/applicant-repository';
 import { ApplicantResponseDTO } from '@/types/applicant';
 import { ApplicationTable } from '@/components/organisms/application-table';
+import { useAIAssistant } from '@/hooks/use-ai-assistant/use-ai-assistant';
 
 // Skill assessment data structure
 interface SkillAssessment {
@@ -92,7 +93,7 @@ export default function CandidateDetailsPage() {
     const router = useRouter();
     const [isLoading, setIsLoading] = React.useState(true);
     const [candidate, setCandidate] = React.useState<ApplicantResponseDTO | null>(null);
-    const [isAIAssistantMinimized, setIsAIAssistantMinimized] = React.useState(false);
+    const { isMinimized: isAIAssistantMinimized } = useAIAssistant();
     const [activeTab, setActiveTab] = React.useState('info');
 
     // Extract resume URL from the application documents
@@ -465,11 +466,7 @@ export default function CandidateDetailsPage() {
                 </SidebarInset>
             </SidebarProvider>
 
-            <AIAssistantSidebar
-                isMinimized={isAIAssistantMinimized}
-                onMinimize={() => setIsAIAssistantMinimized(true)}
-                onMaximize={() => setIsAIAssistantMinimized(false)}
-            />
+            <AIAssistantSidebar />
         </div>
     );
 }

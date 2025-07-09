@@ -20,6 +20,7 @@ import { Stage } from '@/constants/enums/stage';
 import { ArrowLeft } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useAIAssistant } from '@/hooks/use-ai-assistant/use-ai-assistant';
 
 export default function JobDetailPage() {
     const params = useParams();
@@ -33,7 +34,7 @@ export default function JobDetailPage() {
     const [candidatesReview, setCandidatesReview] = React.useState<ApplicantResponseDTO[]>([]);
     const [candidatesOffer, setCandidatesOffer] = React.useState<ApplicantResponseDTO[]>([]);
     const [isLoading, setIsLoading] = React.useState(true);
-    const [isAIAssistantMinimized, setIsAIAssistantMinimized] = React.useState(false);
+    const { isMinimized: isAIAssistantMinimized } = useAIAssistant();
     const [activeTab, setActiveTab] = React.useState('applied');
 
     const transformJobPostToCandidates = (jobPost: JobPostResponseDTO, filter?: Stage) => {
@@ -41,7 +42,7 @@ export default function JobDetailPage() {
             ...application.applicant,
             appliedAt: application.appliedAt,
             phone: application.applicant.phone || null,
-            resumeUrl: application.applicant.resumeUrl || null,
+            resumeUrl: application?.documents[0]?.document.filePath || null,
             stage: application.currentStage,
             // applications: [{
             //     id: application.id,
@@ -120,7 +121,7 @@ export default function JobDetailPage() {
                                                 </Button>
                                             </div>
                                             <div className="flex items-center justify-between">
-                                                <h1 className="text-3xl font-bold text-blue-500">{jobPostsData[0]?.title || 'Job Post Detail'}</h1>
+                                                <h1 className="text-3xl font-bold text-foreground">{jobPostsData[0]?.title || 'Job Post Detail'}</h1>
                                                 <Button
                                                     variant="outline"
                                                     size="sm"
@@ -229,11 +230,7 @@ export default function JobDetailPage() {
             </div>
 
             {/* Fixed AI Assistant Sidebar */}
-            <AIAssistantSidebar
-                isMinimized={isAIAssistantMinimized}
-                onMinimize={() => setIsAIAssistantMinimized(true)}
-                onMaximize={() => setIsAIAssistantMinimized(false)}
-            />
+            <AIAssistantSidebar />
 
             {/* Job Detail Modal */}
             {jobPostsData[0] && (

@@ -58,11 +58,11 @@ export function JobDetailModal({ jobPost, isOpen, onOpenChange }: JobDetailModal
                     <DialogHeader className="flex-none sticky top-0 z-10 bg-card/95 backdrop-blur-sm border-b border-gray-700 p-6 rounded-t-lg">
                         <div className="flex items-center justify-between ">
                             <div className="flex items-center gap-4">
-                                <div className="p-3 bg-blue-500/10 rounded-xl">
-                                    <Briefcase className="w-8 h-8 text-blue-500" />
+                                <div className="p-3 bg-primary/10 rounded-xl">
+                                    <Briefcase className="w-8 h-8 text-foreground" />
                                 </div>
                                 <div>
-                                    <DialogTitle className="text-3xl font-bold text-blue-500">
+                                    <DialogTitle className="text-3xl font-bold text-foreground">
                                         {jobPost.title}
                                     </DialogTitle>
                                     <div className="flex items-center gap-3 mt-2">
@@ -83,7 +83,7 @@ export function JobDetailModal({ jobPost, isOpen, onOpenChange }: JobDetailModal
                             <div className="space-y-8 py-6">
                                 {/* Job Overview */}
                                 <div className="bg-gray-800/50 backdrop-blur-sm p-8 rounded-xl border border-gray-700/50  transition-colors min-h-[16rem]">
-                                    <h3 className="text-xl font-semibold text-blue-400 mb-6 flex items-center gap-2">
+                                    <h3 className="text-xl font-semibold text-foreground mb-6 flex items-center gap-2">
                                         <Users className="w-5 h-5" />
                                         Job Overview
                                     </h3>
@@ -133,7 +133,7 @@ export function JobDetailModal({ jobPost, isOpen, onOpenChange }: JobDetailModal
 
                                 {/* Job Description */}
                                 <div className="bg-gray-800/50 backdrop-blur-sm p-8 rounded-xl border border-gray-700/50  transition-colors min-h-[24rem] flex flex-col">
-                                    <h3 className="text-xl font-semibold text-blue-400 mb-6 flex items-center gap-2">
+                                    <h3 className="text-xl font-semibold text-foreground mb-6 flex items-center gap-2">
                                         <Briefcase className="w-5 h-5" />
                                         Job Description
                                     </h3>
@@ -159,7 +159,7 @@ export function JobDetailModal({ jobPost, isOpen, onOpenChange }: JobDetailModal
                         <Button
                             variant="default"
                             onClick={handleEdit}
-                            className="bg-blue-500 hover:bg-blue-600 text-white gap-2 cursor-pointer"
+                            className="bg-primary hover:bg-primary/90 text-white gap-2 cursor-pointer"
                         >
                             <Pencil className="w-4 h-4" />
                             Edit Description

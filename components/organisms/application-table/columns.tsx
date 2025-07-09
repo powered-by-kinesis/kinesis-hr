@@ -39,7 +39,7 @@ export const getApplicationTableColumns = (): ColumnDef<ApplicationTableData>[] 
       accessorKey: 'jobTitle',
       header: ({ column }) => <DataTableColumnHeader column={column} title="Job Title" />,
       cell: ({ row }) => (
-        <Link href={`/hiring/jobs/detail/${row.original.jobPostId}`} className="font-medium hover:underline cursor-pointer hover:text-blue-500">
+        <Link href={`/hiring/jobs/detail/${row.original.jobPostId}`} className="font-medium hover:underline cursor-pointer hover:text-primary">
           {row.original.jobTitle}
         </Link>
       ),

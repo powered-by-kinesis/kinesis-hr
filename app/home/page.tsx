@@ -1,9 +1,13 @@
+'use client';
+
 import { AppSidebar } from '@/components/organisms/app-sidebar';
 import { SiteHeader } from '@/components/organisms/site-header';
 import { SidebarInset, SidebarProvider } from '@/components/ui/sidebar';
 import { AIAssistantSidebar } from '@/components/organisms/ai-assistant-sidebar';
+import { useState } from 'react';
 
 export default function HomePage() {
+  const [isMinimized, setIsMinimized] = useState(false);
   return (
     <div className="relative">
       <SidebarProvider
@@ -36,7 +40,7 @@ export default function HomePage() {
         </SidebarInset>
       </SidebarProvider>
 
-      <AIAssistantSidebar />
+      <AIAssistantSidebar isMinimized={isMinimized} onMinimize={() => setIsMinimized(true)} onMaximize={() => setIsMinimized(false)} />
     </div>
   );
 }

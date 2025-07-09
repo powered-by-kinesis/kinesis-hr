@@ -73,7 +73,7 @@ export const getCandidatesTableColumns = (onViewDetails: (candidateId: number) =
         <div>
           {row.original?.applications?.[0]?.documents?.[0]?.document?.filePath ? (
             <Link href={row.original?.applications?.[0]?.documents?.[0]?.document?.filePath} target="_blank" rel="noopener noreferrer">
-              <div className="font-medium hover:text-blue-500 hover:underline cursor-pointer">
+              <div className="font-medium hover:text-primary hover:underline cursor-pointer">
                 View Resume
               </div>
             </Link>

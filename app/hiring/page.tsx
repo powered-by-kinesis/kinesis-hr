@@ -10,6 +10,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { AIAssistantSidebar } from '@/components/organisms/ai-assistant-sidebar';
 import { Loading } from '@/components/molecules/loading';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useAIAssistant } from '@/hooks/use-ai-assistant/use-ai-assistant';
 
 // Import repositories and types
 import { jobPostRepository, applicantRepository } from '@/repositories';
@@ -22,7 +23,7 @@ export default function HiringPage() {
   const [jobPostsData, setJobPostsData] = React.useState<JobPostResponseDTO[]>([]);
   const [candidatesData, setCandidatesData] = React.useState<ApplicantResponseDTO[]>([]);
   const [isLoading, setIsLoading] = React.useState(true);
-  const [isAIAssistantMinimized, setIsAIAssistantMinimized] = React.useState(false);
+  const { isMinimized: isAIAssistantMinimized } = useAIAssistant();
   const [activeTab, setActiveTab] = React.useState('job-openings');
 
   // Function to fetch all data
@@ -73,7 +74,12 @@ export default function HiringPage() {
           <div className="flex flex-1 flex-col">
             <div className="@container/main flex flex-1 flex-col gap-2">
               {/* Main content with right margin to accommodate AI Assistant */}
-              <div className={cn("flex flex-col gap-4 py-4 md:gap-6 md:py-6", !isAIAssistantMinimized && "lg:mr-96")}>
+              <div
+                className={cn(
+                  'flex flex-col gap-4 py-4 transition-all duration-300 ease-in-out md:gap-6 md:py-6',
+                  !isAIAssistantMinimized && 'lg:mr-96'
+                )}
+              >
                 <div className="px-4 lg:px-6">
                   <div className="mb-6">
                     <h1 className="text-2xl font-semibold tracking-tight">Hiring Dashboard</h1>
@@ -160,11 +166,7 @@ export default function HiringPage() {
         </SidebarInset>
       </SidebarProvider>
 
-      <AIAssistantSidebar
-        isMinimized={isAIAssistantMinimized}
-        onMinimize={() => setIsAIAssistantMinimized(true)}
-        onMaximize={() => setIsAIAssistantMinimized(false)}
-      />
+      <AIAssistantSidebar />
     </div>
   );
 }
