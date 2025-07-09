@@ -54,14 +54,12 @@ export const useDocuments = () => {
       const data = await response.json();
       const documents: DocumentResponseDTO[] = data.data;
 
-      if (documents.length === 0) {
+      if (!documents || documents.length === 0) {
         toast.error('No documents uploaded.');
         return [];
       }
 
       const documentIds = documents.map((doc) => doc.id);
-
-      toast.success('Documents uploaded successfully.');
       return documentIds;
     } catch (error) {
       console.error('Upload error:', error);

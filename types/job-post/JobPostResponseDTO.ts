@@ -1,5 +1,11 @@
 import { JobPost, Stage } from '@prisma/client';
 
+export interface DocumentDTO {
+  id: number;
+  fileName: string;
+  filePath: string;
+}
+
 export interface ApplicationStageHistoryDTO {
   id: number;
   stage: Stage;
@@ -10,6 +16,11 @@ export interface ApplicationStageHistoryDTO {
     name: string | null;
     email: string;
   } | null;
+}
+
+export interface ApplicationDocumentDTO {
+  id: number;
+  document: DocumentDTO;
 }
 
 export interface ApplicationWithDetailsDTO {
@@ -23,8 +34,8 @@ export interface ApplicationWithDetailsDTO {
     fullName: string;
     email: string;
     phone?: string | null;
-    resumeUrl?: string | null;
   };
+  documents: ApplicationDocumentDTO[];
   stageHistory: ApplicationStageHistoryDTO[];
 }
 

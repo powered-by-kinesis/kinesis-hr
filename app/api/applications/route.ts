@@ -14,13 +14,17 @@ export async function GET() {
 export async function POST(request: Request) {
   try {
     const body = await request.json();
-    const validation = CreateApplicationRequestDTO.safeParse(body);
 
+    const validation = CreateApplicationRequestDTO.safeParse(body);
     if (!validation.success) {
-      return NextResponse.json(validation.error.errors, { status: 400 });
+      return NextResponse.json(
+        { message: 'Validation error', errors: validation.error.errors },
+        { status: 400 },
+      );
     }
 
-    const { fullName, email, phone, resumeUrl, jobPostId, expectedSalary, notes } = validation.data;
+    const { fullName, email, phone, jobPostId, expectedSalary, notes, documentIds } =
+      validation.data;
 
     let applicant = await prisma.applicant.findUnique({
       where: { email },
@@ -32,7 +36,6 @@ export async function POST(request: Request) {
           fullName,
           email,
           phone,
-          resumeUrl,
         },
       });
     }
@@ -51,20 +54,52 @@ export async function POST(request: Request) {
       );
     }
 
-    const newApplication = await prisma.application.create({
-      data: {
-        jobPostId,
-        applicantId: applicant.id,
-        expectedSalary,
-        notes,
-      },
-      include: {
-        applicant: true,
-      },
+    // Create application with document connections in a transaction
+    const newApplication = await prisma.$transaction(async (tx) => {
+      // Create the application first
+      const application = await tx.application.create({
+        data: {
+          jobPostId,
+          applicantId: applicant!.id,
+          expectedSalary,
+          notes,
+        },
+      });
+
+      // Then create document connections
+      if (documentIds && documentIds.length > 0) {
+        await tx.applicationDocument.createMany({
+          data: documentIds.map((documentId) => ({
+            applicationId: application.id,
+            documentId,
+          })),
+        });
+      }
+
+      // Return the created application with related data
+      return tx.application.findUnique({
+        where: { id: application.id },
+        include: {
+          applicant: true,
+          documents: {
+            include: {
+              document: true,
+            },
+          },
+        },
+      });
     });
+
+    if (!newApplication) {
+      throw new Error('Failed to create application');
+    }
 
     return NextResponse.json(newApplication, { status: 201 });
   } catch (error) {
-    return NextResponse.json({ message: 'Error creating application', error }, { status: 500 });
+    console.error('Error in POST /api/applications:', error);
+    return NextResponse.json(
+      { message: error instanceof Error ? error.message : 'Error creating application' },
+      { status: 500 },
+    );
   }
 }

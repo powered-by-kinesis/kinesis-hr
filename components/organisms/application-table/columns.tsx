@@ -53,6 +53,17 @@ export const getApplicationTableColumns = (): ColumnDef<ApplicationTableData>[] 
       ),
     },
     {
+      accessorKey: 'resumeUrl',
+      header: ({ column }) => <DataTableColumnHeader column={column} title="Resume" />,
+      cell: ({ row }) => (
+        <div className="text-muted-foreground">
+          <a href={row.original.resumeUrl || ''} target="_blank" rel="noopener noreferrer">
+            View Resume
+          </a>
+        </div>
+      ),
+    },
+    {
       accessorKey: 'expectedSalary',
       header: ({ column }) => <DataTableColumnHeader column={column} title="Expected Salary" />,
       cell: ({ row }) => <div className="text-muted-foreground">{row.original.expectedSalary || 'N/A'}</div>,

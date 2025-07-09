@@ -17,7 +17,6 @@ type CandidateData = ApplicantResponseDTO;
 
 
 export const getCandidatesTableColumns = (onViewDetails: (candidateId: number) => void): ColumnDef<CandidateData>[] => {
-
   return [
     {
       id: 'select',
@@ -72,8 +71,8 @@ export const getCandidatesTableColumns = (onViewDetails: (candidateId: number) =
       header: 'Resume',
       cell: ({ row }) => (
         <div>
-          {row.original.resumeUrl ? (
-            <Link href={row.original.resumeUrl} target="_blank" rel="noopener noreferrer">
+          {row.original?.applications?.[0]?.documents?.[0]?.document?.filePath ? (
+            <Link href={row.original?.applications?.[0]?.documents?.[0]?.document?.filePath} target="_blank" rel="noopener noreferrer">
               <div className="font-medium hover:text-blue-500 hover:underline cursor-pointer">
                 View Resume
               </div>

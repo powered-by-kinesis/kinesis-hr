@@ -31,7 +31,7 @@ const quickQuestions = [
   'How to improve employee retention?',
 ];
 
-export const AIAssistantSidebar: React.FC<AIAssistantSidebarProps> = ({ className, isMinimized, onMinimize, onMaximize }) => {
+export const AIAssistantSidebar: React.FC<AIAssistantSidebarProps> = ({ className, isMinimized = false, onMinimize, onMaximize }) => {
   const [messages, setMessages] = useState<Message[]>([
     {
       id: '1',

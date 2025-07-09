@@ -23,8 +23,6 @@ import { cn } from '@/lib/utils';
 import { motion, AnimatePresence } from 'framer-motion';
 import { applicantRepository } from '@/repositories/applicant-repository';
 import { ApplicantResponseDTO } from '@/types/applicant';
-import { useState, useEffect } from 'react';
-import * as pdfjs from 'pdfjs-dist';
 import { ApplicationTable } from '@/components/organisms/application-table';
 
 // Skill assessment data structure
@@ -84,17 +82,9 @@ function getRatingColor(rating: string): string {
     }
 }
 
-const getGoogleDriveViewerUrl = (url: string | null): string | null => {
-    if (!url) return null;
-    // Check if it's a Google Drive URL
-    if (url.includes('drive.google.com')) {
-        // Convert to the format: https://drive.google.com/file/d/{fileId}/preview
-        const fileId = url.match(/[-\w]{25,}/);
-        if (fileId) {
-            return `https://drive.google.com/file/d/${fileId[0]}/preview`;
-        }
-    }
-    return url;
+const getDocumentViewerUrl = (url: string | null): string => {
+    if (!url) return '';
+    return `https://docs.google.com/gview?url=${encodeURIComponent(url)}&embedded=true`;
 };
 
 export default function CandidateDetailsPage() {
@@ -104,6 +94,9 @@ export default function CandidateDetailsPage() {
     const [candidate, setCandidate] = React.useState<ApplicantResponseDTO | null>(null);
     const [isAIAssistantMinimized, setIsAIAssistantMinimized] = React.useState(false);
     const [activeTab, setActiveTab] = React.useState('info');
+
+    // Extract resume URL from the application documents
+    const resumeUrl = candidate?.applications?.[0]?.documents?.[0]?.document?.filePath;
 
     const fetchData = React.useCallback(async () => {
         try {
@@ -121,11 +114,6 @@ export default function CandidateDetailsPage() {
         fetchData();
     }, [fetchData]);
 
-    // Initialize PDF.js worker
-    useEffect(() => {
-        pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.min.js`;
-    }, []);
-
     if (isLoading) {
         return (
             <div className="flex items-center justify-center min-h-screen">
@@ -133,9 +121,6 @@ export default function CandidateDetailsPage() {
             </div>
         );
     }
-
-    console.log('candidate', candidate);
-
 
     return (
         <div className="relative min-h-screen bg-background">
@@ -283,25 +268,25 @@ export default function CandidateDetailsPage() {
                                                                         </CardHeader>
                                                                         <CardContent>
                                                                             <div className="aspect-[8.5/11] bg-gray-50 rounded-lg flex items-center justify-center relative">
-                                                                                {candidate?.resumeUrl ? (
+                                                                                {resumeUrl ? (
                                                                                     <div className="w-full h-full relative">
                                                                                         <iframe
-                                                                                            src={getGoogleDriveViewerUrl(candidate.resumeUrl) ?? ''}
+                                                                                            src={getDocumentViewerUrl(resumeUrl)}
                                                                                             className="w-full h-full rounded-lg"
-                                                                                            title={`${candidate.fullName}'s Resume`}
+                                                                                            title={`${candidate?.fullName}'s Resume`}
                                                                                         />
                                                                                         <div className="absolute bottom-4 right-4 flex gap-2">
                                                                                             <Button
                                                                                                 variant="outline"
                                                                                                 size="sm"
                                                                                                 onClick={() => {
-                                                                                                    if (candidate.resumeUrl) {
-                                                                                                        window.open(candidate.resumeUrl, '_blank');
+                                                                                                    if (resumeUrl) {
+                                                                                                        window.open(resumeUrl, '_blank');
                                                                                                     }
                                                                                                 }}
                                                                                             >
                                                                                                 <FileText className="h-4 w-4 mr-2" />
-                                                                                                Open in Drive
+                                                                                                Open
                                                                                             </Button>
                                                                                         </div>
                                                                                     </div>

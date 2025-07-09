@@ -19,6 +19,7 @@ import { ApplicantResponseDTO } from '@/types/applicant';
 import { Stage } from '@/constants/enums/stage';
 import { ArrowLeft } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { motion, AnimatePresence } from 'framer-motion';
 
 export default function JobDetailPage() {
     const params = useParams();
@@ -33,6 +34,7 @@ export default function JobDetailPage() {
     const [candidatesOffer, setCandidatesOffer] = React.useState<ApplicantResponseDTO[]>([]);
     const [isLoading, setIsLoading] = React.useState(true);
     const [isAIAssistantMinimized, setIsAIAssistantMinimized] = React.useState(false);
+    const [activeTab, setActiveTab] = React.useState('applied');
 
     const transformJobPostToCandidates = (jobPost: JobPostResponseDTO, filter?: Stage) => {
         return jobPost.applications?.filter((application) => application.currentStage === filter).map((application) => ({
@@ -130,7 +132,7 @@ export default function JobDetailPage() {
                                             </div>
                                         </div>
 
-                                        <Tabs defaultValue="applied">
+                                        <Tabs defaultValue="applied" onValueChange={setActiveTab}>
                                             <TabsList className="grid grid-cols-5">
                                                 <TabsTrigger value="applied" className="flex items-center gap-2 cursor-pointer">
                                                     Applied
@@ -148,56 +150,75 @@ export default function JobDetailPage() {
                                                     Hired
                                                 </TabsTrigger>
                                             </TabsList>
-
-                                            <TabsContent value="applied" className="mt-6">
-                                                {isLoading ? (
-                                                    <div className="flex items-center justify-center py-12">
-                                                        <Loading />
-                                                    </div>
-                                                ) : (
-                                                    <CandidatesTable data={candidatesApplied} />
-                                                )}
-                                            </TabsContent>
-
-                                            <TabsContent value="hired" className="mt-6">
-                                                {isLoading ? (
-                                                    <div className="flex items-center justify-center py-12">
-                                                        <Loading />
-                                                    </div>
-                                                ) : (
-                                                    <CandidatesTable data={candidatesHired} />
-                                                )}
-                                            </TabsContent>
-
-                                            <TabsContent value="ai-screening" className="mt-6">
-                                                {isLoading ? (
-                                                    <div className="flex items-center justify-center py-12">
-                                                        <Loading />
-                                                    </div>
-                                                ) : (
-                                                    <CandidatesTable data={candidatesAI} />
-                                                )}
-                                            </TabsContent>
-
-                                            <TabsContent value="review" className="mt-6">
-                                                {isLoading ? (
-                                                    <div className="flex items-center justify-center py-12">
-                                                        <Loading />
-                                                    </div>
-                                                ) : (
-                                                    <CandidatesTable data={candidatesReview} />
-                                                )}
-                                            </TabsContent>
-
-                                            <TabsContent value="offer" className="mt-6">
-                                                {isLoading ? (
-                                                    <div className="flex items-center justify-center py-12">
-                                                        <Loading />
-                                                    </div>
-                                                ) : (
-                                                    <CandidatesTable data={candidatesOffer} />
-                                                )}
-                                            </TabsContent>
+                                            <div className="relative mt-6">
+                                                <AnimatePresence mode="wait">
+                                                    {activeTab === 'applied' && (
+                                                        <motion.div
+                                                            key="applied"
+                                                            initial={{ opacity: 0, x: -20 }}
+                                                            animate={{ opacity: 1, x: 0 }}
+                                                            exit={{ opacity: 0, x: 20 }}
+                                                            transition={{ duration: 0.3, ease: 'easeInOut' }}
+                                                        >
+                                                            <TabsContent value="applied" forceMount>
+                                                                {isLoading ? <div className="flex items-center justify-center py-12"><Loading /></div> : <CandidatesTable data={candidatesApplied} />}
+                                                            </TabsContent>
+                                                        </motion.div>
+                                                    )}
+                                                    {activeTab === 'ai-screening' && (
+                                                        <motion.div
+                                                            key="ai-screening"
+                                                            initial={{ opacity: 0, x: -20 }}
+                                                            animate={{ opacity: 1, x: 0 }}
+                                                            exit={{ opacity: 0, x: 20 }}
+                                                            transition={{ duration: 0.3, ease: 'easeInOut' }}
+                                                        >
+                                                            <TabsContent value="ai-screening" forceMount>
+                                                                {isLoading ? <div className="flex items-center justify-center py-12"><Loading /></div> : <CandidatesTable data={candidatesAI} />}
+                                                            </TabsContent>
+                                                        </motion.div>
+                                                    )}
+                                                    {activeTab === 'review' && (
+                                                        <motion.div
+                                                            key="review"
+                                                            initial={{ opacity: 0, x: -20 }}
+                                                            animate={{ opacity: 1, x: 0 }}
+                                                            exit={{ opacity: 0, x: 20 }}
+                                                            transition={{ duration: 0.3, ease: 'easeInOut' }}
+                                                        >
+                                                            <TabsContent value="review" forceMount>
+                                                                {isLoading ? <div className="flex items-center justify-center py-12"><Loading /></div> : <CandidatesTable data={candidatesReview} />}
+                                                            </TabsContent>
+                                                        </motion.div>
+                                                    )}
+                                                    {activeTab === 'offer' && (
+                                                        <motion.div
+                                                            key="offer"
+                                                            initial={{ opacity: 0, x: -20 }}
+                                                            animate={{ opacity: 1, x: 0 }}
+                                                            exit={{ opacity: 0, x: 20 }}
+                                                            transition={{ duration: 0.3, ease: 'easeInOut' }}
+                                                        >
+                                                            <TabsContent value="offer" forceMount>
+                                                                {isLoading ? <div className="flex items-center justify-center py-12"><Loading /></div> : <CandidatesTable data={candidatesOffer} />}
+                                                            </TabsContent>
+                                                        </motion.div>
+                                                    )}
+                                                    {activeTab === 'hired' && (
+                                                        <motion.div
+                                                            key="hired"
+                                                            initial={{ opacity: 0, x: -20 }}
+                                                            animate={{ opacity: 1, x: 0 }}
+                                                            exit={{ opacity: 0, x: 20 }}
+                                                            transition={{ duration: 0.3, ease: 'easeInOut' }}
+                                                        >
+                                                            <TabsContent value="hired" forceMount>
+                                                                {isLoading ? <div className="flex items-center justify-center py-12"><Loading /></div> : <CandidatesTable data={candidatesHired} />}
+                                                            </TabsContent>
+                                                        </motion.div>
+                                                    )}
+                                                </AnimatePresence>
+                                            </div>
                                         </Tabs>
                                     </div>
                                 </div>
