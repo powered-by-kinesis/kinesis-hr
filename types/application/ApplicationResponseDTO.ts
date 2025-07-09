@@ -1,6 +1,5 @@
 import { z } from 'zod';
 import { Stage } from '@prisma/client';
-import { ApplicantResponseDTO } from '../applicant';
 
 export const ApplicationResponseDTO = z.object({
   id: z.number(),
@@ -35,4 +34,4 @@ export const ApplicationResponseDTO = z.object({
   ),
 });
 
-export type ApplicationResponseDTO = z.infer<typeof ApplicantResponseDTO>;
+export type ApplicationResponseDTO = z.infer<typeof ApplicationResponseDTO>;

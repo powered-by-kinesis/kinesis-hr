@@ -9,14 +9,10 @@ import { applicantRepository } from '@/repositories/applicant-repository';
 import { CandidateDetailsClient } from './candidate-details-client';
 import { CandidateDetailsSkeleton } from '@/components/organisms/candidate-details-skeleton';
 
-interface CandidateDetailsPageProps {
-    params: {
-        id: string;
-    };
-}
 
-export default async function CandidateDetailsPage({ params }: CandidateDetailsPageProps) {
-    const candidateData = await applicantRepository.getApplicantById(Number(params.id));
+export default async function CandidateDetailsPage({ params }: { params: Promise<{ id: string }> }) {
+    const { id } = await params;
+    const candidateData = await applicantRepository.getApplicantById(Number(id));
 
     if (!candidateData) {
         notFound();

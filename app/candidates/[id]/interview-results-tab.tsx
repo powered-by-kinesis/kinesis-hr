@@ -67,7 +67,7 @@ function getRatingColor(rating: string): string {
 export function InterviewResultsTab() {
     return (
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-            <Card className="lg:col-span-1">
+            <Card className="lg:col-span-1 h-fit">
                 <CardHeader>
                     <CardTitle>Skills Assessment</CardTitle>
                 </CardHeader>

@@ -14,6 +14,8 @@ import { MoreVertical } from "lucide-react";
 import { DeleteAlert } from "../delete-alert";
 import { applicationRepository } from "@/repositories/application-repository";
 import { toast } from "sonner";
+import { CurrentStageBadge } from "@/components/molecules/badge/current-stage";
+import { Stage } from "@/constants/enums/stage";
 
 export const getApplicationTableColumns = (onDeleteApplication?: (id: number) => void, onEditApplication?: (data: ApplicationTableData) => void): ColumnDef<ApplicationTableData>[] => {
   const handleDeleteApplication = async (id: number) => {
@@ -65,7 +67,7 @@ export const getApplicationTableColumns = (onDeleteApplication?: (id: number) =>
       accessorKey: 'currentStage',
       header: ({ column }) => <DataTableColumnHeader column={column} title="Current Stage" />,
       cell: ({ row }) => (
-        <div className="text-muted-foreground">{row.original.currentStage || 'N/A'}</div>
+        <CurrentStageBadge stage={row.original.currentStage as Stage} />
       ),
     },
     {

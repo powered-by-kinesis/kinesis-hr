@@ -77,7 +77,7 @@ export function CandidateDetailsClient({ initialCandidate }: CandidateDetailsCli
                                 {activeTab === 'info' && (
                                     <TabsContent value="info" forceMount className="w-full">
                                         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                                            <Card className="lg:col-span-1">
+                                            <Card className="lg:col-span-1 h-fit">
                                                 <CardContent className="p-6 text-center">
                                                     <h2 className="text-xl font-bold">{candidate.fullName}</h2>
                                                     <p className="text-sm text-muted-foreground mt-1">{candidate.email}</p>
@@ -122,7 +122,7 @@ export function CandidateDetailsClient({ initialCandidate }: CandidateDetailsCli
                                         <ApplicationTable
                                             data={candidate as ApplicantResponseDTO}
                                             onDeleteApplication={handleDataMutation}
-                                            onEditApplication={() => handleDataMutation()}
+                                            onEditApplication={handleDataMutation}
                                         />
                                     </TabsContent>
                                 )}

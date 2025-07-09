@@ -19,7 +19,7 @@ import { JobStatus } from '@/constants/enums/job-status';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { SalaryType, getSalaryTypeLabel } from '@/constants/enums/salary-type';
 import { JobBadge, EmploymentTypeBadge } from '@/components/molecules/badge';
-import { JobPostModal } from '@/components/organisms/create-job-post-modal';
+import { JobPostModal } from '@/components/organisms/job-post-modal';
 
 interface JobDetailModalProps {
     jobPost: JobPostResponseDTO;
