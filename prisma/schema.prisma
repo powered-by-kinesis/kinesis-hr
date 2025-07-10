@@ -186,7 +186,7 @@ model JobPost {
   location       String?
   employmentType String
   status         String 
-  department     String
+  department     String?
   salaryMin      Decimal?      @db.Decimal(12,2)  // Support up to 9,999,999,999.99
   salaryMax      Decimal?      @db.Decimal(12,2)
   currency       String?       // USD, IDR, JPY, etc

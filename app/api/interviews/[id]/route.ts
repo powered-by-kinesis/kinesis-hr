@@ -4,12 +4,13 @@ import { InterviewResponseDTO, UpdateInterviewRequestDTO } from '@/types/intervi
 
 export async function GET(
     _req: NextRequest,
-    { params }: { params: { id: string } },
-): Promise<NextResponse<InterviewResponseDTO | { message: string }>> {
-    const { id } = params;
+    { params }: { params: Promise<{ id: string }> },
+) {
+    const { id } = await params;
     const interview = await prisma.interview.findUnique({
         where: { id: parseInt(id) },
         include: {
+            jobPost: true,
             invitations: {
                 include: {
                     applicant: {

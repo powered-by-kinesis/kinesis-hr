@@ -19,7 +19,6 @@ const DetailInterviewPage = () => {
     const params = useParams();
     const interviewId = params.id as string;
 
-    const [applicantsForTable, setApplicantsForTable] = useState<ApplicantResponseDTO[]>([]);
     const [interviewData, setInterviewData] = useState<InterviewResponseDTO | null>(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
@@ -32,30 +31,6 @@ const DetailInterviewPage = () => {
                 const interview = await interviewRepository.getInterviewById(parseInt(interviewId));
                 setInterviewData(interview);
 
-                // Extract applicants directly from the interview object using the interview invitations
-                const applicants = interview.invitations?.map(invitation => invitation.applicant) || [];
-
-                // Process applicant data for the chart
-                const statusCounts: { [key: string]: number } = {
-                    "Taken Interview": 0,
-                    "Yet to Take Interview": 0,
-                };
-                applicants.forEach(applicant => {
-                    applicant.applications?.forEach(app => {
-                        const stage = app.currentStage;
-                        if (stage === "APPLIED" || stage === "AI_SCREENING") {
-                            statusCounts["Yet to Take Interview"]++;
-                        } else {
-                            statusCounts["Taken Interview"]++;
-                        }
-                    });
-                });
-
-                const takenCount = statusCounts["Taken Interview"];
-                const yetToTakeCount = statusCounts["Yet to Take Interview"];
-
-                setApplicantsForTable(applicants);
-
             } catch (err) {
                 console.error("Error fetching data:", err);
                 setError((err as Error).message);
@@ -67,7 +42,7 @@ const DetailInterviewPage = () => {
         if (interviewId) {
             fetchData();
         }
-    }, [interviewId]);
+    }, [interviewId, loading]);
 
     const handleInviteCandidate = () => {
         setIsInviteModalOpen(true);
@@ -76,6 +51,7 @@ const DetailInterviewPage = () => {
     const handleInviteSuccess = () => {
         // Optionally re-fetch data or update UI after successful invitation
         // For now, just close the modal
+        setLoading(true); // Set loading to true to re-fetch data
         setIsInviteModalOpen(false);
     };
 
@@ -121,18 +97,35 @@ const DetailInterviewPage = () => {
                                             <div className="mb-6 *:data-[slot=card]:from-primary/5 *:data-[slot=card]:to-card dark:*:data-[slot=card]:bg-card grid grid-cols-1 gap-4 *:data-[slot=card]:bg-gradient-to-t *:data-[slot=card]:shadow-xs lg:px-6 @xl/main:grid-cols-2 @5xl/main:grid-cols-4">
                                                 <Card className="@container/card">
                                                     <CardHeader>
-                                                        <CardDescription>Applied</CardDescription>
-                                                        <CardTitle className="text-2xl font-semibold tabular-nums @[250px]/card:text-3xl">
-                                                            $1,250.00
+                                                        <CardDescription>Invited</CardDescription>
+                                                        <CardTitle className="text-xl font-semibold tabular-nums @[250px]/card:text-3xl">
+                                                            {interviewData?.invitations?.filter(inv => inv.status === 'INVITED').length || 0}
                                                         </CardTitle>
                                                     </CardHeader>
                                                     <CardFooter className="flex-col items-start gap-1.5 text-sm">
-                                                        <div className="line-clamp-1 flex gap-2 font-medium">
-                                                            Trending up this month
-                                                        </div>
-                                                        <div className="text-muted-foreground">
-                                                            Visitors for the last 6 months
-                                                        </div>
+                                                        <span className="text-muted-foreground">Total Invitations</span>
+                                                    </CardFooter>
+                                                </Card>
+                                                <Card className="@container/card">
+                                                    <CardHeader>
+                                                        <CardDescription>Completed</CardDescription>
+                                                        <CardTitle className="text-xl font-semibold tabular-nums @[250px]/card:text-3xl">
+                                                            {interviewData?.invitations?.filter(inv => inv.status === 'COMPLETED').length || 0}
+                                                        </CardTitle>
+                                                    </CardHeader>
+                                                    <CardFooter className="flex-col items-start gap-1.5 text-sm">
+                                                        <span className="text-muted-foreground">Total Completed</span>
+                                                    </CardFooter>
+                                                </Card>
+                                                <Card className="@container/card">
+                                                    <CardHeader>
+                                                        <CardDescription>Applicant</CardDescription>
+                                                        <CardTitle className="text-xl font-semibold tabular-nums @[250px]/card:text-3xl">
+                                                            {interviewData?.invitations?.length || 0}
+                                                        </CardTitle>
+                                                    </CardHeader>
+                                                    <CardFooter className="flex-col items-start gap-1.5 text-sm">
+                                                        <span className="text-muted-foreground">Total Applicants</span>
                                                     </CardFooter>
                                                 </Card>
                                             </div>

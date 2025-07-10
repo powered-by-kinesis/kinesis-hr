@@ -104,7 +104,11 @@ export default function AIInterviewerPage() {
       </div>
 
       {/* Fixed AI Assistant Sidebar */}
-      <AIAssistantSidebar />
+      <AIAssistantSidebar isMinimized={false} onMinimize={function (): void {
+        throw new Error('Function not implemented.');
+      }} onMaximize={function (): void {
+        throw new Error('Function not implemented.');
+      }} />
 
       <CreateInterviewModal
         isOpen={isCreateModalOpen}

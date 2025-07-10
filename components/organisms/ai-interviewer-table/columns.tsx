@@ -90,6 +90,20 @@ export const getCandidatesTableColumns = (onViewDetails: (candidateId: number) =
       header: ({ column }) => <DataTableColumnHeader column={column} title="Expires At" />,
       cell: ({ row }) => <div className="text-muted-foreground">{formatDate(row.original.expiresAt ?? '')}</div>,
     },
+    {
+      accessorKey: 'status',
+      header: ({ column }) => <DataTableColumnHeader column={column} title="Status" />,
+      cell: ({ row }) => {
+        const status = row.original.status;
+        let badgeColor = 'bg-gray-900 text-white';
+        if (status === 'COMPLETED') {
+          badgeColor = 'bg-green-500 text-white';
+        } else if (status === 'INVITED') {
+          badgeColor = 'bg-yellow-500 text-white';
+        }
+        return <Badge variant="outline" className={badgeColor}>{status}</Badge>;
+      }
+    },
     // {
     //   accessorKey: 'hardSkills',
     //   header: ({ column }) => <DataTableColumnHeader column={column} title="Hard Skills" />,

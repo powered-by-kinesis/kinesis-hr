@@ -86,7 +86,8 @@ export default function AiInterviewPage() {
                     interview_time_limit: 5,
                     email: validationResponseData?.data.applicant.email || '',
                     applicant_name: validationResponseData?.data.applicant.fullName || 'Applicant',
-                    applicantId: validationResponseData?.data.applicant.id || ''
+                    applicantId: validationResponseData?.data.applicant.id || '',
+                    position: interviewData?.jobPost?.title || '',
                 },
             });
             setIsRecording(true);

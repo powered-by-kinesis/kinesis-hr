@@ -131,26 +131,8 @@ export function CreateInterviewModal({
         }
 
         try {
-            // First, submit the interview creation data to get the interview ID
-            // Assuming onSubmit will trigger the API call and return the created interview object
-            const createdInterview = await onSubmit({ ...data, applicantIds: selectedApplicantIds });
-
-            if (createdInterview && createdInterview.id) {
-                // Find the full applicant objects for the selected IDs
-                const selectedApplicantsDetails = applicants.filter(applicant =>
-                    selectedApplicantIds.includes(applicant.id)
-                );
-
-                // Send invitation for each selected applicant
-                for (const applicant of selectedApplicantsDetails) {
-                    await applicantRepository.sendInvitation(applicant.email, createdInterview.id.toString());
-                    // You might want to add a toast.success here for each invitation or a single one at the end
-                }
-                toast.success('Interview created and invitations sent successfully!');
-            } else {
-                toast.error('Failed to create interview or get interview ID.');
-            }
-
+            await onSubmit({ ...data, applicantIds: selectedApplicantIds });
+            toast.success('Interview created and invitations sent successfully!');
             form.reset();
             onClose();
             setCurrentStep(1);

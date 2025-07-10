@@ -5,7 +5,7 @@ import { InterviewResponseDTO } from '@/types/interview';
 import { DataTableColumnHeader } from '@/components/organisms/data-table/data-table-column-header';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { Button } from '@/components/ui/button';
-import { Copy, MoreVertical } from 'lucide-react';
+import { MoreVertical } from 'lucide-react';
 import { formatDate } from '@/utils/format-date';
 import Link from 'next/link';
 
@@ -59,13 +59,6 @@ export const getInterviewsTableColumns = (onEditInterview: (interview: Interview
                         </Button>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent align="end">
-                        <DropdownMenuItem
-                            onClick={() => navigator.clipboard.writeText(`${window.location.origin}/ai-interviewer/${row.original.id}/interview`)}
-                            className="cursor-pointer"
-                        >
-                            <Copy className='mr-2 h-4 w-4' />
-                            Copy URL
-                        </DropdownMenuItem>
                         <DropdownMenuItem
                             onClick={() => onEditInterview(row.original)}
                             className="cursor-pointer"
