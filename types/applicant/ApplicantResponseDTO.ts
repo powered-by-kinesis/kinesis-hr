@@ -1,13 +1,17 @@
 import { z } from 'zod';
-import { ApplicationResponseDTO } from '../application';
+import { Applicant, Application } from '@prisma/client';
+import { TApplicationResponseDTO } from '../application';
 
-export const ApplicantResponseDTO = z.object({
+
+export const TApplicantResponseDTO = z.object({
   id: z.number(),
   fullName: z.string(),
   email: z.string(),
   phone: z.string().nullable(),
   appliedAt: z.date(),
-  applications: z.array(ApplicationResponseDTO).optional(),
+  applications: z.array(TApplicationResponseDTO).optional(), // Add applications array
 });
 
-export type ApplicantResponseDTO = z.infer<typeof ApplicantResponseDTO>;
+export type ApplicantResponseDTO = Applicant & {
+  applications?: Application[];
+}

@@ -62,8 +62,14 @@ export function DataTableRowActions<TData>({
             <Copy className='mr-2 h-4 w-4' />
             Copy Task ID
           </DropdownMenuItem>
+          <DropdownMenuItem
+            onClick={() => navigator.clipboard.writeText(`${window.location.origin}/ai-interviewer/${task.id}/interview`)}
+          >
+            <Copy className='mr-2 h-4 w-4' />
+            Copy Interview URL
+          </DropdownMenuItem>
           <DropdownMenuSeparator />
-          <DialogTrigger asChild onClick={() => {}}>
+          <DialogTrigger asChild onClick={() => { }}>
             <DropdownMenuItem>
               {" "}
               <Eye className='mr-2 h-4 w-4' />

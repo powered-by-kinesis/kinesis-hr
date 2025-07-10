@@ -9,11 +9,10 @@ import { DataTable } from '@/components/organisms/data-table/data-table';
 import { StatusOptions } from '@/types/status-options';
 import { INTERVIEW_TYPE_OPTIONS } from '@/constants/enums/interview-type';
 import { SKILL_LEVEL_OPTIONS } from '@/constants/enums/skill-level';
-
-type CandidateData = ApplicantResponseDTO;
+import { InterviewInvitationResponseDTO } from '@/types/interview/InterviewInvitationResponseDTO';
 
 interface AiInterviewerTableProps {
-  data: CandidateData[];
+  data: InterviewInvitationResponseDTO[];
 }
 
 export function AiInterviewerTable({ data }: AiInterviewerTableProps) {
@@ -76,11 +75,11 @@ export function AiInterviewerTable({ data }: AiInterviewerTableProps) {
 
   const columns = getCandidatesTableColumns(handleViewDetails);
   const statusOptions: StatusOptions[] = [
-    {
-      column: 'interviewType',
-      title: 'Interview Type',
-      options: INTERVIEW_TYPE_OPTIONS as unknown as StatusOptions['options'],
-    },
+    // {
+    //   column: 'interviewType',
+    //   title: 'Interview Type',
+    //   options: INTERVIEW_TYPE_OPTIONS as unknown as StatusOptions['options'],
+    // },
     // {
     //   column: 'softSkills',
     //   title: 'Soft Skills',
@@ -96,11 +95,11 @@ export function AiInterviewerTable({ data }: AiInterviewerTableProps) {
     //   title: 'Technical Results',
     //   options: SKILL_LEVEL_OPTIONS as unknown as StatusOptions['options'],
     // },
-    {
-      column: 'overallLevel',
-      title: 'Overall Level',
-      options: SKILL_LEVEL_OPTIONS as unknown as StatusOptions['options'],
-    },
+    // {
+    //   column: 'overallLevel',
+    //   title: 'Overall Level',
+    //   options: SKILL_LEVEL_OPTIONS as unknown as StatusOptions['options'],
+    // },
   ];
 
   return (
