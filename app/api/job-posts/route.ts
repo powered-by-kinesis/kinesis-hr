@@ -12,6 +12,11 @@ export async function GET(_req: NextRequest): Promise<NextResponse<JobPostRespon
         include: {
           applicant: true,
           stageHistory: true,
+          documents: {
+            include: {
+              document: true,
+            },
+          },
         },
       },
     },

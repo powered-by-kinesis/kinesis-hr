@@ -5,8 +5,10 @@ export const CreateApplicationRequestDTO = z.object({
   fullName: z.string().min(1, { message: 'Full name is required' }),
   email: z.string().email({ message: 'Invalid email address' }),
   phone: z.string().optional(),
-  resumeUrl: z.string().url({ message: 'Invalid URL format' }).optional(),
-  expectedSalary: z.string(),
+  documentIds: z.array(z.number()),
+  expectedSalary: z
+    .string()
+    .regex(/^\d+$/, { message: 'Please enter a valid number without commas or dots' }),
   notes: z.string().optional(),
 });
 

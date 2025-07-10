@@ -24,6 +24,14 @@ export const TApplicationResponseDTO = z.object({
       salaryType: z.string().nullable(),
     })
     .nullable(),
+  documents: z.array(
+    z.object({
+      id: z.number(),
+      document: z.object({
+        filePath: z.string(),
+      }),
+    }),
+  ),
 });
 
 export type ApplicationResponseDTO = z.infer<typeof TApplicationResponseDTO>;

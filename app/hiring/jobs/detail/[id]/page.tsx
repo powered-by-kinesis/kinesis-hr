@@ -19,6 +19,8 @@ import { ApplicantResponseDTO } from '@/types/applicant';
 import { Stage } from '@/constants/enums/stage';
 import { ArrowLeft } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { motion, AnimatePresence } from 'framer-motion';
+import { useAIAssistant } from '@/hooks/use-ai-assistant/use-ai-assistant';
 
 export default function JobDetailPage() {
     const params = useParams();
@@ -32,14 +34,15 @@ export default function JobDetailPage() {
     const [candidatesReview, setCandidatesReview] = React.useState<ApplicantResponseDTO[]>([]);
     const [candidatesOffer, setCandidatesOffer] = React.useState<ApplicantResponseDTO[]>([]);
     const [isLoading, setIsLoading] = React.useState(true);
-    const [isAIAssistantMinimized, setIsAIAssistantMinimized] = React.useState(false);
+    const { isMinimized: isAIAssistantMinimized } = useAIAssistant();
+    const [activeTab, setActiveTab] = React.useState('applied');
 
     const transformJobPostToCandidates = (jobPost: JobPostResponseDTO, filter?: Stage) => {
         return jobPost.applications?.filter((application) => application.currentStage === filter).map((application) => ({
             ...application.applicant,
             appliedAt: application.appliedAt,
             phone: application.applicant.phone || null,
-            resumeUrl: application.applicant.resumeUrl || null,
+            resumeUrl: application?.documents[0]?.document.filePath || null,
             stage: application.currentStage,
             // applications: [{
             //     id: application.id,
@@ -118,7 +121,7 @@ export default function JobDetailPage() {
                                                 </Button>
                                             </div>
                                             <div className="flex items-center justify-between">
-                                                <h1 className="text-3xl font-bold text-blue-500">{jobPostsData[0]?.title || 'Job Post Detail'}</h1>
+                                                <h1 className="text-3xl font-bold text-foreground">{jobPostsData[0]?.title || 'Job Post Detail'}</h1>
                                                 <Button
                                                     variant="outline"
                                                     size="sm"
@@ -130,7 +133,7 @@ export default function JobDetailPage() {
                                             </div>
                                         </div>
 
-                                        <Tabs defaultValue="applied">
+                                        <Tabs defaultValue="applied" onValueChange={setActiveTab}>
                                             <TabsList className="grid grid-cols-5">
                                                 <TabsTrigger value="applied" className="flex items-center gap-2 cursor-pointer">
                                                     Applied
@@ -148,56 +151,75 @@ export default function JobDetailPage() {
                                                     Hired
                                                 </TabsTrigger>
                                             </TabsList>
-
-                                            <TabsContent value="applied" className="mt-6">
-                                                {isLoading ? (
-                                                    <div className="flex items-center justify-center py-12">
-                                                        <Loading />
-                                                    </div>
-                                                ) : (
-                                                    <CandidatesTable data={candidatesApplied} />
-                                                )}
-                                            </TabsContent>
-
-                                            <TabsContent value="hired" className="mt-6">
-                                                {isLoading ? (
-                                                    <div className="flex items-center justify-center py-12">
-                                                        <Loading />
-                                                    </div>
-                                                ) : (
-                                                    <CandidatesTable data={candidatesHired} />
-                                                )}
-                                            </TabsContent>
-
-                                            <TabsContent value="ai-screening" className="mt-6">
-                                                {isLoading ? (
-                                                    <div className="flex items-center justify-center py-12">
-                                                        <Loading />
-                                                    </div>
-                                                ) : (
-                                                    <CandidatesTable data={candidatesAI} />
-                                                )}
-                                            </TabsContent>
-
-                                            <TabsContent value="review" className="mt-6">
-                                                {isLoading ? (
-                                                    <div className="flex items-center justify-center py-12">
-                                                        <Loading />
-                                                    </div>
-                                                ) : (
-                                                    <CandidatesTable data={candidatesReview} />
-                                                )}
-                                            </TabsContent>
-
-                                            <TabsContent value="offer" className="mt-6">
-                                                {isLoading ? (
-                                                    <div className="flex items-center justify-center py-12">
-                                                        <Loading />
-                                                    </div>
-                                                ) : (
-                                                    <CandidatesTable data={candidatesOffer} />
-                                                )}
-                                            </TabsContent>
+                                            <div className="relative mt-6">
+                                                <AnimatePresence mode="wait">
+                                                    {activeTab === 'applied' && (
+                                                        <motion.div
+                                                            key="applied"
+                                                            initial={{ opacity: 0, x: -20 }}
+                                                            animate={{ opacity: 1, x: 0 }}
+                                                            exit={{ opacity: 0, x: 20 }}
+                                                            transition={{ duration: 0.3, ease: 'easeInOut' }}
+                                                        >
+                                                            <TabsContent value="applied" forceMount>
+                                                                {isLoading ? <div className="flex items-center justify-center py-12"><Loading /></div> : <CandidatesTable data={candidatesApplied} />}
+                                                            </TabsContent>
+                                                        </motion.div>
+                                                    )}
+                                                    {activeTab === 'ai-screening' && (
+                                                        <motion.div
+                                                            key="ai-screening"
+                                                            initial={{ opacity: 0, x: -20 }}
+                                                            animate={{ opacity: 1, x: 0 }}
+                                                            exit={{ opacity: 0, x: 20 }}
+                                                            transition={{ duration: 0.3, ease: 'easeInOut' }}
+                                                        >
+                                                            <TabsContent value="ai-screening" forceMount>
+                                                                {isLoading ? <div className="flex items-center justify-center py-12"><Loading /></div> : <CandidatesTable data={candidatesAI} />}
+                                                            </TabsContent>
+                                                        </motion.div>
+                                                    )}
+                                                    {activeTab === 'review' && (
+                                                        <motion.div
+                                                            key="review"
+                                                            initial={{ opacity: 0, x: -20 }}
+                                                            animate={{ opacity: 1, x: 0 }}
+                                                            exit={{ opacity: 0, x: 20 }}
+                                                            transition={{ duration: 0.3, ease: 'easeInOut' }}
+                                                        >
+                                                            <TabsContent value="review" forceMount>
+                                                                {isLoading ? <div className="flex items-center justify-center py-12"><Loading /></div> : <CandidatesTable data={candidatesReview} />}
+                                                            </TabsContent>
+                                                        </motion.div>
+                                                    )}
+                                                    {activeTab === 'offer' && (
+                                                        <motion.div
+                                                            key="offer"
+                                                            initial={{ opacity: 0, x: -20 }}
+                                                            animate={{ opacity: 1, x: 0 }}
+                                                            exit={{ opacity: 0, x: 20 }}
+                                                            transition={{ duration: 0.3, ease: 'easeInOut' }}
+                                                        >
+                                                            <TabsContent value="offer" forceMount>
+                                                                {isLoading ? <div className="flex items-center justify-center py-12"><Loading /></div> : <CandidatesTable data={candidatesOffer} />}
+                                                            </TabsContent>
+                                                        </motion.div>
+                                                    )}
+                                                    {activeTab === 'hired' && (
+                                                        <motion.div
+                                                            key="hired"
+                                                            initial={{ opacity: 0, x: -20 }}
+                                                            animate={{ opacity: 1, x: 0 }}
+                                                            exit={{ opacity: 0, x: 20 }}
+                                                            transition={{ duration: 0.3, ease: 'easeInOut' }}
+                                                        >
+                                                            <TabsContent value="hired" forceMount>
+                                                                {isLoading ? <div className="flex items-center justify-center py-12"><Loading /></div> : <CandidatesTable data={candidatesHired} />}
+                                                            </TabsContent>
+                                                        </motion.div>
+                                                    )}
+                                                </AnimatePresence>
+                                            </div>
                                         </Tabs>
                                     </div>
                                 </div>
@@ -208,11 +230,7 @@ export default function JobDetailPage() {
             </div>
 
             {/* Fixed AI Assistant Sidebar */}
-            <AIAssistantSidebar
-                isMinimized={isAIAssistantMinimized}
-                onMinimize={() => setIsAIAssistantMinimized(true)}
-                onMaximize={() => setIsAIAssistantMinimized(false)}
-            />
+            <AIAssistantSidebar />
 
             {/* Job Detail Modal */}
             {jobPostsData[0] && (

@@ -30,7 +30,7 @@ export function Hero({ login, isAuthLoading }: HeroProps) {
         <div className="mt-10 space-x-4">
           <Button
             disabled={isAuthLoading}
-            onClick={() => login('/chat')}
+            onClick={() => login('/hiring')}
             className="px-6 cursor-pointer text-sm rounded-full bg-gradient-to-br from-blue-500 to-blue-600 text-white hover:bg-gradient-to-br hover:from-blue-600 hover:to-blue-700"
           >
             Get Started

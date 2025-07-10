@@ -17,14 +17,20 @@ export interface ApplicationTableData {
   jobPostId: number;
 }
 
+interface ApplicationTableProps {
+  data: ApplicantResponseDTO;
+  onDeleteApplication?: (id: number) => void;
+  onEditApplication?: (data: ApplicationTableData) => void;
+}
 
-export function ApplicationTable({ data }: { data: ApplicantResponseDTO }) {
+
+export function ApplicationTable({ data, onDeleteApplication, onEditApplication }: ApplicationTableProps) {
 
   const transformedData = React.useMemo<ApplicationTableData[]>(() => {
     if (!data.applications) return [];
     return data.applications.map((application) => ({
       id: application.id,
-      resumeUrl: data.resumeUrl,
+      resumeUrl: application?.documents[0]?.document?.filePath,
       currentStage: application.currentStage,
       expectedSalary: application.expectedSalary,
       appliedAt: application.appliedAt,
@@ -35,7 +41,7 @@ export function ApplicationTable({ data }: { data: ApplicantResponseDTO }) {
   }, [data]);
 
 
-  const columns = getApplicationTableColumns();
+  const columns = getApplicationTableColumns(onDeleteApplication, onEditApplication);
 
   return (
     <>

@@ -7,6 +7,18 @@ export async function GET() {
     orderBy: {
       appliedAt: 'desc',
     },
+    include: {
+      applications: {
+        include: {
+          jobPost: true,
+          documents: {
+            include: {
+              document: true,
+            },
+          },
+        },
+      },
+    },
   });
   return NextResponse.json(applicants);
 }
@@ -20,14 +32,13 @@ export async function POST(request: Request) {
       return NextResponse.json(validation.error.errors, { status: 400 });
     }
 
-    const { fullName, email, phone, resumeUrl } = validation.data;
+    const { fullName, email, phone } = validation.data;
 
     const newApplicant = await prisma.applicant.create({
       data: {
         fullName,
         email,
         phone,
-        resumeUrl,
       },
     });
 

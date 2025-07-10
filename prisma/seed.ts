@@ -348,17 +348,11 @@ async function main() {
       ? `+62-${Math.floor(Math.random() * 900) + 100}-${Math.floor(Math.random() * 900000) + 100000}`
       : null;
 
-    // 15% chance of no resume
-    const resumeUrl = getRandomBoolean(0.85)
-      ? `https://storage.example.com/resumes/${firstName.toLowerCase()}-${lastName.toLowerCase()}-resume.pdf`
-      : null;
-
     const applicant = await prisma.applicant.create({
       data: {
         fullName,
         email,
         phone,
-        resumeUrl,
         appliedAt: getRandomDate(60), // Applied within last 60 days
       },
     });
@@ -402,6 +396,26 @@ async function main() {
       },
     });
 
+    // ~70% of applications will have a document attached
+    if (getRandomBoolean(0.7)) {
+      const document = await prisma.document.create({
+        data: {
+          fileName: `CV-${applicant.fullName.replace(/\s/g, '_')}.pdf`,
+          filePath:
+            'https://res.cloudinary.com/dpb2qk5lf/raw/upload/v1752045493/documents/anonymous/1752045490748-CV%20-%20AGUS%20HERYANTO.pdf',
+          fileSize: 54254,
+          fileType: 'application/pdf',
+        },
+      });
+
+      await prisma.applicationDocument.create({
+        data: {
+          applicationId: application.id,
+          documentId: document.id,
+        },
+      });
+    }
+
     applications.push(application);
   }
 
@@ -425,7 +439,6 @@ async function main() {
     applicants: {
       total: applicants.length,
       withPhone: await prisma.applicant.count({ where: { phone: { not: null } } }),
-      withResume: await prisma.applicant.count({ where: { resumeUrl: { not: null } } }),
     },
     applications: {
       total: applications.length,

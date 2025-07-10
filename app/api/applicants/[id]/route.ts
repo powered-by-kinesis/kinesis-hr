@@ -12,6 +12,11 @@ export async function GET(request: Request, { params }: { params: Promise<{ id: 
       applications: {
         include: {
           jobPost: true,
+          documents: {
+            include: {
+              document: true,
+            },
+          },
         },
       },
     },
@@ -34,7 +39,7 @@ export async function PUT(request: Request, { params }: { params: Promise<{ id: 
       return NextResponse.json(validation.error.errors, { status: 400 });
     }
 
-    const { fullName, email, phone, resumeUrl } = validation.data;
+    const { fullName, email, phone } = validation.data;
 
     const updatedApplicant = await prisma.applicant.update({
       where: {
@@ -44,7 +49,6 @@ export async function PUT(request: Request, { params }: { params: Promise<{ id: 
         fullName,
         email,
         phone,
-        resumeUrl,
       },
     });
 

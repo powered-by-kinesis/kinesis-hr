@@ -6,7 +6,7 @@ export async function requireAuth() {
 
   if (!session) {
     signIn('google', {
-      callbackUrl: '/chat',
+      callbackUrl: '/hiring',
       redirect: true,
     });
   }

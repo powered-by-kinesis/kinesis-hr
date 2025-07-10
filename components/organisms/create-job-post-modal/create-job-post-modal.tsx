@@ -185,8 +185,8 @@ export function JobPostModal({ onJobPostCreated, isOpen, onOpenChange, jobPost, 
 
         {/* Step Indicator */}
         <div className="mb-6 flex items-center justify-center space-x-2">
-          <div className={`h-2 w-2 rounded-full ${step === 1 ? 'bg-blue-600' : 'bg-gray-300'}`} />
-          <div className={`h-2 w-2 rounded-full ${step === 2 ? 'bg-blue-600' : 'bg-gray-300'}`} />
+          <div className={`h-2 w-2 rounded-full ${step === 1 ? 'bg-primary' : 'bg-gray-300'}`} />
+          <div className={`h-2 w-2 rounded-full ${step === 2 ? 'bg-primary' : 'bg-gray-300'}`} />
         </div>
 
         <Form {...form}>
@@ -410,15 +410,16 @@ export function JobPostModal({ onJobPostCreated, isOpen, onOpenChange, jobPost, 
                 variant="outline"
                 onClick={step === 1 ? handleClose : handleBack}
                 disabled={isLoading}
+                className="cursor-pointer"
               >
                 {step === 1 ? 'Cancel' : 'Back'}
               </Button>
               {step === 1 ? (
-                <Button type="button" onClick={handleNext}>
+                <Button type="button" onClick={handleNext} className="cursor-pointer">
                   Next
                 </Button>
               ) : (
-                <Button type="submit" disabled={isLoading}>
+                <Button type="submit" disabled={isLoading} className="cursor-pointer">
                   {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
                   {isEditMode ? 'Update Job Post' : 'Create Job Post'}
                 </Button>
