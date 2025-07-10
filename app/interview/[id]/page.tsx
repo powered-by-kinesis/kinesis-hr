@@ -86,7 +86,7 @@ export default function AiInterviewPage() {
                     interview_time_limit: 5,
                     email: validationResponseData?.data.applicant.email || '',
                     applicant_name: validationResponseData?.data.applicant.fullName || 'Applicant',
-                    applicantId: validationResponseData?.data.applicant.id || '',
+                    applicant_id: validationResponseData?.data.applicant.id || '',
                     position: interviewData?.jobPost?.title || '',
                 },
             });
@@ -202,7 +202,7 @@ export default function AiInterviewPage() {
                             />
                         </div>
                         <div className="flex flex-col items-center lg:items-start text-center lg:text-left">
-                            <div className="p-8 rounded-lg text-left text-white font-poppins text-base leading-relaxed">
+                            <div className="p-8 rounded-lg text-left font-poppins text-base leading-relaxed">
                                 <p className="mb-4">
                                     Halo, {validationResponseData?.data.applicant.fullName || 'there'}! 👋<br />
                                     Selamat! Kamu sudah sampai di tahap interview.

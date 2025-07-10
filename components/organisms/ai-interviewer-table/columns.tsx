@@ -15,18 +15,18 @@ import { InterviewInvitationResponseDTO } from "@/types/interview/InterviewInvit
 const getSkillLevelBadge = (skillLevel: SkillLevel) => {
   switch (skillLevel) {
     case SkillLevel.NOVICE:
-      return <Badge variant="outline" className="bg-gray-900 text-white">Novice</Badge>;
+      return <Badge key={skillLevel} variant="outline" className="bg-gray-900 text-white">Novice</Badge>;
     case SkillLevel.INTERMEDIATE:
-      return <Badge variant="outline" className="bg-blue-900 text-white">Intermediate</Badge>
+      return <Badge key={skillLevel} variant="outline" className="bg-blue-900 text-white">Intermediate</Badge>
     case SkillLevel.PROFICIENT:
-      return <Badge variant="outline" className="bg-green-900 text-white">Proficient</Badge>;
+      return <Badge key={skillLevel} variant="outline" className="bg-green-900 text-white">Proficient</Badge>;
     case SkillLevel.ADVANCED:
-      return <Badge variant="outline" className="bg-yellow-900 text-white">Advanced</Badge>;
+      return <Badge key={skillLevel} variant="outline" className="bg-yellow-900 text-white">Advanced</Badge>;
     case SkillLevel.EXPERT:
-      return <Badge variant="outline" className="bg-red-900 text-white">Expert</Badge>;
+      return <Badge key={skillLevel} variant="outline" className="bg-red-900 text-white">Expert</Badge>;
     default:
       // return a not take interview yet badge
-      return <Badge variant="outline" className="bg-gray-900 text-white">Not Taken</Badge>;
+      return <Badge key={skillLevel} variant="outline" className="bg-gray-900 text-white">Not Taken</Badge>;
   }
 };
 
