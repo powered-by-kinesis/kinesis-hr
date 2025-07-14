@@ -248,7 +248,7 @@ export function ApplicationForm({ jobPost }: ApplicationFormProps) {
 
               <div
                 className={`w-full mt-2 border-2 border-dashed rounded-lg p-6 text-center transition-colors
-                ${isDragging ? 'border-white bg-white/10' : 'border-white/30'}
+                ${isDragging ? 'border-primary bg-primary/10' : 'border-primary/30'}
                 ${isUploading ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}`}
                 onDragEnter={handleDragEnter}
                 onDragLeave={handleDragLeave}
@@ -257,14 +257,14 @@ export function ApplicationForm({ jobPost }: ApplicationFormProps) {
                 onClick={handleBrowseClick}
               >
                 <div className="flex flex-col items-center gap-2 w-full">
-                  <FileText className={`h-8 w-8 ${isDragging ? 'text-white' : 'text-white/70'}`} />
+                  <FileText className={`h-8 w-8 ${isDragging ? 'text-primary' : 'text-primary/70'}`} />
                   <div className="w-full">
                     <p className="text-sm font-medium text-gray-700">Upload CV/Resume</p>
                     <p className="text-xs text-gray-500 mt-1">
                       Drag & drop here, or{' '}
                       <button
                         type="button"
-                        className="text-white hover:underline font-medium cursor-pointer"
+                        className="text-primary hover:underline font-medium cursor-pointer"
                         onClick={(e) => {
                           e.stopPropagation();
                           handleBrowseClick();

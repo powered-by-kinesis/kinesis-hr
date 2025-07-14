@@ -20,6 +20,7 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 import { SalaryType, getSalaryTypeLabel } from '@/constants/enums/salary-type';
 import { JobBadge, EmploymentTypeBadge } from '@/components/molecules/badge';
 import { JobPostModal } from '@/components/organisms/job-post-modal';
+import { Card } from '@/components/ui/card';
 
 interface JobDetailModalProps {
     jobPost: JobPostResponseDTO;
@@ -37,12 +38,12 @@ export function JobDetailModal({ jobPost, isOpen, onOpenChange }: JobDetailModal
     const renderSalaryRange = () => {
         if (jobPost.salaryMin && jobPost.salaryMax && jobPost.salaryType && jobPost.currency) {
             return (
-                <span className="text-white">
+                <span className="text-foreground">
                     {formatSalary(Number(jobPost.salaryMin))} - {formatSalary(Number(jobPost.salaryMax))} {jobPost.currency} / {getSalaryTypeLabel(jobPost.salaryType as SalaryType)}
                 </span>
             );
         }
-        return <span className="text-gray-400 italic">Salary not specified</span>;
+        return <span className="text-foreground italic">Salary not specified</span>;
     };
 
     const handleEdit = () => {
@@ -55,7 +56,7 @@ export function JobDetailModal({ jobPost, isOpen, onOpenChange }: JobDetailModal
             <Dialog open={isOpen} onOpenChange={onOpenChange}>
                 <DialogContent className="flex flex-col sm:max-w-7xl h-[85vh] p-0 gap-0 bg-card rounded-lg overflow-hidden">
                     {/* Fixed Header */}
-                    <DialogHeader className="flex-none sticky top-0 z-10 bg-card/95 backdrop-blur-sm border-b border-gray-700 p-6 rounded-t-lg">
+                    <DialogHeader className="flex-none sticky top-0 z-10 bg-card/95 backdrop-blur-sm p-6 rounded-t-lg">
                         <div className="flex items-center justify-between ">
                             <div className="flex items-center gap-4">
                                 <div className="p-3 bg-primary/10 rounded-xl">
@@ -71,8 +72,8 @@ export function JobDetailModal({ jobPost, isOpen, onOpenChange }: JobDetailModal
                                     </div>
                                 </div>
                             </div>
-                            <DialogClose className="rounded-full p-2 hover:bg-gray-800/50 transition-colors">
-                                <X className="w-5 h-5 text-gray-400 cursor-pointer" />
+                            <DialogClose className="rounded-full p-2 hover:bg-primary/10 transition-colors">
+                                <X className="w-5 h-5 text-foreground cursor-pointer hover:text-primary" />
                             </DialogClose>
                         </div>
                     </DialogHeader>
@@ -82,7 +83,7 @@ export function JobDetailModal({ jobPost, isOpen, onOpenChange }: JobDetailModal
                         <ScrollArea className="h-full px-6">
                             <div className="space-y-8 py-6">
                                 {/* Job Overview */}
-                                <div className="bg-gray-800/50 backdrop-blur-sm p-8 rounded-xl border border-gray-700/50  transition-colors min-h-[16rem]">
+                                <Card className="p-8  min-h-[16rem]">
                                     <h3 className="text-xl font-semibold text-foreground mb-6 flex items-center gap-2">
                                         <Users className="w-5 h-5" />
                                         Job Overview
@@ -90,65 +91,65 @@ export function JobDetailModal({ jobPost, isOpen, onOpenChange }: JobDetailModal
                                     <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                                         <div className="space-y-4">
                                             <div className="flex items-center gap-4 group">
-                                                <div className="p-2 rounded-lg bg-gray-700/30 group-hover:bg-gray-700/50 transition-colors">
-                                                    <MapPin className="w-5 h-5 text-gray-400" />
+                                                <div className="p-2 rounded-lg ">
+                                                    <MapPin className="w-5 h-5 text-foreground" />
                                                 </div>
                                                 <div>
-                                                    <p className="text-gray-400 text-sm">Location</p>
-                                                    <p className="text-white font-medium">{jobPost.location || 'Remote'}</p>
+                                                    <p className="text-foreground text-sm">Location</p>
+                                                    <p className="text-foreground font-medium">{jobPost.location || 'Remote'}</p>
                                                 </div>
                                             </div>
                                             <div className="flex items-center gap-4 group">
-                                                <div className="p-2 rounded-lg bg-gray-700/30 group-hover:bg-gray-700/50 transition-colors">
-                                                    <Building2 className="w-5 h-5 text-gray-400" />
+                                                <div className="p-2 rounded-lg ">
+                                                    <Building2 className="w-5 h-5 text-foreground" />
                                                 </div>
                                                 <div>
-                                                    <p className="text-gray-400 text-sm">Department</p>
-                                                    <p className="text-white font-medium">{jobPost.department}</p>
+                                                    <p className="text-foreground text-sm">Department</p>
+                                                    <p className="text-foreground font-medium">{jobPost.department}</p>
                                                 </div>
                                             </div>
                                         </div>
                                         <div className="space-y-4">
                                             <div className="flex items-center gap-4 group">
-                                                <div className="p-2 rounded-lg bg-gray-700/30 group-hover:bg-gray-700/50 transition-colors">
-                                                    <Clock className="w-5 h-5 text-gray-400" />
+                                                <div className="p-2 rounded-lg ">
+                                                    <Clock className="w-5 h-5 text-foreground" />
                                                 </div>
                                                 <div>
-                                                    <p className="text-gray-400 text-sm">Employment Type</p>
-                                                    <p className="text-white font-medium">{getEmploymentTypeLabel(jobPost.employmentType as EmploymentType)}</p>
+                                                    <p className="text-foreground text-sm">Employment Type</p>
+                                                    <p className="text-foreground font-medium">{getEmploymentTypeLabel(jobPost.employmentType as EmploymentType)}</p>
                                                 </div>
                                             </div>
                                             <div className="flex items-center gap-4 group">
-                                                <div className="p-2 rounded-lg bg-gray-700/30 group-hover:bg-gray-700/50 transition-colors">
-                                                    <DollarSign className="w-5 h-5 text-gray-400" />
+                                                <div className="p-2 rounded-lg ">
+                                                    <DollarSign className="w-5 h-5 text-foreground" />
                                                 </div>
                                                 <div>
-                                                    <p className="text-gray-400 text-sm">Salary Range</p>
+                                                    <p className="text-foreground text-sm">Salary Range</p>
                                                     {renderSalaryRange()}
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
-                                </div>
+                                </Card>
 
                                 {/* Job Description */}
-                                <div className="bg-gray-800/50 backdrop-blur-sm p-8 rounded-xl border border-gray-700/50  transition-colors min-h-[24rem] flex flex-col">
+                                <Card className="p-8 min-h-[24rem] flex flex-col">
                                     <h3 className="text-xl font-semibold text-foreground mb-6 flex items-center gap-2">
                                         <Briefcase className="w-5 h-5" />
                                         Job Description
                                     </h3>
                                     <div className="prose prose-invert max-w-none flex-grow">
-                                        <p className="text-gray-300 leading-relaxed whitespace-pre-wrap">
+                                        <p className="text-foreground leading-relaxed whitespace-pre-wrap">
                                             {jobPost.description}
                                         </p>
                                     </div>
-                                </div>
+                                </Card>
                             </div>
                         </ScrollArea>
                     </div>
 
                     {/* Fixed Footer */}
-                    <DialogFooter className="flex-none border-t border-gray-700 p-4 flex justify-end gap-3 bg-card">
+                    <DialogFooter className="flex-none p-4 flex justify-end gap-3 bg-card">
                         <Button
                             variant="ghost"
                             onClick={() => onOpenChange(false)}
