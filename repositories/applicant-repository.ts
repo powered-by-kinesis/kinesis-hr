@@ -109,6 +109,34 @@ export class ApplicantRepository {
       throw error;
     }
   }
+
+  /**
+   * Send an invitation email to an applicant.
+   * @param email - The recipient's email address.
+   * @param interviewId - The ID of the interview to link in the invitation.
+   * @returns Promise<{ success: boolean; messageId?: string; error?: any }>
+   */
+  async sendInvitation(email: string, interviewId: string): Promise<{ success: boolean; messageId?: string; error?: any }> {
+    try {
+      const res = await fetch(`${this.baseUrl}/api/applicants/invite`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email, interviewId }),
+      });
+
+      if (!res.ok) {
+        const errorData = await res.json();
+        throw new Error(errorData.error || `Failed to send invitation: ${res.status} ${res.statusText}`);
+      }
+
+      return { success: true, messageId: (await res.json()).messageId };
+    } catch (error) {
+      console.error('Error sending invitation:', error);
+      return { success: false, error };
+    }
+  }
 }
 
 // Export singleton instance

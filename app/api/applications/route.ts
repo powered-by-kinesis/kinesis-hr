@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import prisma from '@/lib/prisma';
 import { CreateApplicationRequestDTO } from '@/types/application';
+import axios from 'axios';
 
 export async function GET() {
   const applications = await prisma.application.findMany({
@@ -93,6 +94,20 @@ export async function POST(request: Request) {
     if (!newApplication) {
       throw new Error('Failed to create application');
     }
+
+    // embed document
+    // temp code to simulate document embedding
+    await axios.post('https://llmapi.nolepsekali.fun/publisher/publish', {
+      event: "store-pdf",
+      data: {
+        file_urls: newApplication.documents.map(doc => doc.document.filePath),
+        applicant_id: newApplication.applicant.id,
+      }
+    }, {
+      headers: {
+        'Content-Type': 'application/json',
+      }
+    })
 
     return NextResponse.json(newApplication, { status: 201 });
   } catch (error) {

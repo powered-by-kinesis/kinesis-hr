@@ -10,21 +10,23 @@ import { Badge } from "@/components/ui/badge";
 import { SkillLevel } from "@/constants/enums/skill-level";
 import { formatDate } from "@/utils/format-date";
 import { InterviewType } from "@/constants/enums/interview-type";
+import { InterviewInvitationResponseDTO } from "@/types/interview/InterviewInvitationResponseDTO";
 
 const getSkillLevelBadge = (skillLevel: SkillLevel) => {
   switch (skillLevel) {
     case SkillLevel.NOVICE:
-      return <Badge variant="outline" className="bg-gray-900 text-white">Novice</Badge>;
+      return <Badge key={skillLevel} variant="outline" className="bg-gray-900 text-white">Novice</Badge>;
     case SkillLevel.INTERMEDIATE:
-      return <Badge variant="outline" className="bg-blue-900 text-white">Intermediate</Badge>
+      return <Badge key={skillLevel} variant="outline" className="bg-blue-900 text-white">Intermediate</Badge>
     case SkillLevel.PROFICIENT:
-      return <Badge variant="outline" className="bg-green-900 text-white">Proficient</Badge>;
+      return <Badge key={skillLevel} variant="outline" className="bg-green-900 text-white">Proficient</Badge>;
     case SkillLevel.ADVANCED:
-      return <Badge variant="outline" className="bg-yellow-900 text-white">Advanced</Badge>;
+      return <Badge key={skillLevel} variant="outline" className="bg-yellow-900 text-white">Advanced</Badge>;
     case SkillLevel.EXPERT:
-      return <Badge variant="outline" className="bg-red-900 text-white">Expert</Badge>;
+      return <Badge key={skillLevel} variant="outline" className="bg-red-900 text-white">Expert</Badge>;
     default:
-      return <Badge variant="outline" className="bg-gray-900 text-white">Novice</Badge>;
+      // return a not take interview yet badge
+      return <Badge key={skillLevel} variant="outline" className="bg-gray-900 text-white">Not Taken</Badge>;
   }
 };
 
@@ -44,8 +46,7 @@ const getInterviewTypeBadge = (interviewType: InterviewType) => {
 };
 
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export const getCandidatesTableColumns = (onViewDetails: (candidateId: number) => void): ColumnDef<any>[] => {
+export const getCandidatesTableColumns = (onViewDetails: (candidateId: number) => void): ColumnDef<InterviewInvitationResponseDTO>[] => {
   return [
     {
       id: 'select',
@@ -71,39 +72,58 @@ export const getCandidatesTableColumns = (onViewDetails: (candidateId: number) =
     {
       accessorKey: 'fullName',
       header: ({ column }) => <DataTableColumnHeader column={column} title="Full Name" />,
-      cell: ({ row }) => <div className="font-medium">{row.original.fullName}</div>,
+      cell: ({ row }) => <div className="font-medium">{row.original.applicant.fullName}</div>,
       enableHiding: false,
     },
-    {
-      accessorKey: 'interviewType',
-      header: ({ column }) => <DataTableColumnHeader column={column} title="Interview Type" />,
-      cell: ({ row }) => <div className="text-muted-foreground">{getInterviewTypeBadge(row.original.interviewType)}</div>,
-    },
+    // {
+    //   accessorKey: 'interviewType',
+    //   header: ({ column }) => <DataTableColumnHeader column={column} title="Interview Type" />,
+    //   cell: ({ row }) => <div className="text-muted-foreground">{getInterviewTypeBadge(row.original.interviewType)}</div>,
+    // },
     {
       accessorKey: 'dateTaken',
       header: ({ column }) => <DataTableColumnHeader column={column} title="Date Taken" />,
-      cell: ({ row }) => <div className="text-muted-foreground">{formatDate(row.original.dateTaken)}</div>,
+      cell: ({ row }) => <div className="text-muted-foreground">{formatDate(row.original.dateTaken ?? '')}</div>,
     },
     {
-      accessorKey: 'hardSkills',
-      header: ({ column }) => <DataTableColumnHeader column={column} title="Hard Skills" />,
-      cell: ({ row }) => <div className="text-muted-foreground">{getSkillLevelBadge(row.original.hardSkills)}</div>,
+      accessorKey: 'expiresAt',
+      header: ({ column }) => <DataTableColumnHeader column={column} title="Expires At" />,
+      cell: ({ row }) => <div className="text-muted-foreground">{formatDate(row.original.expiresAt ?? '')}</div>,
     },
     {
-      accessorKey: 'softSkills',
-      header: ({ column }) => <DataTableColumnHeader column={column} title="Soft Skills" />,
-      cell: ({ row }) => <div className="text-muted-foreground">{getSkillLevelBadge(row.original.softSkills)}</div>,
+      accessorKey: 'status',
+      header: ({ column }) => <DataTableColumnHeader column={column} title="Status" />,
+      cell: ({ row }) => {
+        const status = row.original.status;
+        let badgeColor = 'bg-gray-900 text-white';
+        if (status === 'COMPLETED') {
+          badgeColor = 'bg-green-500 text-white';
+        } else if (status === 'INVITED') {
+          badgeColor = 'bg-yellow-500 text-white';
+        }
+        return <Badge variant="outline" className={badgeColor}>{status}</Badge>;
+      }
     },
+    // {
+    //   accessorKey: 'hardSkills',
+    //   header: ({ column }) => <DataTableColumnHeader column={column} title="Hard Skills" />,
+    //   cell: ({ row }) => <div className="text-muted-foreground">{(row.original.applicant.skills as { name: string; description: string }[]).map(s => getSkillLevelBadge(s.description as SkillLevel)).join(', ')}</div>,
+    // },
+    // {
+    //   accessorKey: 'softSkills',
+    //   header: ({ column }) => <DataTableColumnHeader column={column} title="Soft Skills" />,
+    //   cell: ({ row }) => <div className="text-muted-foreground">{getSkillLevelBadge(row.original.softSkills)}</div>,
+    // },
     {
       accessorKey: 'technicalSkills',
       header: ({ column }) => <DataTableColumnHeader column={column} title="Technical Skills" />,
-      cell: ({ row }) => <div className="text-muted-foreground">{getSkillLevelBadge(row.original.technicalSkills)}</div>,
+      cell: ({ row }) => <div className="text-muted-foreground">{row.original.applicant.skills?.map(s => getSkillLevelBadge(s.level))}</div>,
     },
-    {
-      accessorKey: 'overallLevel',
-      header: ({ column }) => <DataTableColumnHeader column={column} title="Overall Level" />,
-      cell: ({ row }) => <div className="text-muted-foreground">{getSkillLevelBadge(row.original.overallLevel)}</div>,
-    },
+    // {
+    //   accessorKey: 'overallLevel',
+    //   header: ({ column }) => <DataTableColumnHeader column={column} title="Overall Level" />,
+    //   cell: ({ row }) => <div className="text-muted-foreground">{getSkillLevelBadge(row.original.overallLevel)}</div>,
+    // },
     // {
     //   accessorKey: 'overallFeedback',
     //   header: ({ column }) => <DataTableColumnHeader column={column} title="Overall Feedback" />,
