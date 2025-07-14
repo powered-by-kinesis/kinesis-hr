@@ -12,12 +12,15 @@ import { Button } from '@/components/ui/button';
 import { CreateInterviewRequestDTO, InterviewResponseDTO } from '@/types/interview';
 import { interviewRepository } from '@/repositories/interview-repository';
 import { CreateInterviewModal } from '@/components/organisms/interview-modal/create-interview-modal';
+import { useAIAssistant } from '@/hooks/use-ai-assistant/use-ai-assistant';
+import { cn } from '@/lib/utils';
 
 export default function AIInterviewerPage() {
   // State for storing fetched data
   const [interviewsData, setInterviewsData] = React.useState<InterviewResponseDTO[]>([]);
   const [isLoading, setIsLoading] = React.useState(true);
   const [isCreateModalOpen, setIsCreateModalOpen] = React.useState(false);
+  const { isMinimized: isAIAssistantMinimized } = useAIAssistant();
 
   // Function to fetch all data
   const fetchData = React.useCallback(async () => {
@@ -37,15 +40,12 @@ export default function AIInterviewerPage() {
     fetchData();
   }, [fetchData]);
 
-  const handleCreateInterview = async (
-    data: CreateInterviewRequestDTO,
-  ): Promise<InterviewResponseDTO> => {
+  const handleCreateInterview = async (data: CreateInterviewRequestDTO): Promise<void> => {
     try {
-      const createdInterview = await interviewRepository.createInterview(data);
+      await interviewRepository.createInterview(data);
       // Re-fetch data to update the table with the new interview
       fetchData();
       setIsCreateModalOpen(false);
-      return createdInterview; // Return the created interview
     } catch (error) {
       console.error('Error creating interview:', error);
       // Optionally, show an error message to the user
@@ -55,7 +55,7 @@ export default function AIInterviewerPage() {
 
   return (
     <>
-      <div className="relative m-0 p-0">
+      <div className="relative min-h-screen bg-background">
         <SidebarProvider
           style={
             {
@@ -67,12 +67,14 @@ export default function AIInterviewerPage() {
           <AppSidebar variant="inset" />
           <SidebarInset className="md:peer-data-[variant=inset]:m-0">
             <SiteHeader />
-            <div className="flex flex-1 flex-col">
+            <div className={cn(
+              "flex flex-1 flex-col transition-all duration-300 ease-in-out",
+              !isAIAssistantMinimized && "lg:mr-[384px]" // 384px = 24rem = 96 in tailwind
+            )}>
               <div className="@container/main flex flex-1 flex-col gap-2">
-                {/* Main content with right margin to accommodate AI Assistant */}
-                <div className="flex flex-col gap-4 py-4 md:gap-6 md:py-6 mr-96">
+                <div className="flex flex-col gap-4 py-4 md:gap-6 md:py-6">
                   <div className="px-4 lg:px-6">
-                    <div className="mb-6 flex justify-between">
+                    <div className="mb-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
                       <div>
                         <h1 className="text-2xl font-semibold tracking-tight">AI Interviewer</h1>
                         <p className="text-muted-foreground">
@@ -91,11 +93,13 @@ export default function AIInterviewerPage() {
                             <Loading />
                           </div>
                         ) : (
-                          <InterviewTable
-                            data={interviewsData}
-                            onInterviewUpdated={fetchData}
-                            onInterviewDeleted={fetchData}
-                          />
+                          <div className="w-full overflow-auto">
+                            <InterviewTable
+                              data={interviewsData}
+                              onInterviewUpdated={fetchData}
+                              onInterviewDeleted={fetchData}
+                            />
+                          </div>
                         )}
                       </TabsContent>
                     </Tabs>
@@ -105,10 +109,8 @@ export default function AIInterviewerPage() {
             </div>
           </SidebarInset>
         </SidebarProvider>
+        <AIAssistantSidebar />
       </div>
-
-      {/* Fixed AI Assistant Sidebar */}
-      <AIAssistantSidebar />
 
       <CreateInterviewModal
         isOpen={isCreateModalOpen}
