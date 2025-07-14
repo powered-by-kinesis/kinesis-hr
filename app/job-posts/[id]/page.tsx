@@ -7,9 +7,7 @@ import type { JobPost } from '@prisma/client';
 
 import { jobPostRepository } from '@/repositories';
 import { ApplicationForm } from '@/components/organisms/application-form';
-import {
-  EmploymentType,
-} from '@/constants/enums/employment-type';
+import { EmploymentType } from '@/constants/enums/employment-type';
 import { JobStatus } from '@/constants/enums/job-status';
 import { formatDate } from '@/utils/format-date';
 import { formatSalary } from '@/utils/format-salary/format-salary';
@@ -100,7 +98,7 @@ export default function JobPostDetailPage() {
     jobPost.salaryMin?.toString(),
     jobPost.salaryMax?.toString(),
     jobPost.currency,
-    jobPost.salaryType
+    jobPost.salaryType,
   );
 
   return (
@@ -137,9 +135,7 @@ export default function JobPostDetailPage() {
             <div className="sticky top-8">
               <Card className="shadow-lg">
                 <CardHeader>
-                  <CardTitle className="text-xl font-semibold">
-                    Apply for this Role
-                  </CardTitle>
+                  <CardTitle className="text-xl font-semibold">Apply for this Role</CardTitle>
                 </CardHeader>
                 <CardContent>
                   <ApplicationForm jobPost={jobPost} />

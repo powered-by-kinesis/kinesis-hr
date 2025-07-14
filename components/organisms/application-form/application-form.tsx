@@ -140,7 +140,9 @@ export function ApplicationForm({ jobPost }: ApplicationFormProps) {
       setSelectedFiles([]);
     } catch (error) {
       console.error('Error submitting application:', error);
-      toast.error(error instanceof Error ? error.message : 'Failed to submit application. Please try again.');
+      toast.error(
+        error instanceof Error ? error.message : 'Failed to submit application. Please try again.',
+      );
     } finally {
       setIsLoading(false);
     }
@@ -257,7 +259,9 @@ export function ApplicationForm({ jobPost }: ApplicationFormProps) {
                 onClick={handleBrowseClick}
               >
                 <div className="flex flex-col items-center gap-2 w-full">
-                  <FileText className={`h-8 w-8 ${isDragging ? 'text-primary' : 'text-primary/70'}`} />
+                  <FileText
+                    className={`h-8 w-8 ${isDragging ? 'text-primary' : 'text-primary/70'}`}
+                  />
                   <div className="w-full">
                     <p className="text-sm font-medium text-gray-700">Upload CV/Resume</p>
                     <p className="text-xs text-gray-500 mt-1">
@@ -286,10 +290,7 @@ export function ApplicationForm({ jobPost }: ApplicationFormProps) {
                         className="w-full flex items-center gap-3 p-2 border border-text-foreground rounded-lg text-sm bg-card"
                       >
                         <div className="flex-1 min-w-0 overflow-hidden">
-                          <div
-                            className="font-medium text-gray-700 break-all"
-                            title={file.name}
-                          >
+                          <div className="font-medium text-gray-700 break-all" title={file.name}>
                             {file.name}
                           </div>
                           <div className="text-xs text-gray-400">

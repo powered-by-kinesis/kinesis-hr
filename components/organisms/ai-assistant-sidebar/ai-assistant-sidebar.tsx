@@ -28,9 +28,7 @@ const quickQuestions = [
   'How to improve employee retention?',
 ];
 
-export const AIAssistantSidebar: React.FC<AIAssistantSidebarProps> = ({
-  className,
-}) => {
+export const AIAssistantSidebar: React.FC<AIAssistantSidebarProps> = ({ className }) => {
   const { isMinimized, minimize, maximize } = useAIAssistant();
   const [messages, setMessages] = useState<Message[]>([
     {
@@ -69,7 +67,8 @@ export const AIAssistantSidebar: React.FC<AIAssistantSidebarProps> = ({
       const response: Message = {
         id: (Date.now() + 1).toString(),
         type: 'assistant',
-        content: "I'm a demo AI assistant. In the real app, I'll provide helpful HR-related answers!",
+        content:
+          "I'm a demo AI assistant. In the real app, I'll provide helpful HR-related answers!",
         timestamp: new Date(),
       };
       setMessages((prev) => [...prev, response]);
@@ -94,7 +93,7 @@ export const AIAssistantSidebar: React.FC<AIAssistantSidebarProps> = ({
         className="fixed lg:right-6 lg:bottom-6 right-4 bottom-4 z-50"
         initial={{ scale: 0 }}
         animate={{ scale: 1 }}
-        transition={{ type: "spring", bounce: 0.5 }}
+        transition={{ type: 'spring', bounce: 0.5 }}
       >
         <motion.div
           animate={{
@@ -103,7 +102,7 @@ export const AIAssistantSidebar: React.FC<AIAssistantSidebarProps> = ({
           transition={{
             duration: 2,
             repeat: Infinity,
-            ease: "easeInOut"
+            ease: 'easeInOut',
           }}
         >
           <Button
@@ -119,8 +118,8 @@ export const AIAssistantSidebar: React.FC<AIAssistantSidebarProps> = ({
               transition={{
                 duration: 2,
                 repeat: Infinity,
-                ease: "easeInOut",
-                times: [0, 0.2, 0.8, 1]
+                ease: 'easeInOut',
+                times: [0, 0.2, 0.8, 1],
               }}
             >
               <Bot className="lg:h-6 lg:w-6 h-5 w-5" />
@@ -139,10 +138,10 @@ export const AIAssistantSidebar: React.FC<AIAssistantSidebarProps> = ({
           'shadow-2xl custom-scrollbar overflow-y-auto focus:outline-none',
           className,
         )}
-        initial={{ x: "100%" }}
+        initial={{ x: '100%' }}
         animate={{ x: 0 }}
-        exit={{ x: "100%" }}
-        transition={{ type: "spring", bounce: 0.2 }}
+        exit={{ x: '100%' }}
+        transition={{ type: 'spring', bounce: 0.2 }}
         tabIndex={0}
       >
         {/* Header */}

@@ -75,10 +75,13 @@ export function NavUser({
               </div>
             </DropdownMenuLabel>
             <DropdownMenuSeparator />
-            <DropdownMenuItem className="cursor-pointer" onClick={() => {
-              setIsLoading(true);
-              signOut({ callbackUrl: '/' });
-            }}>
+            <DropdownMenuItem
+              className="cursor-pointer"
+              onClick={() => {
+                setIsLoading(true);
+                signOut({ callbackUrl: '/' });
+              }}
+            >
               <LogOut className="text-primary" />
               Log out
             </DropdownMenuItem>

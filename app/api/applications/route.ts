@@ -97,17 +97,21 @@ export async function POST(request: Request) {
 
     // embed document
     // temp code to simulate document embedding
-    await axios.post('https://llmapi.nolepsekali.fun/publisher/publish', {
-      event: "store-pdf",
-      data: {
-        file_urls: newApplication.documents.map(doc => doc.document.filePath),
-        applicant_id: newApplication.applicant.id,
-      }
-    }, {
-      headers: {
-        'Content-Type': 'application/json',
-      }
-    })
+    await axios.post(
+      'https://llmapi.nolepsekali.fun/publisher/publish',
+      {
+        event: 'store-pdf',
+        data: {
+          file_urls: newApplication.documents.map((doc) => doc.document.filePath),
+          applicant_id: newApplication.applicant.id,
+        },
+      },
+      {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      },
+    );
 
     return NextResponse.json(newApplication, { status: 201 });
   } catch (error) {

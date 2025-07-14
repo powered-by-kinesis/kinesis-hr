@@ -37,7 +37,9 @@ export default function AIInterviewerPage() {
     fetchData();
   }, [fetchData]);
 
-  const handleCreateInterview = async (data: CreateInterviewRequestDTO): Promise<InterviewResponseDTO> => {
+  const handleCreateInterview = async (
+    data: CreateInterviewRequestDTO,
+  ): Promise<InterviewResponseDTO> => {
     try {
       const createdInterview = await interviewRepository.createInterview(data);
       // Re-fetch data to update the table with the new interview
@@ -77,7 +79,9 @@ export default function AIInterviewerPage() {
                           Manage candidates and talent pipeline
                         </p>
                       </div>
-                      <Button onClick={() => setIsCreateModalOpen(true)}>Create New Interview</Button>
+                      <Button onClick={() => setIsCreateModalOpen(true)}>
+                        Create New Interview
+                      </Button>
                     </div>
 
                     <Tabs defaultValue="candidates">

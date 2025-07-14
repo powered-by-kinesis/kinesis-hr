@@ -25,9 +25,15 @@ interface ApplicationTableProps {
   onEditApplication?: () => void;
 }
 
-export function ApplicationTable({ data, onDeleteApplication, onEditApplication }: ApplicationTableProps) {
+export function ApplicationTable({
+  data,
+  onDeleteApplication,
+  onEditApplication,
+}: ApplicationTableProps) {
   const [isUpdateApplicationModalOpen, setIsUpdateApplicationModalOpen] = React.useState(false);
-  const [selectedApplication, setSelectedApplication] = React.useState<ApplicationTableData | null>(null);
+  const [selectedApplication, setSelectedApplication] = React.useState<ApplicationTableData | null>(
+    null,
+  );
 
   const handleEditApplication = (data: ApplicationTableData) => {
     setSelectedApplication(data);
@@ -50,9 +56,8 @@ export function ApplicationTable({ data, onDeleteApplication, onEditApplication 
       notes: application.notes,
       jobTitle: application.jobPost?.title ?? 'Unknown Job',
       jobPostId: application.jobPostId,
-    }))
+    }));
   }, [data]);
-
 
   const columns = getApplicationTableColumns(onDeleteApplication, handleEditApplication);
 

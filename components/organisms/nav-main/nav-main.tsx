@@ -29,7 +29,10 @@ export function NavMain({
           {items.map((item) => (
             <SidebarMenuItem key={item.title}>
               <SidebarMenuButton tooltip={item.title} asChild>
-                <Link href={item.url} className={cn(pathname === item.url && 'bg-primary/10')}>
+                <Link
+                  href={item.url}
+                  className={cn(pathname.startsWith(item.url) && 'bg-primary/10')}
+                >
                   {item.icon && <item.icon className="text-foreground" />}
                   <span className="text-foreground">{item.title}</span>
                 </Link>

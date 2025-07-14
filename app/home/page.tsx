@@ -40,7 +40,11 @@ export default function HomePage() {
         </SidebarInset>
       </SidebarProvider>
 
-      <AIAssistantSidebar isMinimized={isMinimized} onMinimize={() => setIsMinimized(true)} onMaximize={() => setIsMinimized(false)} />
+      <AIAssistantSidebar
+        isMinimized={isMinimized}
+        onMinimize={() => setIsMinimized(true)}
+        onMaximize={() => setIsMinimized(false)}
+      />
     </div>
   );
 }

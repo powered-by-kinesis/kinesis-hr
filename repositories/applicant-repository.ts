@@ -116,7 +116,10 @@ export class ApplicantRepository {
    * @param interviewId - The ID of the interview to link in the invitation.
    * @returns Promise<{ success: boolean; messageId?: string; error?: any }>
    */
-  async sendInvitation(email: string, interviewId: string): Promise<{ success: boolean; messageId?: string; error?: any }> {
+  async sendInvitation(
+    email: string,
+    interviewId: string,
+  ): Promise<{ success: boolean; messageId?: string; error?: any }> {
     try {
       const res = await fetch(`${this.baseUrl}/api/applicants/invite`, {
         method: 'POST',
@@ -128,7 +131,9 @@ export class ApplicantRepository {
 
       if (!res.ok) {
         const errorData = await res.json();
-        throw new Error(errorData.error || `Failed to send invitation: ${res.status} ${res.statusText}`);
+        throw new Error(
+          errorData.error || `Failed to send invitation: ${res.status} ${res.statusText}`,
+        );
       }
 
       return { success: true, messageId: (await res.json()).messageId };
