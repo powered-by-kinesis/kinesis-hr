@@ -34,9 +34,12 @@ export function Features() {
           animate={{ opacity: 1, y: 0 }}
           className="text-center md:mb-16 mb-8"
         >
-          <h2 className="text-3xl md:text-4xl font-bold tracking-tight">Powerful Features That Drive Results</h2>
+          <h2 className="text-3xl md:text-4xl font-bold tracking-tight">
+            Powerful Features That Drive Results
+          </h2>
           <p className="mt-4 md:text-lg text-base text-muted-foreground">
-            Our comprehensive suite of recruitment tools combines AI innovation with practical functionality to streamline every aspect of your hiring process.
+            Our comprehensive suite of recruitment tools combines AI innovation with practical
+            functionality to streamline every aspect of your hiring process.
           </p>
         </motion.div>
 

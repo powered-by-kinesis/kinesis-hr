@@ -27,10 +27,7 @@ export function LandingPageTemplate() {
         <Hero login={login} isAuthLoading={isAuthLoading} />
       </div>
 
-      <Video
-        src="https://youtu.be/OnNswVfV14w?si=bIRnynkrK8XWYMz0"
-        thumbnail="/thumbnail.png"
-      />
+      <Video src="https://youtu.be/OnNswVfV14w?si=bIRnynkrK8XWYMz0" thumbnail="/thumbnail.png" />
       <HowItWorks />
       <Features />
       <Footer />

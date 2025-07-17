@@ -11,9 +11,10 @@ export function NavLink({ href, children, active }: NavLinkProps) {
       className={`
         relative px-4 py-2 rounded-full
         font-medium text-sm
-        ${active
-          ? 'text-primary bg-primary/10 shadow-[inset_0_1px_0_0_rgba(255,255,255,0.1)]'
-          : 'text-foreground/70 hover:text-primary/90'
+        ${
+          active
+            ? 'text-primary bg-primary/10 shadow-[inset_0_1px_0_0_rgba(255,255,255,0.1)]'
+            : 'text-foreground/70 hover:text-primary/90'
         }
         hover:bg-primary/10
         group

@@ -22,7 +22,10 @@ export function Hero({ login, isAuthLoading }: HeroProps) {
         </h1>
 
         <p className="mt-6 text-base md:text-lg text-muted-foreground max-w-2xl mx-auto">
-          Experience the next evolution in talent acquisition. Our AI-powered platform delivers unparalleled candidate analysis, sophisticated evaluation metrics, and data-driven insights empowering you to make exceptional hiring decisions with confidence and precision.
+          Experience the next evolution in talent acquisition. Our AI-powered platform delivers
+          unparalleled candidate analysis, sophisticated evaluation metrics, and data-driven
+          insights empowering you to make exceptional hiring decisions with confidence and
+          precision.
         </p>
 
         <div className="mt-10 space-x-4">

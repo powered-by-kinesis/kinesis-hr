@@ -8,17 +8,12 @@ import {
   HelpCircle,
   CheckCircle2,
   X,
-  LucideIcon
+  LucideIcon,
 } from 'lucide-react';
 import { Container } from '@/components/atoms/container';
 // import { useEffect, useRef, useState } from 'react';
 import Image from 'next/image';
-import {
-  Carousel,
-  CarouselApi,
-  CarouselContent,
-  CarouselItem,
-} from "@/components/ui/carousel";
+import { Carousel, CarouselApi, CarouselContent, CarouselItem } from '@/components/ui/carousel';
 import { useEffect, useState } from 'react';
 
 interface ImageCarouselProps {
@@ -41,7 +36,7 @@ const SingleImage = ({ source, title }: SingleImageProps) => {
         alt={title}
         width={800}
         height={800}
-        className='rounded-lg shadow-blue-500 shadow-lg w-full h-auto cursor-pointer transition-transform hover:scale-[1.02]'
+        className="rounded-lg shadow-blue-500 shadow-lg w-full h-auto cursor-pointer transition-transform hover:scale-[1.02]"
         onClick={() => setIsFullscreen(true)}
         priority
       />
@@ -55,11 +50,16 @@ const SingleImage = ({ source, title }: SingleImageProps) => {
   );
 };
 
-const ShowFullScreenImage = ({ title, isFullscreen, setIsFullscreen, sources }: {
-  title: string,
-  isFullscreen: boolean,
-  setIsFullscreen: (isFullscreen: boolean) => void,
-  sources: string[]
+const ShowFullScreenImage = ({
+  title,
+  isFullscreen,
+  setIsFullscreen,
+  sources,
+}: {
+  title: string;
+  isFullscreen: boolean;
+  setIsFullscreen: (isFullscreen: boolean) => void;
+  sources: string[];
 }) => {
   const [api, setApi] = useState<CarouselApi>();
   const [current, setCurrent] = useState(0);
@@ -71,7 +71,7 @@ const ShowFullScreenImage = ({ title, isFullscreen, setIsFullscreen, sources }: 
     setCount(api.scrollSnapList().length);
     setCurrent(api.selectedScrollSnap() + 1);
 
-    api.on("select", () => {
+    api.on('select', () => {
       setCurrent(api.selectedScrollSnap() + 1);
     });
   }, [api]);
@@ -106,7 +106,14 @@ const ShowFullScreenImage = ({ title, isFullscreen, setIsFullscreen, sources }: 
           onClick={handlePrevious}
           className="p-2 rounded-full bg-primary hover:bg-primary/80 cursor-pointer transition-colors"
         >
-          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-8 h-8 text-white">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            strokeWidth={2}
+            stroke="currentColor"
+            className="w-8 h-8 text-white"
+          >
             <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" />
           </svg>
         </button>
@@ -116,7 +123,14 @@ const ShowFullScreenImage = ({ title, isFullscreen, setIsFullscreen, sources }: 
           onClick={handleNext}
           className="p-2 rounded-full bg-primary hover:bg-primary/80 cursor-pointer transition-colors"
         >
-          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-8 h-8 text-white">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            strokeWidth={2}
+            stroke="currentColor"
+            className="w-8 h-8 text-white"
+          >
             <path strokeLinecap="round" strokeLinejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" />
           </svg>
         </button>
@@ -140,8 +154,8 @@ const ShowFullScreenImage = ({ title, isFullscreen, setIsFullscreen, sources }: 
         </CarouselContent>
       </Carousel>
     </div>
-  )
-}
+  );
+};
 
 const ImageCarousel = ({ sources, title }: ImageCarouselProps) => {
   const [api, setApi] = useState<CarouselApi>();
@@ -155,7 +169,7 @@ const ImageCarousel = ({ sources, title }: ImageCarouselProps) => {
     setCount(api.scrollSnapList().length);
     setCurrent(api.selectedScrollSnap() + 1);
 
-    api.on("select", () => {
+    api.on('select', () => {
       setCurrent(api.selectedScrollSnap() + 1);
     });
   }, [api]);
@@ -166,7 +180,10 @@ const ImageCarousel = ({ sources, title }: ImageCarouselProps) => {
 
   return (
     <div className="w-full rounded-lg">
-      <Carousel className="w-full rounded-lg shadow-blue-500 shadow-lg h-auto cursor-pointer transition-transform hover:scale-[1.02]" setApi={setApi}>
+      <Carousel
+        className="w-full rounded-lg shadow-blue-500 shadow-lg h-auto cursor-pointer transition-transform hover:scale-[1.02]"
+        setApi={setApi}
+      >
         <CarouselContent>
           {sources.map((source, index) => (
             <CarouselItem key={index}>
@@ -175,7 +192,7 @@ const ImageCarousel = ({ sources, title }: ImageCarouselProps) => {
                   src={source}
                   alt={`${title} - ${index + 1}`}
                   fill
-                  className='rounded-lg object-contain'
+                  className="rounded-lg object-contain"
                   onClick={handleImageClick}
                   priority
                 />
@@ -246,7 +263,7 @@ interface HowItWorksStep {
   position: 'left' | 'right';
   features?: string[];
   bgAccent: string;
-  sources?: string[]
+  sources?: string[];
 }
 
 export function HowItWorks() {
@@ -255,11 +272,11 @@ export function HowItWorks() {
       icon: FileText,
       title: 'Create and Customize Job Listings',
       description:
-        'Effortlessly create detailed job listings with our intuitive interface. Define comprehensive job descriptions, competitive salary packages, employment terms, and more - all with professional precision. Publish instantly or save drafts for team review.',
+        'Effortlessly create detailed job listings with our intuitive interface. Define comprehensive job descriptions, competitive salary packages, employment terms, and more all with professional precision. Publish instantly or save drafts for team review.',
       position: 'left',
       features: [],
       bgAccent: 'from-blue-500 to-blue-600',
-      sources: ["/job-post-2.png", "/job-post-1.png"],
+      sources: ['/job-post-2.png', '/job-post-1.png'],
     },
     {
       icon: Users,
@@ -269,7 +286,7 @@ export function HowItWorks() {
       position: 'right',
       features: [],
       bgAccent: 'from-blue-500 to-blue-600',
-      sources: ["/manage-candidate-1.png", "/manage-candidate-2.png",],
+      sources: ['/manage-candidate-1.png', '/manage-candidate-2.png'],
     },
     {
       icon: BotMessageSquare,
@@ -279,7 +296,13 @@ export function HowItWorks() {
       position: 'left',
       features: [],
       bgAccent: 'from-blue-500 to-blue-600',
-      sources: ["/ai-interview-2.png", "/ai-interview-1.png", "/ai-interview-3.png", "/ai-interview-4.png", "/ai-interview-5.png"],
+      sources: [
+        '/ai-interview-2.png',
+        '/ai-interview-1.png',
+        '/ai-interview-3.png',
+        '/ai-interview-4.png',
+        '/ai-interview-5.png',
+      ],
     },
     {
       icon: ClipboardCheck,
@@ -289,7 +312,7 @@ export function HowItWorks() {
       position: 'right',
       features: [],
       bgAccent: 'from-blue-500 to-blue-600',
-      sources: ["/candidate-application.png"],
+      sources: ['/candidate-application.png'],
     },
     {
       icon: HelpCircle,
@@ -299,7 +322,7 @@ export function HowItWorks() {
       position: 'left',
       features: [],
       bgAccent: 'from-blue-500 to-blue-600',
-      sources: ["/ai-chat-bot.png"],
+      sources: ['/ai-chat-bot.png'],
     },
   ];
 
@@ -316,7 +339,10 @@ export function HowItWorks() {
             Transform Your Hiring Process
           </h2>
           <p className="text-muted-foreground text-sm sm:text-base md:text-xl max-w-3xl mx-auto leading-relaxed px-4 sm:px-6">
-            Experience the future of recruitment with our AI-powered platform. We combine cutting-edge technology with intuitive design to deliver a recruitment solution that saves time, reduces costs, and helps you identify top talent with unprecedented efficiency.
+            Experience the future of recruitment with our AI-powered platform. We combine
+            cutting-edge technology with intuitive design to deliver a recruitment solution that
+            saves time, reduces costs, and helps you identify top talent with unprecedented
+            efficiency.
           </p>
         </motion.div>
 
@@ -448,7 +474,9 @@ export function HowItWorks() {
                 className={`flex items-center gap-20 ${step.position === 'left' ? 'flex-row' : 'flex-row-reverse'}`}
               >
                 {/* Content Box */}
-                <div className={`w-[calc(50%-4rem)] ${step.position === 'left' ? 'text-right' : 'text-left'}`}>
+                <div
+                  className={`w-[calc(50%-4rem)] ${step.position === 'left' ? 'text-right' : 'text-left'}`}
+                >
                   <motion.div
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
@@ -461,7 +489,9 @@ export function HowItWorks() {
                     </p>
 
                     {/* Feature List */}
-                    <ul className={`space-y-3 text-sm ${step.position === 'left' ? 'ml-auto' : ''}`}>
+                    <ul
+                      className={`space-y-3 text-sm ${step.position === 'left' ? 'ml-auto' : ''}`}
+                    >
                       {step.features?.map((feature, i) => (
                         <motion.li
                           key={i}
@@ -489,9 +519,10 @@ export function HowItWorks() {
                     animate={{ scale: 1 }}
                     transition={{ delay: index * 0.3 + 0.2 }}
                     className={`absolute top-1/2 -translate-y-1/2 w-20 h-1 
-                      bg-gradient-to-r ${step.position === 'left'
-                        ? 'from-primary to-transparent -right-20'
-                        : 'from-transparent to-primary -left-20'
+                      bg-gradient-to-r ${
+                        step.position === 'left'
+                          ? 'from-primary to-transparent -right-20'
+                          : 'from-transparent to-primary -left-20'
                       }`}
                   />
 
@@ -508,14 +539,15 @@ export function HowItWorks() {
                       hover:shadow-2xl hover:scale-110 transition-all duration-300
                       hover:rotate-6`}
                     style={{
-                      boxShadow: `0 20px 40px -10px ${step.bgAccent.includes('blue')
-                        ? 'rgba(59, 130, 246, 0.3)'
-                        : step.bgAccent.includes('purple')
-                          ? 'rgba(147, 51, 234, 0.3)'
-                          : step.bgAccent.includes('green')
-                            ? 'rgba(34, 197, 94, 0.3)'
-                            : 'rgba(249, 115, 22, 0.3)'
-                        }`,
+                      boxShadow: `0 20px 40px -10px ${
+                        step.bgAccent.includes('blue')
+                          ? 'rgba(59, 130, 246, 0.3)'
+                          : step.bgAccent.includes('purple')
+                            ? 'rgba(147, 51, 234, 0.3)'
+                            : step.bgAccent.includes('green')
+                              ? 'rgba(34, 197, 94, 0.3)'
+                              : 'rgba(249, 115, 22, 0.3)'
+                      }`,
                     }}
                   >
                     <step.icon className="text-white w-6 h-6 md:w-8 md:h-8" />
