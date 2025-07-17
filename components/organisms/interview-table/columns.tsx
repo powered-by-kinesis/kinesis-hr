@@ -25,7 +25,7 @@ export const getInterviewsTableColumns = (onEditInterview: (interview: Interview
             header: ({ column }) => (
                 <DataTableColumnHeader column={column} title="Skills" />
             ),
-            cell: ({ row }) => <div>{(row.original.skills as { name: string; description: string }[]).map(s => s.name).join(', ')}</div>,
+            cell: ({ row }) => <div>sds</div>,
         },
         {
             accessorKey: 'jobPost',

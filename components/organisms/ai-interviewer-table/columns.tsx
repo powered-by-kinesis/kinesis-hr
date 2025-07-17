@@ -117,7 +117,7 @@ export const getCandidatesTableColumns = (onViewDetails: (candidateId: number) =
     {
       accessorKey: 'technicalSkills',
       header: ({ column }) => <DataTableColumnHeader column={column} title="Technical Skills" />,
-      cell: ({ row }) => <div className="text-muted-foreground">{row.original.applicant.skills?.map(s => getSkillLevelBadge(s.level))}</div>,
+      cell: ({ row }) => <div className="text-muted-foreground">sdsd</div>,
     },
     // {
     //   accessorKey: 'overallLevel',

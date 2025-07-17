@@ -273,7 +273,7 @@ export default function AiInterviewPage() {
 
                         <VoiceBlobSmoothCircle isSpeaking={conversation.isSpeaking} aiVolume={aiVolume} />
 
-                        <div className="absolute bottom-8 flex gap-4">
+                        {/* <div className="absolute bottom-8 flex gap-4">
                             <Button
                                 onClick={startInterview} // This button should ideally be removed or re-purposed if interview starts automatically
                                 disabled={conversation.status === 'connected' || elevenLabsError !== null}
@@ -289,7 +289,7 @@ export default function AiInterviewPage() {
                             >
                                 Stop Interview
                             </Button>
-                        </div>
+                        </div> */}
                     </>
                 )}
             </div>

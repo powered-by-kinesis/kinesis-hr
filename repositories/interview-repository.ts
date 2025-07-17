@@ -1,6 +1,7 @@
 import prisma from '@/lib/prisma';
 import { InterviewResponseDTO, CreateInterviewRequestDTO, UpdateInterviewRequestDTO } from '@/types/interview';
 import { ValidationResponseDTO } from '@/types/interview/ValidationResponseDTO';
+import { LivekitRoomResponseDto, TCreateLivekitRoomDto } from '@/types/livekit';
 
 export class InterviewRepository {
     private baseUrl: string;
@@ -137,6 +138,45 @@ export class InterviewRepository {
             return validationData;
         } catch (error) {
             console.error('Error validating invitation:', error);
+            throw error;
+        }
+    }
+
+    async validateInvitationByToken(token: string): Promise<ValidationResponseDTO> {
+        try {
+            const res = await fetch(`${this.baseUrl}/api/interviews/validate?token=${token}`);
+            const validationData: ValidationResponseDTO = await res.json();
+            if (!validationData || typeof validationData.success !== 'boolean') {
+                throw new Error('Invalid response format from validation endpoint');
+            }
+            if (!res.ok) {
+                throw new Error(!validationData.success ? "Failed to validate invitation" : `Failed to validate invitation: ${res.status} ${res.statusText}`);
+            }
+
+            return validationData;
+        } catch (error) {
+            console.error('Error validating invitation:', error);
+            throw error;
+        }
+    }
+
+    async createLivekitRoom(payload: TCreateLivekitRoomDto): Promise<LivekitRoomResponseDto> {
+        try {
+            const res = await fetch(`${this.baseUrl}/api/livekit`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(payload),
+            });
+
+            if (!res.ok) {
+                throw new Error(`Failed to create Livekit room: ${res.status} ${res.statusText}`);
+            }
+
+            return await res.json();
+        } catch (error) {
+            console.error('Error creating Livekit room:', error);
             throw error;
         }
     }

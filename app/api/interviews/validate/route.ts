@@ -7,19 +7,23 @@ export async function GET(req: Request) {
     try {
         const { searchParams } = new URL(req.url);
         const token = searchParams.get('token');
-        const interviewId = searchParams.get('interviewId');
 
-        if (!token || !interviewId) {
-            return NextResponse.json({ error: 'Token and Interview ID are required' }, { status: 400 });
+        if (!token) {
+            return NextResponse.json({ error: 'Token is required' }, { status: 400 });
         }
 
         const invitation = await prisma.interviewInvitation.findUnique({
             where: {
                 token: token,
-                interviewId: parseInt(interviewId),
+                AND: {
+                    status: {
+                        not: "COMPLETED"
+                    }
+                }
             },
             include: {
-                applicant: true, // Include applicant data if needed on the frontend
+                applicant: true,
+                interview: true,
             },
         });
 
