@@ -13,10 +13,10 @@ export function NavLink({ href, children, active }: NavLinkProps) {
         font-medium text-sm
         ${
           active
-            ? 'text-white bg-background/10 shadow-[inset_0_1px_0_0_rgba(255,255,255,0.1)]'
-            : 'text-foreground/70 hover:text-white/90'
+            ? 'text-primary bg-primary/10 shadow-[inset_0_1px_0_0_rgba(255,255,255,0.1)]'
+            : 'text-foreground/70 hover:text-primary/90'
         }
-        hover:bg-background/10
+        hover:bg-primary/10
         group
       `}
     >
