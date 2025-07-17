@@ -126,10 +126,10 @@ export const getCandidatesTableColumns = (): ColumnDef<CandidateData>[] => {
                 View Details
               </Link>
             </DropdownMenuItem>
-            <DropdownMenuItem className="cursor-pointer">Schedule Interview</DropdownMenuItem>
+            <DropdownMenuItem className="cursor-pointer">Edit Candidate</DropdownMenuItem>
             <DropdownMenuSeparator />
             <DropdownMenuItem className="text-destructive cursor-pointer">
-              Reject Candidate
+              Delete Candidate
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>

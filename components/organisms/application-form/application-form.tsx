@@ -128,6 +128,11 @@ export function ApplicationForm({ jobPost }: ApplicationFormProps) {
       const responseData = await response.json();
 
       if (!response.ok) {
+        if (response.status === 409) {
+          toast.error('You have already applied for this job');
+          return;
+        }
+
         throw new Error(responseData.message || 'Failed to submit application');
       }
 

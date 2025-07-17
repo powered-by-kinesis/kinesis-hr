@@ -1,49 +1,284 @@
 'use client';
 import { motion } from 'motion/react';
-import { Upload, BotMessageSquare, Settings2, Trophy, CheckCircle2 } from 'lucide-react';
+import { Upload, BotMessageSquare, Settings2, Trophy, CheckCircle2, LucideIcon, X } from 'lucide-react';
 import { Container } from '@/components/atoms/container';
+// import { useEffect, useRef, useState } from 'react';
+import Image from 'next/image';
+import {
+  Carousel,
+  CarouselApi,
+  CarouselContent,
+  CarouselItem,
+} from "@/components/ui/carousel";
+import { useEffect, useState } from 'react';
+
+interface ImageCarouselProps {
+  sources: string[];
+  title: string;
+}
+
+interface SingleImageProps {
+  source: string;
+  title: string;
+}
+
+const SingleImage = ({ source, title }: SingleImageProps) => {
+  const [isFullscreen, setIsFullscreen] = useState(false);
+
+  return (
+    <div className="relative">
+      <Image
+        src={source}
+        alt={title}
+        width={800}
+        height={800}
+        className='rounded-lg shadow-blue-500 shadow-lg w-full h-auto cursor-pointer transition-transform hover:scale-[1.02]'
+        onClick={() => setIsFullscreen(true)}
+      />
+      <ShowFullScreenImage
+        title={title}
+        isFullscreen={isFullscreen}
+        setIsFullscreen={setIsFullscreen}
+        sources={[source]}
+      />
+    </div>
+  );
+};
+
+const ShowFullScreenImage = ({ title, isFullscreen, setIsFullscreen, sources }: {
+  title: string,
+  isFullscreen: boolean,
+  setIsFullscreen: (isFullscreen: boolean) => void,
+  sources: string[]
+}) => {
+  const [api, setApi] = useState<CarouselApi>();
+  const [current, setCurrent] = useState(0);
+  const [count, setCount] = useState(0);
+
+  useEffect(() => {
+    if (!api) return;
+
+    setCount(api.scrollSnapList().length);
+    setCurrent(api.selectedScrollSnap() + 1);
+
+    api.on("select", () => {
+      setCurrent(api.selectedScrollSnap() + 1);
+    });
+  }, [api]);
+
+  const handlePrevious = () => {
+    if (api) {
+      api.scrollPrev();
+    }
+  };
+
+  const handleNext = () => {
+    if (api) {
+      api.scrollNext();
+    }
+  };
+
+  if (!isFullscreen) return null;
+
+  return (
+    <div className="fixed inset-0 z-[9999] bg-black">
+      <button
+        onClick={() => setIsFullscreen(false)}
+        className="absolute top-4 right-4 z-[9999] p-2 rounded-full bg-primary hover:bg-primary/80 cursor-pointer transition-colors"
+      >
+        <X className="h-8 w-8 text-white" />
+      </button>
+      <div className="absolute bottom-4 left-1/2 -translate-x-1/2 text-white z-[9999] bg-primary rounded-4xl w-fit mx-auto py-2 px-4 mt-4">
+        Image {current} of {count}
+      </div>
+      <div className="absolute left-4 top-1/2 -translate-y-1/2 z-[9999]">
+        <button
+          onClick={handlePrevious}
+          className="p-2 rounded-full bg-primary hover:bg-primary/80 cursor-pointer transition-colors"
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-8 h-8 text-white">
+            <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" />
+          </svg>
+        </button>
+      </div>
+      <div className="absolute right-4 top-1/2 -translate-y-1/2 z-[9999]">
+        <button
+          onClick={handleNext}
+          className="p-2 rounded-full bg-primary hover:bg-primary/80 cursor-pointer transition-colors"
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-8 h-8 text-white">
+            <path strokeLinecap="round" strokeLinejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" />
+          </svg>
+        </button>
+      </div>
+      <Carousel className="w-screen h-screen" setApi={setApi}>
+        <CarouselContent className="h-full">
+          {sources.map((source, index) => (
+            <CarouselItem key={index} className="h-full flex items-center justify-center p-0">
+              <div className="relative w-screen h-screen flex items-center justify-center">
+                <Image
+                  src={source}
+                  alt={`${title} - ${index + 1}`}
+                  fill
+                  className="object-contain"
+                  priority
+                  quality={100}
+                />
+              </div>
+            </CarouselItem>
+          ))}
+        </CarouselContent>
+      </Carousel>
+    </div>
+  )
+}
+
+const ImageCarousel = ({ sources, title }: ImageCarouselProps) => {
+  const [api, setApi] = useState<CarouselApi>();
+  const [current, setCurrent] = useState(0);
+  const [count, setCount] = useState(0);
+  const [isFullscreen, setIsFullscreen] = useState(false);
+
+  useEffect(() => {
+    if (!api) return;
+
+    setCount(api.scrollSnapList().length);
+    setCurrent(api.selectedScrollSnap() + 1);
+
+    api.on("select", () => {
+      setCurrent(api.selectedScrollSnap() + 1);
+    });
+  }, [api]);
+
+  const handleImageClick = () => {
+    setIsFullscreen(true);
+  };
+
+  return (
+    <div className="w-full rounded-lg">
+      <Carousel className="w-full rounded-lg shadow-blue-500 shadow-lg h-auto cursor-pointer transition-transform hover:scale-[1.02]" setApi={setApi}>
+        <CarouselContent>
+          {sources.map((source, index) => (
+            <CarouselItem key={index}>
+              <div className="relative aspect-[16/9]">
+                <Image
+                  src={source}
+                  alt={`${title} - ${index + 1}`}
+                  fill
+                  className='rounded-lg object-contain'
+                  onClick={handleImageClick}
+                />
+              </div>
+            </CarouselItem>
+          ))}
+        </CarouselContent>
+      </Carousel>
+      <div className="py-2 text-center text-sm text-muted-foreground mt-4">
+        Image {current} of {count}
+      </div>
+      <ShowFullScreenImage
+        title={title}
+        isFullscreen={isFullscreen}
+        setIsFullscreen={setIsFullscreen}
+        sources={sources}
+      />
+    </div>
+  );
+};
+
+// interface VideoProps {
+//   url: string;
+//   className?: string;
+// }
+
+// const Video = ({ url, className }: VideoProps) => {
+//   const [isVisible, setIsVisible] = useState(false);
+//   const videoRef = useRef<HTMLDivElement>(null);
+
+//   useEffect(() => {
+//     const observer = new IntersectionObserver(
+//       ([entry]) => {
+//         setIsVisible(entry.isIntersecting);
+//       },
+//       {
+//         threshold: 0.5,
+//       }
+//     );
+
+//     if (videoRef.current) {
+//       observer.observe(videoRef.current);
+//     }
+
+//     return () => {
+//       if (videoRef.current) {
+//         observer.unobserve(videoRef.current);
+//       }
+//     };
+//   }, []);
+
+//   return (
+//     <div ref={videoRef} className={`relative w-full aspect-video rounded-lg overflow-hidden shadow-lg ${className}`}>
+//       <iframe
+//         src={`${url}${isVisible ? '&autoplay=1' : ''}&loop=1&muted=1&controls=0`}
+//         className="absolute inset-0 w-full h-full"
+//         allow="autoplay; encrypted-media"
+//         allowFullScreen
+//       />
+//     </div>
+//   );
+// };
+
+interface HowItWorksStep {
+  icon: LucideIcon;
+  title: string;
+  description: string;
+  position: 'left' | 'right';
+  features: string[];
+  bgAccent: string;
+  sources?: string[]
+}
 
 export function HowItWorks() {
-  const steps = [
+  const steps: HowItWorksStep[] = [
     {
-      icon: <Settings2 className="w-6 h-6 md:w-8 md:h-8 " />,
-      title: 'Set Up Your Assistant',
+      icon: Settings2,
+      title: 'Upload and Manage Job Post',
       description:
-        'Begin by configuring your assistant with your job requirements and preferred language. Tailor the process to fit your unique needs.',
+        'Upload your job post in seconds. You can set up your job description, salary range, employment type, currency, salary type and publish or save as draft.',
       position: 'left',
-      features: ['Custom job description', 'Local language support'],
+      features: [],
       bgAccent: 'from-blue-500 to-blue-600',
+      sources: ["/job-post-2.png", "/job-post-1.png"],
     },
     {
-      icon: <Upload className="w-6 h-6 md:w-8 md:h-8 " />,
-      title: 'Upload CV',
+      icon: Upload,
+      title: 'Manage Candidates',
       description:
-        'Upload candidate CVs in seconds. Our AI instantly analyzes PDF and DOC files, giving you rapid insights to accelerate your screening.',
+        'You can also manage candidates with the understandable UI. Show detail candidate, update candidate, delete candidate and etc.',
       position: 'right',
-      features: ['Supports multiple file formats', 'Instant, automated analysis'],
+      features: ['Send interview invitation'],
       bgAccent: 'from-blue-500 to-blue-600',
+      sources: ["/manage-candidate-1.png", "/manage-candidate-2.png",],
     },
     {
-      icon: <Trophy className="w-6 h-6 md:w-8 md:h-8 " />,
-      title: 'AI Analysis & Ranking',
+      icon: BotMessageSquare,
+      title: 'AI Interview',
       description:
-        'Get comprehensive candidate insights with AI-powered analysis. Our system evaluates each CV with detailed justification, identifies key strengths and weaknesses, then provides accurate scoring and ranking to help you make confident hiring decisions.',
+        'Candidate can interview with AI. You can also see the interview result.',
       position: 'left',
-      features: [
-        'Detailed AI justification',
-        'Key strengths & weaknesses analysis',
-        'Smart scoring & ranking',
-      ],
+      features: [],
       bgAccent: 'from-blue-500 to-blue-600',
+      sources: ["/ai-interview-2.png", "/ai-interview-1.png", "/ai-interview-3.png", "/ai-interview-4.png", "/ai-interview-5.png"],
     },
     {
-      icon: <BotMessageSquare className="w-6 h-6 md:w-8 md:h-8 " />,
-      title: 'Chat with your assistant',
+      icon: Trophy,
+      title: 'Candidate Application',
       description:
-        'Interact with your AI assistant to get personalized candidate recommendations and make confident hiring decisions.',
+        'Candidate can apply to your job post.',
       position: 'right',
-      features: ['Interactive chat', 'Tailored candidate suggestions'],
+      features: [],
       bgAccent: 'from-blue-500 to-blue-600',
+      sources: ["/candidate-application.png"],
     },
   ];
 
@@ -97,7 +332,7 @@ export function HowItWorks() {
                     flex items-center justify-center shadow-lg
                     hover:scale-110 transition-all duration-300 z-10`}
                 >
-                  {step.icon}
+                  {step.icon && <step.icon className="text-white" />}
                 </motion.div>
 
                 {/* Content */}
@@ -177,16 +412,10 @@ export function HowItWorks() {
                   type: 'spring',
                   stiffness: 100,
                 }}
-                className={`flex items-center gap-20 ${
-                  step.position === 'left' ? 'flex-row' : 'flex-row-reverse'
-                }`}
+                className={`flex items-center gap-20 ${step.position === 'left' ? 'flex-row' : 'flex-row-reverse'}`}
               >
                 {/* Content Box */}
-                <div
-                  className={`w-[calc(50%-4rem)] ${
-                    step.position === 'left' ? 'text-right' : 'text-left'
-                  }`}
-                >
+                <div className={`w-[calc(50%-4rem)] ${step.position === 'left' ? 'text-right' : 'text-left'}`}>
                   <motion.div
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
@@ -199,9 +428,7 @@ export function HowItWorks() {
                     </p>
 
                     {/* Feature List */}
-                    <ul
-                      className={`space-y-3 text-sm ${step.position === 'left' ? 'ml-auto' : ''}`}
-                    >
+                    <ul className={`space-y-3 text-sm ${step.position === 'left' ? 'ml-auto' : ''}`}>
                       {step.features.map((feature, i) => (
                         <motion.li
                           key={i}
@@ -213,7 +440,7 @@ export function HowItWorks() {
                           transition={{ delay: index * 0.3 + 0.4 + i * 0.1 }}
                           className="flex items-center gap-2 text-muted-foreground"
                         >
-                          <CheckCircle2 className="md:w-5 md:h-5 w-4 h-4  flex-shrink-0" />
+                          <CheckCircle2 className="md:w-5 md:h-5 w-4 h-4 flex-shrink-0" />
                           <span className="md:text-sm text-xs">{feature}</span>
                         </motion.li>
                       ))}
@@ -229,10 +456,9 @@ export function HowItWorks() {
                     animate={{ scale: 1 }}
                     transition={{ delay: index * 0.3 + 0.2 }}
                     className={`absolute top-1/2 -translate-y-1/2 w-20 h-1 
-                      bg-gradient-to-r ${
-                        step.position === 'left'
-                          ? 'from-primary to-transparent -right-20'
-                          : 'from-transparent to-primary -left-20'
+                      bg-gradient-to-r ${step.position === 'left'
+                        ? 'from-primary to-transparent -right-20'
+                        : 'from-transparent to-primary -left-20'
                       }`}
                   />
 
@@ -249,22 +475,37 @@ export function HowItWorks() {
                       hover:shadow-2xl hover:scale-110 transition-all duration-300
                       hover:rotate-6`}
                     style={{
-                      boxShadow: `0 20px 40px -10px ${
-                        step.bgAccent.includes('blue')
-                          ? 'rgba(59, 130, 246, 0.3)'
-                          : step.bgAccent.includes('purple')
-                            ? 'rgba(147, 51, 234, 0.3)'
-                            : step.bgAccent.includes('green')
-                              ? 'rgba(34, 197, 94, 0.3)'
-                              : 'rgba(249, 115, 22, 0.3)'
-                      }`,
+                      boxShadow: `0 20px 40px -10px ${step.bgAccent.includes('blue')
+                        ? 'rgba(59, 130, 246, 0.3)'
+                        : step.bgAccent.includes('purple')
+                          ? 'rgba(147, 51, 234, 0.3)'
+                          : step.bgAccent.includes('green')
+                            ? 'rgba(34, 197, 94, 0.3)'
+                            : 'rgba(249, 115, 22, 0.3)'
+                        }`,
                     }}
                   >
-                    {step.icon}
+                    <step.icon className="text-white w-6 h-6 md:w-8 md:h-8" />
                   </motion.div>
                 </div>
 
-                <div className="w-[calc(50%-4rem)]" />
+                <div className="w-[calc(50%-4rem)]">
+                  <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: index * 0.3 + 0.3 }}
+                  >
+                    {step.sources && (
+                      <>
+                        {step.sources.length > 1 ? (
+                          <ImageCarousel sources={step.sources} title={step.title} />
+                        ) : (
+                          <SingleImage source={step.sources[0]} title={step.title} />
+                        )}
+                      </>
+                    )}
+                  </motion.div>
+                </div>
               </motion.div>
             ))}
           </div>

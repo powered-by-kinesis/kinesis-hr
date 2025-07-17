@@ -45,11 +45,11 @@ const JobPostSkeleton = () => (
   <div className="container mx-auto px-4 py-12 max-w-7xl">
     <div className="grid gap-10 lg:grid-cols-3">
       <div className="lg:col-span-2 space-y-8">
-        <Skeleton className="h-48 w-full rounded-xl" />
-        <Skeleton className="h-96 w-full rounded-xl" />
+        <Skeleton className="h-48 w-full rounded-xl bg-primary/10" />
+        <Skeleton className="h-96 w-full rounded-xl bg-primary/10" />
       </div>
       <div className="lg:col-span-1">
-        <Skeleton className="h-80 w-full rounded-xl" />
+        <Skeleton className="h-80 w-full rounded-xl bg-primary/10" />
       </div>
     </div>
   </div>

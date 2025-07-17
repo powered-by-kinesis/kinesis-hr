@@ -27,8 +27,8 @@ export function Navbar() {
     <nav className="fixed top-0 w-full z-50 transition-all duration-300 ease-in-out px-4">
       <div
         className={`mx-auto px-4 md:px-6 lg:px-8 flex items-center justify-between 
-                    transition-all duration-300 ease-in-out h-16 border rounded-2xl border-white/10 backdrop-blur-md bg-background/5
-                    ${scrolled ? 'max-w-3xl mt-4' : 'max-w-7xl bg-transparent border-none'}`}
+                    transition-all duration-300 ease-in-out h-16 rounded-2xl  backdrop-blur-md bg-background/10
+                    ${scrolled ? 'max-w-3xl mt-4 border border-primary/10' : 'bg-transparent border-none'}`}
       >
         <div>
           <a href="#">
@@ -42,12 +42,12 @@ export function Navbar() {
 
         <div className="hidden md:flex justify-end">
           <Button
-            className="px-6 text-sm cursor-pointer rounded-full bg-gradient-to-br from-blue-500 to-blue-600 text-white hover:bg-gradient-to-br hover:from-blue-600 hover:to-blue-700"
+            className="px-6 text-sm cursor-pointer rounded-full bg-gradient-to-br from-primary to-primary/80 text-white hover:bg-gradient-to-br hover:from-primary hover:to-primary/90"
             onClick={() => {
               if (session) {
-                router.push('/chat');
+                router.push('/hiring');
               } else {
-                signIn('google', { callbackUrl: '/chat' });
+                signIn('google', { callbackUrl: '/hiring' });
               }
               setIsMenuOpen(false);
             }}
