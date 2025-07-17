@@ -1,5 +1,5 @@
 export enum SkillLevel {
-  NOVICE = 'NOVICE', // 0-5.9
+  BEGINNER = 'BEGINNER', // 0-5.9
   INTERMEDIATE = 'INTERMEDIATE', // 6.0-7.4
   PROFICIENT = 'PROFICIENT', // 7.5-8.4
   ADVANCED = 'ADVANCED', // 8.5-9.2
@@ -8,8 +8,8 @@ export enum SkillLevel {
 
 export const getSkillLevelLabel = (skillLevel: SkillLevel): string => {
   switch (skillLevel) {
-    case SkillLevel.NOVICE:
-      return 'Novice';
+    case SkillLevel.BEGINNER:
+      return 'Beginner';
     case SkillLevel.INTERMEDIATE:
       return 'Intermediate';
     case SkillLevel.PROFICIENT:
@@ -19,7 +19,7 @@ export const getSkillLevelLabel = (skillLevel: SkillLevel): string => {
     case SkillLevel.EXPERT:
       return 'Expert';
     default:
-      return 'Novice';
+      return 'Beginner';
   }
 };
 /**
@@ -29,7 +29,7 @@ export const getSkillLevelLabel = (skillLevel: SkillLevel): string => {
  */
 export function getSkillLevelDescription(level: SkillLevel): string {
   const descriptions = {
-    [SkillLevel.NOVICE]: 'Basic understanding with room for growth',
+    [SkillLevel.BEGINNER]: 'Basic understanding with room for growth',
     [SkillLevel.INTERMEDIATE]: 'Solid foundation with developing competency',
     [SkillLevel.PROFICIENT]: 'Strong capability with consistent performance',
     [SkillLevel.ADVANCED]: 'High expertise with proven excellence',
@@ -40,7 +40,7 @@ export function getSkillLevelDescription(level: SkillLevel): string {
 }
 
 export const SKILL_LEVEL_OPTIONS = [
-  { value: SkillLevel.NOVICE, label: getSkillLevelLabel(SkillLevel.NOVICE) },
+  { value: SkillLevel.BEGINNER, label: getSkillLevelLabel(SkillLevel.BEGINNER) },
   { value: SkillLevel.INTERMEDIATE, label: getSkillLevelLabel(SkillLevel.INTERMEDIATE) },
   { value: SkillLevel.PROFICIENT, label: getSkillLevelLabel(SkillLevel.PROFICIENT) },
   { value: SkillLevel.ADVANCED, label: getSkillLevelLabel(SkillLevel.ADVANCED) },
