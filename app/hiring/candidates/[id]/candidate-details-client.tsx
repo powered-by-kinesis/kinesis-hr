@@ -65,6 +65,7 @@ export function CandidateDetailsClient({ initialCandidate }: CandidateDetailsCli
     router.refresh();
   };
 
+
   const resumeUrl = candidate?.applications?.[0]?.documents?.[0]?.document?.filePath;
 
   if (!candidate) {
@@ -198,9 +199,9 @@ export function CandidateDetailsClient({ initialCandidate }: CandidateDetailsCli
                               )}
                           </div>
 
-                          <Button className="w-full mt-6 cursor-pointer" size="lg">
+                          {/* <Button className="w-full mt-6 cursor-pointer" size="lg">
                             Request Interview
-                          </Button>
+                          </Button> */}
                         </CardContent>
                       </Card>
 

@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { Applicant, Application } from '@prisma/client';
+import { Applicant, Application, Document } from '@prisma/client';
 import { TApplicationResponseDTO } from '../application';
 import { SkillLevel } from '@/constants/enums/skill-level';
 
@@ -52,5 +52,9 @@ export const TApplicantResponseDTO = z.object({
 });
 
 export type ApplicantResponseDTO = Applicant & {
-  applications?: Application[];
+  applications?: (Application & {
+    documents: {
+      document: Document
+    }[];
+  })[];
 };
