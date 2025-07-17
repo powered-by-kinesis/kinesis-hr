@@ -242,9 +242,9 @@ export function HowItWorks() {
   const steps: HowItWorksStep[] = [
     {
       icon: Settings2,
-      title: 'Upload and Manage Job Post',
+      title: 'Create and Customize Job Listings',
       description:
-        'Upload your job post in seconds. You can set up your job description, salary range, employment type, currency, salary type and publish or save as draft.',
+        'Effortlessly create detailed job listings with our intuitive interface. Define comprehensive job descriptions, competitive salary packages, employment terms, and more - all with professional precision. Publish instantly or save drafts for team review.',
       position: 'left',
       features: [],
       bgAccent: 'from-blue-500 to-blue-600',
@@ -252,19 +252,19 @@ export function HowItWorks() {
     },
     {
       icon: Upload,
-      title: 'Manage Candidates',
+      title: 'Streamline Candidate Management',
       description:
-        'You can also manage candidates with the understandable UI. Show detail candidate, update candidate, delete candidate and etc.',
+        'Take control of your recruitment pipeline with our powerful candidate management system. Access detailed profiles, track application status, and make data-driven decisions through our sophisticated yet user-friendly interface.',
       position: 'right',
-      features: ['Send interview invitation'],
+      features: ['Schedule and automate interview invitations'],
       bgAccent: 'from-blue-500 to-blue-600',
       sources: ["/manage-candidate-1.png", "/manage-candidate-2.png",],
     },
     {
       icon: BotMessageSquare,
-      title: 'AI Interview',
+      title: 'AI-Powered Interviews',
       description:
-        'Candidate can interview with AI. You can also see the interview result.',
+        'Transform your screening process with our cutting-edge AI interviewer. Conduct consistent, unbiased initial interviews 24/7, while gaining valuable insights into candidate qualifications and potential.',
       position: 'left',
       features: [],
       bgAccent: 'from-blue-500 to-blue-600',
@@ -272,13 +272,23 @@ export function HowItWorks() {
     },
     {
       icon: Trophy,
-      title: 'Candidate Application',
+      title: 'Seamless Application Process',
       description:
-        'Candidate can apply to your job post.',
+        'Provide candidates with a modern, friction-free application experience. Our streamlined process ensures higher completion rates while capturing all essential information for informed hiring decisions.',
       position: 'right',
       features: [],
       bgAccent: 'from-blue-500 to-blue-600',
       sources: ["/candidate-application.png"],
+    },
+    {
+      icon: BotMessageSquare,
+      title: 'Support AI Assistant',
+      description:
+        'Our AI assistant is available 24/7 to answer questions, provide information, and assist with any recruitment needs. It can handle routine inquiries, schedule interviews, and provide updates on candidate status.',
+      position: 'left',
+      features: [],
+      bgAccent: 'from-blue-500 to-blue-600',
+      sources: ["/ai-chat-bot.png"],
     },
   ];
 
@@ -292,11 +302,10 @@ export function HowItWorks() {
           className="text-center md:mb-32 mb-8"
         >
           <h2 className="md:text-4xl text-3xl font-bold mb-6 bg-gradient-to-r from-foreground to-foreground/80 bg-clip-text text-transparent">
-            How It Works
+            Transform Your Hiring Process
           </h2>
           <p className="text-muted-foreground md:text-xl text-base max-w-3xl mx-auto leading-relaxed">
-            Discover a smarter, faster way to hire. Our AI-driven platform streamlines every stage
-            of recruitment making your hiring process simpler, quicker, and more effective.
+            Experience the future of recruitment with our AI-powered platform. We combine cutting-edge technology with intuitive design to deliver a recruitment solution that saves time, reduces costs, and helps you identify top talent with unprecedented efficiency.
           </p>
         </motion.div>
 

@@ -27,7 +27,7 @@ export function FeatureCard({ title, description, Icon, index, className }: Feat
         <CardContent className="pt-8 pb-6 px-6 text-center">
           <motion.div className="mb-6 flex justify-center" whileHover={{ scale: 1.1 }}>
             <div className="p-3 rounded-full bg-gradient-to-br from-blue-500 to-blue-600">
-              <Icon className="h-8 w-8 " />
+              <Icon className="h-8 w-8 text-white" />
             </div>
           </motion.div>
           <h3 className="md:text-xl text-lg font-semibold mb-3 ">{title}</h3>

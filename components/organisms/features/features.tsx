@@ -1,28 +1,28 @@
 'use client';
 import { motion } from 'motion/react';
-import { Brain, BarChart3, Workflow } from 'lucide-react';
+import { Settings2, Upload, BotMessageSquare } from 'lucide-react';
 import { FeatureCard } from '@/components/molecules/feature-card';
 import { Container } from '@/components/atoms/container';
 
 export function Features() {
   const features = [
     {
-      title: 'Intelligent CV Analysis',
+      title: 'Smart Job Template Builder',
       description:
-        'Get deep insights from every CV with AI-powered analysis. Our system provides detailed justification, identifies key strengths and weaknesses, and matches candidates to your exact requirements.',
-      Icon: Brain,
+        'Utilize pre-built templates and AI-powered suggestions to create compelling job posts. Our intelligent system helps you craft competitive packages and optimize job descriptions to attract top talent.',
+      Icon: Settings2,
     },
     {
-      title: 'Smart Scoring & Ranking',
+      title: 'Advanced Applicant Tracking',
       description:
-        'Receive comprehensive candidate scores with transparent reasoning. Our AI evaluates skills, experience, and culture fit, then ranks candidates to help you focus on top talent.',
-      Icon: BarChart3,
+        'Keep your hiring organized with our comprehensive tracking system. Monitor candidate progress, set automated reminders, and collaborate with your team through our centralized recruitment dashboard.',
+      Icon: Upload,
     },
     {
-      title: 'Streamlined Decision Making',
+      title: 'Intelligent Interview Engine',
       description:
-        'Make confident hiring decisions with actionable insights. Get clear recommendations, detailed analysis reports, and data-driven justifications for every candidate.',
-      Icon: Workflow,
+        'Powered by advanced AI technology that adapts questions based on candidate responses. Features natural language processing, real-time evaluation, and detailed post-interview analytics.',
+      Icon: BotMessageSquare,
     },
   ];
 
@@ -34,10 +34,9 @@ export function Features() {
           animate={{ opacity: 1, y: 0 }}
           className="text-center md:mb-16 mb-8"
         >
-          <h2 className="text-3xl md:text-4xl font-bold tracking-tight">Platform Features</h2>
+          <h2 className="text-3xl md:text-4xl font-bold tracking-tight">Powerful Features That Drive Results</h2>
           <p className="mt-4 md:text-lg text-base text-muted-foreground">
-            Unlock a smarter, faster, and more effective hiring experience with our AI-powered
-            tools.
+            Our comprehensive suite of recruitment tools combines AI innovation with practical functionality to streamline every aspect of your hiring process.
           </p>
         </motion.div>
 
