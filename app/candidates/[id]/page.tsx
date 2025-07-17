@@ -6,8 +6,8 @@ import { SiteHeader } from '@/components/organisms/site-header';
 import { SidebarInset, SidebarProvider } from '@/components/ui/sidebar';
 import { AIAssistantSidebar } from '@/components/organisms/ai-assistant-sidebar';
 import { applicantRepository } from '@/repositories/applicant-repository';
-import { CandidateDetailsClient } from './candidate-details-client';
 import { CandidateDetailsSkeleton } from '@/components/organisms/candidate-details-skeleton';
+import { CandidateDetailsClient } from '@/app/hiring/candidates/[id]/candidate-details-client';
 
 interface CandidateDetailsPageProps {
     params: {
