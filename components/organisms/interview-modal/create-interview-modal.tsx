@@ -179,13 +179,17 @@ export function CreateInterviewModal({ isOpen, onClose, onSubmit }: CreateInterv
                         <FormControl>
                           <RadioGroupItem value="new" />
                         </FormControl>
-                        <FormLabel className="font-normal cursor-pointer">Create New Interview</FormLabel>
+                        <FormLabel className="font-normal cursor-pointer">
+                          Create New Interview
+                        </FormLabel>
                       </FormItem>
                       <FormItem className="flex items-center space-x-3 space-y-0">
                         <FormControl>
                           <RadioGroupItem value="fromJob" />
                         </FormControl>
-                        <FormLabel className="font-normal cursor-pointer">Create Based on Job List</FormLabel>
+                        <FormLabel className="font-normal cursor-pointer">
+                          Create Based on Job List
+                        </FormLabel>
                       </FormItem>
                     </RadioGroup>
                   </FormControl>
@@ -465,7 +469,12 @@ export function CreateInterviewModal({ isOpen, onClose, onSubmit }: CreateInterv
 
             <DialogFooter>
               {currentStep > 1 && (
-                <Button className='cursor-pointer' type="button" variant="outline" onClick={handleBack}>
+                <Button
+                  className="cursor-pointer"
+                  type="button"
+                  variant="outline"
+                  onClick={handleBack}
+                >
                   Back
                 </Button>
               )}

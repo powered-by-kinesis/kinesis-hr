@@ -67,10 +67,12 @@ export default function AIInterviewerPage() {
           <AppSidebar variant="inset" />
           <SidebarInset className="md:peer-data-[variant=inset]:m-0">
             <SiteHeader />
-            <div className={cn(
-              "flex flex-1 flex-col transition-all duration-300 ease-in-out",
-              !isAIAssistantMinimized && "lg:mr-[384px]" // 384px = 24rem = 96 in tailwind
-            )}>
+            <div
+              className={cn(
+                'flex flex-1 flex-col transition-all duration-300 ease-in-out',
+                !isAIAssistantMinimized && 'lg:mr-[384px]', // 384px = 24rem = 96 in tailwind
+              )}
+            >
               <div className="@container/main flex flex-1 flex-col gap-2">
                 <div className="flex flex-col gap-4 py-4 md:gap-6 md:py-6">
                   <div className="px-4 lg:px-6">
