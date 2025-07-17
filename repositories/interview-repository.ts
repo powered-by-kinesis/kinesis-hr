@@ -1,4 +1,3 @@
-import prisma from '@/lib/prisma';
 import {
   InterviewResponseDTO,
   CreateInterviewRequestDTO,
@@ -150,6 +149,23 @@ export class InterviewRepository {
       return validationData;
     } catch (error) {
       console.error('Error validating invitation:', error);
+      throw error;
+    }
+  }
+
+  async deleteInterviewInvitation(id: number): Promise<{ message: string }> {
+    try {
+      const res = await fetch(`${this.baseUrl}/api/interview-invitations/${id}`, {
+        method: 'DELETE',
+      });
+
+      if (!res.ok) {
+        throw new Error(`Failed to delete interview invitation: ${res.status} ${res.statusText}`);
+      }
+
+      return await res.json();
+    } catch (error) {
+      console.error('Error deleting interview invitation:', error);
       throw error;
     }
   }

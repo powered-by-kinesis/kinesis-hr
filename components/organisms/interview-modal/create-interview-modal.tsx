@@ -179,13 +179,13 @@ export function CreateInterviewModal({ isOpen, onClose, onSubmit }: CreateInterv
                         <FormControl>
                           <RadioGroupItem value="new" />
                         </FormControl>
-                        <FormLabel className="font-normal">Create New Interview</FormLabel>
+                        <FormLabel className="font-normal cursor-pointer">Create New Interview</FormLabel>
                       </FormItem>
                       <FormItem className="flex items-center space-x-3 space-y-0">
                         <FormControl>
                           <RadioGroupItem value="fromJob" />
                         </FormControl>
-                        <FormLabel className="font-normal">Create Based on Job List</FormLabel>
+                        <FormLabel className="font-normal cursor-pointer">Create Based on Job List</FormLabel>
                       </FormItem>
                     </RadioGroup>
                   </FormControl>
@@ -298,7 +298,7 @@ export function CreateInterviewModal({ isOpen, onClose, onSubmit }: CreateInterv
                         const newSkills = currentSkills.filter((_, i) => i !== index);
                         form.setValue('skills', newSkills);
                       }}
-                      className="self-end"
+                      className="self-end cursor-pointer"
                     >
                       <Trash2 className="h-4 w-4" />
                     </Button>
@@ -311,6 +311,7 @@ export function CreateInterviewModal({ isOpen, onClose, onSubmit }: CreateInterv
                     const currentSkills = form.getValues('skills') || [];
                     form.setValue('skills', [...currentSkills, { name: '', description: '' }]);
                   }}
+                  className="cursor-pointer"
                 >
                   Add Skill
                 </Button>
@@ -363,7 +364,7 @@ export function CreateInterviewModal({ isOpen, onClose, onSubmit }: CreateInterv
                         const newQuestions = currentQuestions.filter((_, i) => i !== index);
                         form.setValue('customQuestionList', newQuestions);
                       }}
-                      className="self-end"
+                      className="self-end cursor-pointer"
                     >
                       <Trash2 className="h-4 w-4" />
                     </Button>
@@ -379,6 +380,7 @@ export function CreateInterviewModal({ isOpen, onClose, onSubmit }: CreateInterv
                       { question: '', time: 0 },
                     ]);
                   }}
+                  className="cursor-pointer"
                 >
                   Add Question
                 </Button>
@@ -463,16 +465,20 @@ export function CreateInterviewModal({ isOpen, onClose, onSubmit }: CreateInterv
 
             <DialogFooter>
               {currentStep > 1 && (
-                <Button type="button" variant="outline" onClick={handleBack}>
+                <Button className='cursor-pointer' type="button" variant="outline" onClick={handleBack}>
                   Back
                 </Button>
               )}
               {currentStep < 4 && (
-                <Button type="button" onClick={handleNext}>
+                <Button className="cursor-pointer" type="button" onClick={handleNext}>
                   Next
                 </Button>
               )}
-              {currentStep === 4 && <Button type="submit">Create Interview</Button>}
+              {currentStep === 4 && (
+                <Button className="cursor-pointer" type="submit">
+                  Create Interview
+                </Button>
+              )}
             </DialogFooter>
           </form>
         </Form>

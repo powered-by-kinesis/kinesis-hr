@@ -20,11 +20,15 @@ import {
 import { InterviewResponseDTO } from '@/types/interview';
 import { AiInterviewerTable } from '@/components/organisms/ai-interviewer-table';
 import { InviteApplicantModal } from '@/components/organisms/interview-modal/invite-applicant-modal';
+import { AIAssistantSidebar } from '@/components/organisms/ai-assistant-sidebar';
+import { useAIAssistant } from '@/hooks/use-ai-assistant/use-ai-assistant';
+import { cn } from '@/lib/utils';
+
 
 const DetailInterviewPage = () => {
   const params = useParams();
   const interviewId = params.id as string;
-
+  const { isMinimized: isAIAssistantMinimized } = useAIAssistant();
   const [interviewData, setInterviewData] = useState<InterviewResponseDTO | null>(null);
   const [loading, setLoading] = useState(true);
   const [isInviteModalOpen, setIsInviteModalOpen] = useState(false);
@@ -73,8 +77,7 @@ const DetailInterviewPage = () => {
           <SiteHeader />
           <div className="flex flex-1 flex-col">
             <div className="@container/main flex flex-1 flex-col gap-2">
-              {/* Main content with right margin to accommodate AI Assistant */}
-              <div className="flex flex-col gap-4 py-4 md:gap-6 md:py-6 mr-96">
+              <div className={cn("flex flex-col gap-4 py-4 md:gap-6 md:py-6 mr-96", isAIAssistantMinimized ? 'mr-0' : 'mr-  96')}>
                 <div className="px-4 lg:px-6">
                   {loading && interviewData === null ? (
                     <div className="flex items-center justify-center py-12">
@@ -138,7 +141,7 @@ const DetailInterviewPage = () => {
                         </Card>
                       </div>
 
-                      <AiInterviewerTable data={interviewData?.invitations || []} />
+                      <AiInterviewerTable data={interviewData?.invitations || []} setLoading={setLoading} />
                     </>
                   )}
                 </div>
@@ -153,6 +156,7 @@ const DetailInterviewPage = () => {
         onInviteSuccess={handleInviteSuccess}
         interviewId={interviewId} // Pass interviewId here
       />
+      <AIAssistantSidebar />
     </div>
   );
 };

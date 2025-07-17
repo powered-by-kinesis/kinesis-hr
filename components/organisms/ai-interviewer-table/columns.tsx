@@ -14,6 +14,9 @@ import { DataTableColumnHeader } from '../data-table/data-table-column-header';
 import { Badge } from '@/components/ui/badge';
 import { formatDate } from '@/utils/format-date';
 import { InterviewInvitationResponseDTO } from '@/types/interview/InterviewInvitationResponseDTO';
+import { interviewRepository } from '@/repositories/interview-repository';
+import { DeleteAlert } from '../delete-alert';
+import { toast } from 'sonner';
 
 interface InterviewSkill {
   name: string;
@@ -22,7 +25,18 @@ interface InterviewSkill {
 
 export const getInterviewTableColumns = (
   onViewDetails: (invitation: InterviewInvitationResponseDTO) => void,
+  onDelete?: () => void,
 ): ColumnDef<InterviewInvitationResponseDTO>[] => {
+  const handleDelete = async (id: number) => {
+    try {
+      await interviewRepository.deleteInterviewInvitation(id);
+      toast.success('Interview invitation deleted successfully!');
+      onDelete?.();
+    } catch (error) {
+      console.error('Error deleting interview invitation:', error);
+    }
+  };
+
   return [
     {
       id: 'select',
@@ -116,7 +130,12 @@ export const getInterviewTableColumns = (
               View Details
             </DropdownMenuItem>
             <DropdownMenuItem className="cursor-pointer">Edit</DropdownMenuItem>
-            <DropdownMenuItem className="text-destructive cursor-pointer">Delete</DropdownMenuItem>
+            <DeleteAlert
+              title="Delete"
+              description={`Are you sure you want to delete "${row.original.applicant.fullName}"? This action cannot be undone.`}
+              action="Delete"
+              onConfirm={() => handleDelete(row.original.id)}
+            />
           </DropdownMenuContent>
         </DropdownMenu>
       ),

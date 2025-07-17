@@ -81,7 +81,7 @@ export default function AIInterviewerPage() {
                           Manage candidates and talent pipeline
                         </p>
                       </div>
-                      <Button onClick={() => setIsCreateModalOpen(true)}>
+                      <Button className="cursor-pointer" onClick={() => setIsCreateModalOpen(true)}>
                         Create New Interview
                       </Button>
                     </div>

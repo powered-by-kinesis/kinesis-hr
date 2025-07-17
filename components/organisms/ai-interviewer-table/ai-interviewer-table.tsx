@@ -9,9 +9,10 @@ import { InterviewInvitationDetailModal } from '@/components/organisms/interview
 
 interface AiInterviewerTableProps {
   data: InterviewInvitationResponseDTO[];
+  setLoading: (loading: boolean) => void;
 }
 
-export function AiInterviewerTable({ data }: AiInterviewerTableProps) {
+export function AiInterviewerTable({ data, setLoading }: AiInterviewerTableProps) {
   const [selectedInvitation, setSelectedInvitation] =
     React.useState<InterviewInvitationResponseDTO | null>(null);
   const [isModalOpen, setIsModalOpen] = React.useState(false);
@@ -21,7 +22,11 @@ export function AiInterviewerTable({ data }: AiInterviewerTableProps) {
     setIsModalOpen(true);
   };
 
-  const columns = getInterviewTableColumns(handleViewDetails);
+  const handleDelete = () => {
+    setLoading(true);
+  };
+
+  const columns = getInterviewTableColumns(handleViewDetails, handleDelete);
   const statusOptions: StatusOptions[] = [
     {
       column: 'status',
@@ -38,8 +43,6 @@ export function AiInterviewerTable({ data }: AiInterviewerTableProps) {
       ],
     },
   ];
-
-  console.log('data', data);
 
   return (
     <>
