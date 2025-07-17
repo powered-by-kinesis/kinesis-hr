@@ -170,7 +170,6 @@ model Applicant {
   education    Json? // Stores [{ institution: String, degree: String, startDate: DateTime, endDate: DateTime }]
 
 
-
   applications Application[]
   invitations  InterviewInvitation[] // Add this line
   user         User?         @relation(fields: [userId], references: [id])

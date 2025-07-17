@@ -10,13 +10,12 @@ import { CandidateDetailsSkeleton } from '@/components/organisms/candidate-detai
 import { CandidateDetailsClient } from '@/app/hiring/candidates/[id]/candidate-details-client';
 
 interface CandidateDetailsPageProps {
-    params: {
-        id: string;
-    };
+    params: Promise<{ id: string }>
 }
 
 export default async function CandidateDetailsPage({ params }: CandidateDetailsPageProps) {
-    const candidateData = await applicantRepository.getApplicantById(Number(params.id));
+    const { id } = await params;
+    const candidateData = await applicantRepository.getApplicantById(Number(id));
     if (!candidateData) {
         notFound();
     }

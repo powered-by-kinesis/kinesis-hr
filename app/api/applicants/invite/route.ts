@@ -37,7 +37,7 @@ export async function POST(req: Request) {
       },
     });
 
-    const interviewLink = `${process.env.NEXT_PUBLIC_BASE_URL}/interview/${interviewId}?token=${token}`;
+    const interviewLink = `${process.env.NEXT_PUBLIC_BASE_URL}/interview/meet?token=${token}`;
 
     // Define the subject and message template
     const subject = 'Invitation to AI Interview';

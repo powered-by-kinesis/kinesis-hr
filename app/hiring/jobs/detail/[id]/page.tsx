@@ -13,8 +13,8 @@ import { useParams } from 'next/navigation';
 import { JobDetailModal } from './job-detail-modal';
 import { jobPostRepository } from '@/repositories';
 import { JobPostResponseDTO } from '@/types/job-post';
-import { ApplicantResponseDTO } from '@/types/applicant';
 import { Stage } from '@/constants/enums/stage';
+import { Candidate } from '@/types/candidate/Candidate';
 import { cn } from '@/lib/utils';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useAIAssistant } from '@/hooks/use-ai-assistant/use-ai-assistant';
@@ -31,11 +31,11 @@ export default function JobDetailPage() {
   const [isDetailModalOpen, setIsDetailModalOpen] = React.useState(false);
   // State for storing fetched data
   const [jobPostsData, setJobPostsData] = React.useState<JobPostResponseDTO[]>([]);
-  const [candidatesApplied, setCandidatesApplied] = React.useState<ApplicantResponseDTO[]>([]);
-  const [candidatesHired, setCandidatesHired] = React.useState<ApplicantResponseDTO[]>([]);
-  const [candidatesAI, setCandidatesAI] = React.useState<ApplicantResponseDTO[]>([]);
-  const [candidatesReview, setCandidatesReview] = React.useState<ApplicantResponseDTO[]>([]);
-  const [candidatesOffer, setCandidatesOffer] = React.useState<ApplicantResponseDTO[]>([]);
+  const [candidatesApplied, setCandidatesApplied] = React.useState<Candidate[]>([]);
+  const [candidatesHired, setCandidatesHired] = React.useState<Candidate[]>([]);
+  const [candidatesAI, setCandidatesAI] = React.useState<Candidate[]>([]);
+  const [candidatesReview, setCandidatesReview] = React.useState<Candidate[]>([]);
+  const [candidatesOffer, setCandidatesOffer] = React.useState<Candidate[]>([]);
   const [isLoading, setIsLoading] = React.useState(true);
   const { isMinimized: isAIAssistantMinimized } = useAIAssistant();
   const [activeTab, setActiveTab] = React.useState('applied');
@@ -50,28 +50,6 @@ export default function JobDetailPage() {
           phone: application.applicant.phone || null,
           resumeUrl: application?.documents[0]?.document.filePath || null,
           stage: application.currentStage,
-          // applications: [{
-          //     id: application.id,
-          //     jobPostId: jobPost.id,
-          //     applicantId: application.applicant.id,
-          //     currentStage: application.currentStage,
-          //     expectedSalary: application.expectedSalary,
-          //     appliedAt: application.appliedAt,
-          //     notes: application.notes || null,
-          //     jobPost: {
-          //         id: jobPost.id,
-          //         title: jobPost.title,
-          //         description: jobPost.description,
-          //         location: jobPost.location,
-          //         employmentType: jobPost.employmentType,
-          //         status: jobPost.status,
-          //         department: jobPost.department,
-          //         salaryMin: jobPost.salaryMin ? Number(jobPost.salaryMin) : null,
-          //         salaryMax: jobPost.salaryMax ? Number(jobPost.salaryMax) : null,
-          //         currency: jobPost.currency,
-          //         salaryType: jobPost.salaryType,
-          //     }
-          // }]
         })) || []
     );
   };
