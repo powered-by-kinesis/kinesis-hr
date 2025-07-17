@@ -1,9 +1,9 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
-import { Button } from '@/components/ui/button';
 import { Mic, MicOff } from 'lucide-react';
-import { motion, useSpring, useMotionValue, useTransform, MotionValue } from 'framer-motion';
+import { motion, useSpring, useMotionValue, useTransform } from 'framer-motion';
 
 // A gentle multi-sine noise
 function softNoise(angle: number, t: number) {

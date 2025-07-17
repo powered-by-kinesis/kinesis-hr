@@ -99,7 +99,7 @@ export default function AiInterviewPage() {
       console.error('Failed to start interview:', error);
       setElevenLabsError(new Error('Failed to connect to interview service. Please try again.'));
     }
-  }, [conversation, interviewData]);
+  }, [conversation, interviewData, validationResponseData]);
 
   const stopInterview = useCallback(async () => {
     await conversation.endSession();
