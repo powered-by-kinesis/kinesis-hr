@@ -53,7 +53,7 @@ export function NavUser({
                 <span className="truncate font-medium">{user.name}</span>
                 <span className="text-muted-foreground truncate text-xs">{user.email}</span>
               </div>
-              <MoreVertical className="ml-auto size-4" />
+              <MoreVertical className="ml-auto size-4 text-primary" />
             </SidebarMenuButton>
           </DropdownMenuTrigger>
           <DropdownMenuContent
@@ -75,11 +75,14 @@ export function NavUser({
               </div>
             </DropdownMenuLabel>
             <DropdownMenuSeparator />
-            <DropdownMenuItem className="cursor-pointer" onClick={() => {
-              setIsLoading(true);
-              signOut({ callbackUrl: '/' });
-            }}>
-              <LogOut />
+            <DropdownMenuItem
+              className="cursor-pointer"
+              onClick={() => {
+                setIsLoading(true);
+                signOut({ callbackUrl: '/' });
+              }}
+            >
+              <LogOut className="text-primary" />
               Log out
             </DropdownMenuItem>
           </DropdownMenuContent>

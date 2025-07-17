@@ -7,9 +7,7 @@ import type { JobPost } from '@prisma/client';
 
 import { jobPostRepository } from '@/repositories';
 import { ApplicationForm } from '@/components/organisms/application-form';
-import {
-  EmploymentType,
-} from '@/constants/enums/employment-type';
+import { EmploymentType } from '@/constants/enums/employment-type';
 import { JobStatus } from '@/constants/enums/job-status';
 import { formatDate } from '@/utils/format-date';
 import { formatSalary } from '@/utils/format-salary/format-salary';
@@ -47,11 +45,11 @@ const JobPostSkeleton = () => (
   <div className="container mx-auto px-4 py-12 max-w-7xl">
     <div className="grid gap-10 lg:grid-cols-3">
       <div className="lg:col-span-2 space-y-8">
-        <Skeleton className="h-48 w-full rounded-xl" />
-        <Skeleton className="h-96 w-full rounded-xl" />
+        <Skeleton className="h-48 w-full rounded-xl bg-primary/10" />
+        <Skeleton className="h-96 w-full rounded-xl bg-primary/10" />
       </div>
       <div className="lg:col-span-1">
-        <Skeleton className="h-80 w-full rounded-xl" />
+        <Skeleton className="h-80 w-full rounded-xl bg-primary/10" />
       </div>
     </div>
   </div>
@@ -100,7 +98,7 @@ export default function JobPostDetailPage() {
     jobPost.salaryMin?.toString(),
     jobPost.salaryMax?.toString(),
     jobPost.currency,
-    jobPost.salaryType
+    jobPost.salaryType,
   );
 
   return (
@@ -137,9 +135,7 @@ export default function JobPostDetailPage() {
             <div className="sticky top-8">
               <Card className="shadow-lg">
                 <CardHeader>
-                  <CardTitle className="text-xl font-semibold">
-                    Apply for this Role
-                  </CardTitle>
+                  <CardTitle className="text-xl font-semibold">Apply for this Role</CardTitle>
                 </CardHeader>
                 <CardContent>
                   <ApplicationForm jobPost={jobPost} />

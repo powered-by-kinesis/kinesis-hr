@@ -17,7 +17,6 @@ interface CandidateDetailsPageProps {
 
 export default async function CandidateDetailsPage({ params }: CandidateDetailsPageProps) {
     const candidateData = await applicantRepository.getApplicantById(Number(params.id));
-
     if (!candidateData) {
         notFound();
     }

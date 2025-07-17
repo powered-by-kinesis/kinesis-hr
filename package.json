@@ -55,6 +55,7 @@
     "date-fns": "^4.1.0",
     "livekit-client": "^2.15.2",
     "livekit-server-sdk": "^2.13.1",
+    "embla-carousel-react": "^8.6.0",
     "lucide-react": "^0.511.0",
     "moment": "^2.30.1",
     "motion": "^12.12.1",

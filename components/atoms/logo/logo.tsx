@@ -96,8 +96,8 @@ export function Logo({
         animate={{ opacity: 1 }}
         transition={{ duration: 0.5 }}
       >
-        <span>Kinesis</span>
-        <span className="text-blue-500">HR</span>
+        <span className="text-primary">Kinesis</span>
+        <span>&nbsp;HR</span>
       </motion.div>
     </motion.div>
   );

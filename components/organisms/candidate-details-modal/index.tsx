@@ -1,1 +1,0 @@
-export { CandidateDetailsModal } from './candidate-details-modal';

@@ -1,21 +1,31 @@
-"use client";
+'use client';
 
-import { ColumnDef } from "@tanstack/react-table";
-import Link from "next/link";
+import { ColumnDef } from '@tanstack/react-table';
+import Link from 'next/link';
 
-import { Checkbox } from "@/components/ui/checkbox";
+import { Checkbox } from '@/components/ui/checkbox';
 
-import { DataTableColumnHeader } from "../data-table/data-table-column-header";
-import { formatDate } from "@/utils/format-date";
-import { ApplicationTableData } from "./application-table";
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
-import { Button } from "@/components/ui/button";
-import { MoreVertical } from "lucide-react";
-import { DeleteAlert } from "../delete-alert";
-import { applicationRepository } from "@/repositories/application-repository";
-import { toast } from "sonner";
+import { DataTableColumnHeader } from '../data-table/data-table-column-header';
+import { formatDate } from '@/utils/format-date';
+import { ApplicationTableData } from './application-table';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
+import { Button } from '@/components/ui/button';
+import { MoreVertical } from 'lucide-react';
+import { DeleteAlert } from '../delete-alert';
+import { applicationRepository } from '@/repositories/application-repository';
+import { toast } from 'sonner';
+import { CurrentStageBadge } from '@/components/molecules/badge/current-stage';
+import { Stage } from '@/constants/enums/stage';
 
-export const getApplicationTableColumns = (onDeleteApplication?: (id: number) => void, onEditApplication?: (data: ApplicationTableData) => void): ColumnDef<ApplicationTableData>[] => {
+export const getApplicationTableColumns = (
+  onDeleteApplication?: (id: number) => void,
+  onEditApplication?: (data: ApplicationTableData) => void,
+): ColumnDef<ApplicationTableData>[] => {
   const handleDeleteApplication = async (id: number) => {
     try {
       await applicationRepository.deleteApplication(id);
@@ -34,7 +44,8 @@ export const getApplicationTableColumns = (onDeleteApplication?: (id: number) =>
         <Checkbox
           className="cursor-pointer"
           checked={
-            table.getIsAllPageRowsSelected() || (table.getIsSomePageRowsSelected() && 'indeterminate')
+            table.getIsAllPageRowsSelected() ||
+            (table.getIsSomePageRowsSelected() && 'indeterminate')
           }
           onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
           aria-label="Select all"
@@ -55,7 +66,10 @@ export const getApplicationTableColumns = (onDeleteApplication?: (id: number) =>
       accessorKey: 'jobTitle',
       header: ({ column }) => <DataTableColumnHeader column={column} title="Job Title" />,
       cell: ({ row }) => (
-        <Link href={`/hiring/jobs/detail/${row.original.jobPostId}`} className="font-medium hover:underline cursor-pointer hover:text-primary">
+        <Link
+          href={`/hiring/jobs/detail/${row.original.jobPostId}`}
+          className="font-medium hover:underline cursor-pointer hover:text-primary"
+        >
           {row.original.jobTitle}
         </Link>
       ),
@@ -64,9 +78,7 @@ export const getApplicationTableColumns = (onDeleteApplication?: (id: number) =>
     {
       accessorKey: 'currentStage',
       header: ({ column }) => <DataTableColumnHeader column={column} title="Current Stage" />,
-      cell: ({ row }) => (
-        <div className="text-muted-foreground">{row.original.currentStage || 'N/A'}</div>
-      ),
+      cell: ({ row }) => <CurrentStageBadge stage={row.original.currentStage as Stage} />,
     },
     {
       accessorKey: 'resumeUrl',
@@ -82,7 +94,9 @@ export const getApplicationTableColumns = (onDeleteApplication?: (id: number) =>
     {
       accessorKey: 'expectedSalary',
       header: ({ column }) => <DataTableColumnHeader column={column} title="Expected Salary" />,
-      cell: ({ row }) => <div className="text-muted-foreground">{row.original.expectedSalary || 'N/A'}</div>,
+      cell: ({ row }) => (
+        <div className="text-muted-foreground">{row.original.expectedSalary || 'N/A'}</div>
+      ),
     },
     {
       accessorKey: 'notes',
@@ -92,11 +106,7 @@ export const getApplicationTableColumns = (onDeleteApplication?: (id: number) =>
     {
       accessorKey: 'appliedAt',
       header: ({ column }) => <DataTableColumnHeader column={column} title="Applied Date" />,
-      cell: ({ row }) => (
-        <div>
-          {formatDate(row.original.appliedAt.toString())}
-        </div>
-      ),
+      cell: ({ row }) => <div>{formatDate(row.original.appliedAt.toString())}</div>,
     },
 
     {
@@ -110,7 +120,10 @@ export const getApplicationTableColumns = (onDeleteApplication?: (id: number) =>
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
-            <DropdownMenuItem className="cursor-pointer" onClick={() => onEditApplication?.(row.original)}>
+            <DropdownMenuItem
+              className="cursor-pointer"
+              onClick={() => onEditApplication?.(row.original)}
+            >
               Edit Application
             </DropdownMenuItem>
             <DeleteAlert
@@ -123,5 +136,5 @@ export const getApplicationTableColumns = (onDeleteApplication?: (id: number) =>
         </DropdownMenu>
       ),
     },
-  ]
+  ];
 };
