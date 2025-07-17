@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { Applicant, Application, Document } from '@prisma/client';
+import { Applicant, Application, Document, Stage } from '@prisma/client';
 import { TApplicationResponseDTO } from '../application';
 import { SkillLevel } from '@/constants/enums/skill-level';
 
@@ -51,10 +51,13 @@ export const TApplicantResponseDTO = z.object({
   applications: z.array(TApplicationResponseDTO).optional(), // Add applications array
 });
 
+import { JobPost } from '@prisma/client';
+
 export type ApplicantResponseDTO = Applicant & {
   applications?: (Application & {
     documents: {
-      document: Document
+      document: Document;
     }[];
+    jobPost: JobPost;
   })[];
 };

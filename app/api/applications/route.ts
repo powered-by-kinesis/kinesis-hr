@@ -97,7 +97,7 @@ export async function POST(request: Request) {
         // Embed documents
         try {
           await axios.post(
-            'https://llmapi.nolepsekali.fun/publisher/publish',
+            'http://31.97.109.148:8000/publisher/publish',
             {
               event: 'store-pdf',
               data: {

@@ -14,7 +14,6 @@ import {
 import { cn } from '@/lib/utils';
 import { useAIAssistant } from '@/hooks/use-ai-assistant/use-ai-assistant';
 import { ApplicantResponseDTO } from '@/types/applicant';
-import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { ApplicationTable } from '@/components/organisms/application-table';

@@ -1,7 +1,7 @@
 'use client'; // Required for animations and state
 
 import { notFound } from 'next/navigation';
-import { motion } from 'framer-motion';
+import { motion, type Variants } from 'framer-motion';
 import { useEffect, useState } from 'react';
 import type { JobPost } from '@prisma/client';
 
@@ -18,7 +18,7 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { useParams } from 'next/navigation';
 
 // Animation variants for Framer Motion
-const containerVariants = {
+const containerVariants: Variants = {
   hidden: { opacity: 0 },
   visible: {
     opacity: 1,
@@ -28,7 +28,7 @@ const containerVariants = {
   },
 };
 
-const itemVariants = {
+const itemVariants: Variants = {
   hidden: { y: 20, opacity: 0 },
   visible: {
     y: 0,

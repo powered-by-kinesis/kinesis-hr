@@ -1,4 +1,4 @@
-import { JobPost, Stage } from '@prisma/client';
+import { JobPost, Stage, Applicant } from '@prisma/client';
 
 export interface DocumentDTO {
   id: number;
@@ -29,12 +29,7 @@ export interface ApplicationWithDetailsDTO {
   expectedSalary: string;
   appliedAt: Date;
   notes?: string | null;
-  applicant: {
-    id: number;
-    fullName: string;
-    email: string;
-    phone?: string | null;
-  };
+  applicant: Applicant;
   documents: ApplicationDocumentDTO[];
   stageHistory: ApplicationStageHistoryDTO[];
 }

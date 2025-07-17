@@ -30,10 +30,10 @@ export async function GET(_req: NextRequest, { params }: { params: Promise<{ id:
 
 export async function PUT(
   req: NextRequest,
-  { params }: { params: { id: string } },
+  { params }: { params: Promise<{ id: string }> },
 ): Promise<NextResponse<InterviewResponseDTO | { message: string }>> {
   try {
-    const { id } = params;
+    const { id } = await params;
     const body = await req.json();
     const { interviewName, skills, customQuestionList, jobPostId } =
       UpdateInterviewRequestDTO.parse(body);
@@ -57,9 +57,9 @@ export async function PUT(
 
 export async function DELETE(
   _req: NextRequest,
-  { params }: { params: { id: string } },
+  { params }: { params: Promise<{ id: string }> },
 ): Promise<NextResponse<{ message: string }>> {
-  const { id } = params;
+  const { id } = await params;
   try {
     await prisma.interview.delete({
       where: { id: parseInt(id) },
