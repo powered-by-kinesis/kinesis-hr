@@ -2,10 +2,8 @@ import { Badge } from '@/components/ui/badge';
 import { getSkillLevelLabel, SkillLevel } from '@/constants/enums/skill-level';
 
 export function SkillLevelBadge({ level }: { level: SkillLevel }) {
-  if (level.toUpperCase() === 'BEGINNER') { level = SkillLevel.NOVICE; }
-  level = level.toUpperCase() as SkillLevel;
   switch (level) {
-    case SkillLevel.NOVICE:
+    case SkillLevel.BEGINNER:
       return (
         <Badge variant="default" className="bg-gray-500/10 text-gray-400">
           {getSkillLevelLabel(level)}

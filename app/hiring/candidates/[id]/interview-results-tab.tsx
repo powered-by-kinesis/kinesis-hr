@@ -30,7 +30,7 @@ export function InterviewResultsTab({ data }: { data: Data }) {
                 <div className="flex items-center gap-3">
                   <p className="font-medium text-sm">{skill.skill_name}</p>
                 </div>
-                <SkillLevelBadge level={skill.skill_level} />
+                <SkillLevelBadge level={skill.skill_level.toUpperCase() as SkillLevel} />
               </div>
             ))
           ) : (
