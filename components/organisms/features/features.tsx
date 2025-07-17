@@ -1,6 +1,6 @@
 'use client';
 import { motion } from 'motion/react';
-import { Settings2, Upload, BotMessageSquare } from 'lucide-react';
+import { FileText, Users, BotMessageSquare } from 'lucide-react';
 import { FeatureCard } from '@/components/molecules/feature-card';
 import { Container } from '@/components/atoms/container';
 
@@ -10,13 +10,13 @@ export function Features() {
       title: 'Smart Job Template Builder',
       description:
         'Utilize pre-built templates and AI-powered suggestions to create compelling job posts. Our intelligent system helps you craft competitive packages and optimize job descriptions to attract top talent.',
-      Icon: Settings2,
+      Icon: FileText,
     },
     {
       title: 'Advanced Applicant Tracking',
       description:
         'Keep your hiring organized with our comprehensive tracking system. Monitor candidate progress, set automated reminders, and collaborate with your team through our centralized recruitment dashboard.',
-      Icon: Upload,
+      Icon: Users,
     },
     {
       title: 'Intelligent Interview Engine',

@@ -1,6 +1,15 @@
 'use client';
 import { motion } from 'motion/react';
-import { Upload, BotMessageSquare, Settings2, Trophy, CheckCircle2, LucideIcon, X } from 'lucide-react';
+import {
+  FileText,
+  Users,
+  BotMessageSquare,
+  ClipboardCheck,
+  HelpCircle,
+  CheckCircle2,
+  X,
+  LucideIcon
+} from 'lucide-react';
 import { Container } from '@/components/atoms/container';
 // import { useEffect, useRef, useState } from 'react';
 import Image from 'next/image';
@@ -34,6 +43,7 @@ const SingleImage = ({ source, title }: SingleImageProps) => {
         height={800}
         className='rounded-lg shadow-blue-500 shadow-lg w-full h-auto cursor-pointer transition-transform hover:scale-[1.02]'
         onClick={() => setIsFullscreen(true)}
+        priority
       />
       <ShowFullScreenImage
         title={title}
@@ -167,13 +177,14 @@ const ImageCarousel = ({ sources, title }: ImageCarouselProps) => {
                   fill
                   className='rounded-lg object-contain'
                   onClick={handleImageClick}
+                  priority
                 />
               </div>
             </CarouselItem>
           ))}
         </CarouselContent>
       </Carousel>
-      <div className="py-2 text-center text-sm text-muted-foreground mt-4">
+      <div className="py-1 sm:py-2 text-center text-xs sm:text-sm text-muted-foreground mt-2 sm:mt-4">
         Image {current} of {count}
       </div>
       <ShowFullScreenImage
@@ -233,7 +244,7 @@ interface HowItWorksStep {
   title: string;
   description: string;
   position: 'left' | 'right';
-  features: string[];
+  features?: string[];
   bgAccent: string;
   sources?: string[]
 }
@@ -241,7 +252,7 @@ interface HowItWorksStep {
 export function HowItWorks() {
   const steps: HowItWorksStep[] = [
     {
-      icon: Settings2,
+      icon: FileText,
       title: 'Create and Customize Job Listings',
       description:
         'Effortlessly create detailed job listings with our intuitive interface. Define comprehensive job descriptions, competitive salary packages, employment terms, and more - all with professional precision. Publish instantly or save drafts for team review.',
@@ -251,12 +262,12 @@ export function HowItWorks() {
       sources: ["/job-post-2.png", "/job-post-1.png"],
     },
     {
-      icon: Upload,
+      icon: Users,
       title: 'Streamline Candidate Management',
       description:
         'Take control of your recruitment pipeline with our powerful candidate management system. Access detailed profiles, track application status, and make data-driven decisions through our sophisticated yet user-friendly interface.',
       position: 'right',
-      features: ['Schedule and automate interview invitations'],
+      features: [],
       bgAccent: 'from-blue-500 to-blue-600',
       sources: ["/manage-candidate-1.png", "/manage-candidate-2.png",],
     },
@@ -271,7 +282,7 @@ export function HowItWorks() {
       sources: ["/ai-interview-2.png", "/ai-interview-1.png", "/ai-interview-3.png", "/ai-interview-4.png", "/ai-interview-5.png"],
     },
     {
-      icon: Trophy,
+      icon: ClipboardCheck,
       title: 'Seamless Application Process',
       description:
         'Provide candidates with a modern, friction-free application experience. Our streamlined process ensures higher completion rates while capturing all essential information for informed hiring decisions.',
@@ -281,7 +292,7 @@ export function HowItWorks() {
       sources: ["/candidate-application.png"],
     },
     {
-      icon: BotMessageSquare,
+      icon: HelpCircle,
       title: 'Support AI Assistant',
       description:
         'Our AI assistant is available 24/7 to answer questions, provide information, and assist with any recruitment needs. It can handle routine inquiries, schedule interviews, and provide updates on candidate status.',
@@ -293,27 +304,27 @@ export function HowItWorks() {
   ];
 
   return (
-    <section id="how-it-works" className=" py-16 md:py-32 overflow-hidden">
+    <section id="how-it-works" className="py-8 sm:py-12 md:py-16 lg:py-32 overflow-hidden">
       <Container>
         <motion.div
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
-          className="text-center md:mb-32 mb-8"
+          className="text-center mb-8 sm:mb-16 md:mb-24 lg:mb-32"
         >
-          <h2 className="md:text-4xl text-3xl font-bold mb-6 bg-gradient-to-r from-foreground to-foreground/80 bg-clip-text text-transparent">
+          <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-3 sm:mb-4 md:mb-6 bg-gradient-to-r from-foreground to-foreground/80 bg-clip-text text-transparent">
             Transform Your Hiring Process
           </h2>
-          <p className="text-muted-foreground md:text-xl text-base max-w-3xl mx-auto leading-relaxed">
+          <p className="text-muted-foreground text-sm sm:text-base md:text-xl max-w-3xl mx-auto leading-relaxed px-4 sm:px-6">
             Experience the future of recruitment with our AI-powered platform. We combine cutting-edge technology with intuitive design to deliver a recruitment solution that saves time, reduces costs, and helps you identify top talent with unprecedented efficiency.
           </p>
         </motion.div>
 
         {/* Mobile Version */}
         <div className="md:hidden relative">
-          <div className="absolute left-8 top-0 w-[2px] h-full bg-gradient-to-b from-primary/10 via-primary/20 to-primary/10" />
+          <div className="absolute left-4 sm:left-8 top-0 w-[2px] h-full bg-gradient-to-b from-primary/10 via-primary/20 to-primary/10" />
 
-          <div className="space-y-12">
+          <div className="space-y-8 sm:space-y-12">
             {steps.map((step, index) => (
               <motion.div
                 key={index}
@@ -325,7 +336,7 @@ export function HowItWorks() {
                   type: 'spring',
                   stiffness: 100,
                 }}
-                className="relative pl-16 pr-4"
+                className="relative pl-12 sm:pl-16 pr-2 sm:pr-4"
               >
                 {/* Icon */}
                 <motion.div
@@ -336,12 +347,12 @@ export function HowItWorks() {
                     type: 'spring',
                     stiffness: 200,
                   }}
-                  className={`absolute left-[0.8rem] top-0 w-10 h-10 rounded-full 
+                  className={`absolute left-[0.10rem] sm:left-[0.8rem] top-0 w-8 sm:w-10 h-8 sm:h-10 rounded-full 
                     bg-gradient-to-br ${step.bgAccent}
                     flex items-center justify-center shadow-lg
                     hover:scale-110 transition-all duration-300 z-10`}
                 >
-                  {step.icon && <step.icon className="text-white" />}
+                  {step.icon && <step.icon className="w-4 h-4 sm:w-5 sm:h-5 text-white" />}
                 </motion.div>
 
                 {/* Content */}
@@ -351,14 +362,27 @@ export function HowItWorks() {
                   transition={{ delay: index * 0.2 + 0.3 }}
                   className="space-y-3"
                 >
-                  <h3 className="font-bold text-xl">{step.title}</h3>
-                  <p className="text-muted-foreground text-sm leading-relaxed">
+                  <h3 className="font-bold text-lg sm:text-xl">{step.title}</h3>
+                  <p className="text-muted-foreground text-xs sm:text-sm leading-relaxed">
                     {step.description}
                   </p>
 
+                  {/* Image */}
+                  <div className="mt-4">
+                    {step.sources && (
+                      <>
+                        {step.sources.length > 1 ? (
+                          <ImageCarousel sources={step.sources} title={step.title} />
+                        ) : (
+                          <SingleImage source={step.sources[0]} title={step.title} />
+                        )}
+                      </>
+                    )}
+                  </div>
+
                   {/* Features */}
                   <ul className="space-y-2">
-                    {step.features.map((feature, i) => (
+                    {step.features?.map((feature, i) => (
                       <motion.li
                         key={i}
                         initial={{ opacity: 0, x: -20 }}
@@ -366,8 +390,8 @@ export function HowItWorks() {
                         transition={{ delay: index * 0.2 + 0.4 + i * 0.1 }}
                         className="flex items-center gap-2 text-muted-foreground"
                       >
-                        <CheckCircle2 className="w-4 h-4 flex-shrink-0" />
-                        <span className="text-xs">{feature}</span>
+                        <CheckCircle2 className="w-3 h-3 sm:w-4 sm:h-4 flex-shrink-0" />
+                        <span className="text-xs sm:text-sm">{feature}</span>
                       </motion.li>
                     ))}
                   </ul>
@@ -381,7 +405,7 @@ export function HowItWorks() {
             initial={{ height: '0%' }}
             animate={{ height: '100%' }}
             transition={{ duration: 2, delay: 0.5 }}
-            className="absolute left-8 top-0 w-[2px] bg-gradient-to-b from-primary via-primary to-primary/50"
+            className="absolute left-4 sm:left-8 top-0 w-[2px] bg-gradient-to-b from-primary via-primary to-primary/50"
           />
         </div>
 
@@ -438,7 +462,7 @@ export function HowItWorks() {
 
                     {/* Feature List */}
                     <ul className={`space-y-3 text-sm ${step.position === 'left' ? 'ml-auto' : ''}`}>
-                      {step.features.map((feature, i) => (
+                      {step.features?.map((feature, i) => (
                         <motion.li
                           key={i}
                           initial={{

@@ -72,7 +72,7 @@ export function Navbar() {
               className="md:hidden fixed inset-0 bg-black/60 backdrop-blur-sm z-40"
               onClick={() => setIsMenuOpen(false)}
             />
-            <motion.div className="md:hidden fixed top-0 left-0 right-0 bg-black z-50 px-4 py-3">
+            <motion.div className="md:hidden fixed top-0 left-0 right-0 bg-white z-50 px-4 py-3">
               <motion.div
                 className="flex flex-col h-[50%] rounded-t-2xl"
                 initial={{ y: '100%' }}
