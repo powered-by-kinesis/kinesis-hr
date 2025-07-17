@@ -96,8 +96,11 @@ export async function POST(request: Request) {
 
         // Embed documents
         try {
+          if (!process.env.EMBEDDING_DOCUMENT_API_URL) {
+            throw new Error('EMBEDDING_DOCUMENT_API_URL is not configured');
+          }
           await axios.post(
-            'https://llmapi.nolepsekali.fun/publisher/publish',
+            process.env.EMBEDDING_DOCUMENT_API_URL,
             {
               event: 'store-pdf',
               data: {
@@ -111,10 +114,9 @@ export async function POST(request: Request) {
               },
             },
           );
-        } catch (embedError) {
-          // Log the error with fail the transaction
-          console.error('Error embedding documents:', embedError);
-          throw new Error('Failed to embed documents');
+        } catch (error) {
+          console.error('Error embedding document:', error);
+          // Handle error appropriately
         }
 
         return completeApplication;
