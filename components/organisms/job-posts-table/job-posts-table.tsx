@@ -9,7 +9,7 @@ import { DataTable } from '@/components/organisms/data-table/data-table';
 import { StatusOptions } from '@/types/status-options';
 import { JOB_STATUS_OPTIONS } from '@/constants/enums/job-status';
 import { EMPLOYMENT_TYPE_OPTIONS } from '@/constants/enums/employment-type';
-import { JobPostModal } from '@/components/organisms/create-job-post-modal';
+import { JobPostModal } from '@/components/organisms/job-post-modal';
 
 interface JobPostsTableProps {
   data: JobPostResponseDTO[];

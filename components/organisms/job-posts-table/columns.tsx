@@ -1,24 +1,32 @@
-"use client";
+'use client';
 
-import { ColumnDef } from "@tanstack/react-table";
-import Link from "next/link";
+import { ColumnDef } from '@tanstack/react-table';
+import Link from 'next/link';
 
-import { Checkbox } from "@/components/ui/checkbox";
+import { Checkbox } from '@/components/ui/checkbox';
 
-import { JobPostResponseDTO } from "@/types/job-post";
-import { EmploymentType } from "@/constants/enums/employment-type";
-import { JobStatus } from "@/constants/enums/job-status";
-import { formatDate } from "@/utils/format-date";
-import { DeleteAlert } from "../delete-alert";
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
-import { Button } from "@/components/ui/button";
-import { MoreVertical } from "lucide-react";
+import { JobPostResponseDTO } from '@/types/job-post';
+import { EmploymentType } from '@/constants/enums/employment-type';
+import { JobStatus } from '@/constants/enums/job-status';
+import { formatDate } from '@/utils/format-date';
+import { DeleteAlert } from '../delete-alert';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
+import { Button } from '@/components/ui/button';
+import { MoreVertical } from 'lucide-react';
 import { jobPostRepository } from '@/repositories';
-import { toast } from "sonner";
-import { DataTableColumnHeader } from "@/components/organisms/data-table/data-table-column-header";
-import { JobBadge, EmploymentTypeBadge } from "@/components/molecules/badge";
+import { toast } from 'sonner';
+import { DataTableColumnHeader } from '@/components/organisms/data-table/data-table-column-header';
+import { JobBadge, EmploymentTypeBadge } from '@/components/molecules/badge';
 
-export const GetJobPostsTableColumns = (onJobPostDeleted?: () => void, onEditJobPost?: (data: JobPostResponseDTO) => void): ColumnDef<JobPostResponseDTO>[] => {
+export const GetJobPostsTableColumns = (
+  onJobPostDeleted?: () => void,
+  onEditJobPost?: (data: JobPostResponseDTO) => void,
+): ColumnDef<JobPostResponseDTO>[] => {
   // Function to handle job post deletion (called after confirmation)
   const handleDeleteJobPost = async (id: number) => {
     try {
@@ -93,9 +101,7 @@ export const GetJobPostsTableColumns = (onJobPostDeleted?: () => void, onEditJob
     {
       accessorKey: 'status',
       header: ({ column }) => <DataTableColumnHeader column={column} title="Status" />,
-      cell: ({ row }) => (
-        <JobBadge status={row.original.status as JobStatus} />
-      ),
+      cell: ({ row }) => <JobBadge status={row.original.status as JobStatus} />,
     },
     {
       accessorKey: 'applications',
@@ -132,7 +138,10 @@ export const GetJobPostsTableColumns = (onJobPostDeleted?: () => void, onEditJob
             <Link href={`/hiring/jobs/detail/${row.original.id}`}>
               <DropdownMenuItem className="cursor-pointer">View Details</DropdownMenuItem>
             </Link>
-            <DropdownMenuItem className="cursor-pointer" onClick={() => onEditJobPost?.(row.original)}>
+            <DropdownMenuItem
+              className="cursor-pointer"
+              onClick={() => onEditJobPost?.(row.original)}
+            >
               Edit Job Post
             </DropdownMenuItem>
             <DeleteAlert
@@ -145,5 +154,5 @@ export const GetJobPostsTableColumns = (onJobPostDeleted?: () => void, onEditJob
         </DropdownMenu>
       ),
     },
-  ]
+  ];
 };

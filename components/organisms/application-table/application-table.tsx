@@ -5,6 +5,8 @@ import { ApplicantResponseDTO } from '@/types/applicant';
 import { getApplicationTableColumns } from './columns';
 import { DataTable } from '@/components/organisms/data-table/data-table';
 import { Stage } from '@prisma/client';
+import { UpdateApplicationModal } from '../update-application-modal';
+import { ApplicationResponseDTO } from '@/types/application';
 
 export interface ApplicationTableData {
   id: number;
@@ -20,11 +22,28 @@ export interface ApplicationTableData {
 interface ApplicationTableProps {
   data: ApplicantResponseDTO;
   onDeleteApplication?: (id: number) => void;
-  onEditApplication?: (data: ApplicationTableData) => void;
+  onEditApplication?: () => void;
 }
 
+export function ApplicationTable({
+  data,
+  onDeleteApplication,
+  onEditApplication,
+}: ApplicationTableProps) {
+  const [isUpdateApplicationModalOpen, setIsUpdateApplicationModalOpen] = React.useState(false);
+  const [selectedApplication, setSelectedApplication] = React.useState<ApplicationTableData | null>(
+    null,
+  );
 
-export function ApplicationTable({ data, onDeleteApplication, onEditApplication }: ApplicationTableProps) {
+  const handleEditApplication = (data: ApplicationTableData) => {
+    setSelectedApplication(data);
+    setIsUpdateApplicationModalOpen(true);
+  };
+
+  const handleCloseModal = () => {
+    setIsUpdateApplicationModalOpen(false);
+    setSelectedApplication(null);
+  };
 
   const transformedData = React.useMemo<ApplicationTableData[]>(() => {
     if (!data.applications) return [];
@@ -37,15 +56,21 @@ export function ApplicationTable({ data, onDeleteApplication, onEditApplication 
       notes: application.notes,
       jobTitle: application.jobPost?.title ?? 'Unknown Job',
       jobPostId: application.jobPostId,
-    }))
+    }));
   }, [data]);
 
-
-  const columns = getApplicationTableColumns(onDeleteApplication, onEditApplication);
+  const columns = getApplicationTableColumns(onDeleteApplication, handleEditApplication);
 
   return (
     <>
       <DataTable columns={columns} data={transformedData} searchColumn="jobTitle" />
+      <UpdateApplicationModal
+        onEditApplication={onEditApplication}
+        isOpen={isUpdateApplicationModalOpen}
+        onOpenChange={setIsUpdateApplicationModalOpen}
+        application={selectedApplication as unknown as ApplicationResponseDTO}
+        onClose={handleCloseModal}
+      />
     </>
   );
 }

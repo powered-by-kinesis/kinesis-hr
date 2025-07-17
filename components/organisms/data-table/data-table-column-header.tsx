@@ -1,20 +1,19 @@
-import { type Column } from "@tanstack/react-table"
+import { type Column } from '@tanstack/react-table';
 
-import { cn } from "@/lib/utils"
-import { Button } from "@/components/ui/button"
+import { cn } from '@/lib/utils';
+import { Button } from '@/components/ui/button';
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
-import { ArrowDownIcon, ArrowUpIcon, ChevronsUpDown, EyeOff, RotateCcw } from "lucide-react"
+} from '@/components/ui/dropdown-menu';
+import { ArrowDownIcon, ArrowUpIcon, ChevronsUpDown, EyeOff, RotateCcw } from 'lucide-react';
 
-interface DataTableColumnHeaderProps<TData, TValue>
-  extends React.HTMLAttributes<HTMLDivElement> {
-  column: Column<TData, TValue>
-  title: string
+interface DataTableColumnHeaderProps<TData, TValue> extends React.HTMLAttributes<HTMLDivElement> {
+  column: Column<TData, TValue>;
+  title: string;
 }
 
 export function DataTableColumnHeader<TData, TValue>({
@@ -23,18 +22,18 @@ export function DataTableColumnHeader<TData, TValue>({
   className,
 }: DataTableColumnHeaderProps<TData, TValue>) {
   if (!column.getCanSort()) {
-    return <div className={cn(className)}>{title}</div>
+    return <div className={cn(className)}>{title}</div>;
   }
 
   return (
-    <div className={cn("flex items-center space-x-2", className)}>
+    <div className={cn('flex items-center space-x-2', className)}>
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <Button
             aria-label={
-              column.getIsSorted() === "desc"
+              column.getIsSorted() === 'desc'
                 ? `Sorted descending. Click to sort ascending.`
-                : column.getIsSorted() === "asc"
+                : column.getIsSorted() === 'asc'
                   ? `Sorted ascending. Click to sort descending.`
                   : `Not sorted. Click to sort ascending.`
             }
@@ -43,9 +42,9 @@ export function DataTableColumnHeader<TData, TValue>({
             className="-ml-3 h-8 data-[state=open]:bg-accent cursor-pointer"
           >
             <span>{title}</span>
-            {column.getIsSorted() === "desc" ? (
+            {column.getIsSorted() === 'desc' ? (
               <ArrowDownIcon className="ml-2 h-4 w-4 cursor-pointer" aria-hidden="true" />
-            ) : column.getIsSorted() === "asc" ? (
+            ) : column.getIsSorted() === 'asc' ? (
               <ArrowUpIcon className="ml-2 h-4 w-4 cursor-pointer" aria-hidden="true" />
             ) : (
               <ChevronsUpDown className="ml-2 h-4 w-4 cursor-pointer" aria-hidden="true" />
@@ -103,5 +102,5 @@ export function DataTableColumnHeader<TData, TValue>({
         </DropdownMenuContent>
       </DropdownMenu>
     </div>
-  )
+  );
 }

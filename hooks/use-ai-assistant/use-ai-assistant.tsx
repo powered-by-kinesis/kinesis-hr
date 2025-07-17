@@ -11,9 +11,7 @@ interface AIAssistantContextType {
 }
 
 // Create the context with a default value (will throw an error if used outside a provider)
-const AIAssistantContext = createContext<AIAssistantContextType | undefined>(
-  undefined
-);
+const AIAssistantContext = createContext<AIAssistantContextType | undefined>(undefined);
 
 // Define the props for the provider component
 interface AIAssistantProviderProps {
@@ -27,17 +25,13 @@ interface AIAssistantProviderProps {
 export const AIAssistantProvider = ({ children }: AIAssistantProviderProps) => {
   const [isMinimized, setIsMinimized] = useState(false);
 
-  const toggle = () => setIsMinimized(prev => !prev);
+  const toggle = () => setIsMinimized((prev) => !prev);
   const minimize = () => setIsMinimized(true);
   const maximize = () => setIsMinimized(false);
 
   const value = { isMinimized, toggle, minimize, maximize };
 
-  return (
-    <AIAssistantContext.Provider value={value}>
-      {children}
-    </AIAssistantContext.Provider>
-  );
+  return <AIAssistantContext.Provider value={value}>{children}</AIAssistantContext.Provider>;
 };
 
 /**
@@ -47,9 +41,7 @@ export const AIAssistantProvider = ({ children }: AIAssistantProviderProps) => {
 export const useAIAssistant = (): AIAssistantContextType => {
   const context = useContext(AIAssistantContext);
   if (context === undefined) {
-    throw new Error(
-      'useAIAssistant must be used within an AIAssistantProvider'
-    );
+    throw new Error('useAIAssistant must be used within an AIAssistantProvider');
   }
   return context;
-}; 
+};

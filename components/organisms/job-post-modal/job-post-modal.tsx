@@ -47,7 +47,13 @@ interface JobPostModalProps {
   onClose?: () => void;
 }
 
-export function JobPostModal({ onJobPostCreated, isOpen, onOpenChange, jobPost, onClose }: JobPostModalProps) {
+export function JobPostModal({
+  onJobPostCreated,
+  isOpen,
+  onOpenChange,
+  jobPost,
+  onClose,
+}: JobPostModalProps) {
   const [isLoading, setIsLoading] = React.useState(false);
   const [step, setStep] = React.useState(1);
   const isEditMode = !!jobPost;
@@ -123,7 +129,14 @@ export function JobPostModal({ onJobPostCreated, isOpen, onOpenChange, jobPost, 
   const handleNext = async (e: React.MouseEvent) => {
     e.preventDefault(); // Prevent form submission
     // Validate only the fields in step 1
-    const step1Fields = ['title', 'description', 'location', 'employmentType', 'status', 'department'] as const;
+    const step1Fields = [
+      'title',
+      'description',
+      'location',
+      'employmentType',
+      'status',
+      'department',
+    ] as const;
     const result = await form.trigger(step1Fields);
     if (result) {
       setStep(2);

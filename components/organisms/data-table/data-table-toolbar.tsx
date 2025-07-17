@@ -1,18 +1,18 @@
-"use client"
+'use client';
 
-import type { Table } from "@tanstack/react-table"
+import type { Table } from '@tanstack/react-table';
 
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { DataTableFacetedFilter } from "@/components/organisms/data-table/data-table-faceted-filter"
-import { DataTableViewOptions } from "@/components/organisms/data-table/data-table-view-options"
-import { X } from "lucide-react"
-import { StatusOptions } from "@/types/status-options"
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { DataTableFacetedFilter } from '@/components/organisms/data-table/data-table-faceted-filter';
+import { DataTableViewOptions } from '@/components/organisms/data-table/data-table-view-options';
+import { X } from 'lucide-react';
+import { StatusOptions } from '@/types/status-options';
 
 interface DataTableToolbarProps<TData> {
-  table: Table<TData>
-  options?: StatusOptions[]
-  searchColumn?: string
+  table: Table<TData>;
+  options?: StatusOptions[];
+  searchColumn?: string;
 }
 
 export function DataTableToolbar<TData>({
@@ -20,7 +20,7 @@ export function DataTableToolbar<TData>({
   options,
   searchColumn,
 }: DataTableToolbarProps<TData>) {
-  const isFiltered = table.getState().columnFilters.length > 0
+  const isFiltered = table.getState().columnFilters.length > 0;
 
   return (
     <div className="flex items-center justify-between">
@@ -28,14 +28,14 @@ export function DataTableToolbar<TData>({
         {searchColumn && (
           <Input
             placeholder="Search..."
-            value={(table.getColumn(searchColumn ?? "")?.getFilterValue() as string) ?? ""}
+            value={(table.getColumn(searchColumn ?? '')?.getFilterValue() as string) ?? ''}
             onChange={(event) =>
-              table.getColumn(searchColumn ?? "")?.setFilterValue(event.target.value)
+              table.getColumn(searchColumn ?? '')?.setFilterValue(event.target.value)
             }
             className="h-8 w-[150px] lg:w-[250px]"
           />
         )}
-        {options && (
+        {options &&
           options.map((option, index) => (
             <DataTableFacetedFilter
               column={table.getColumn(option.column)}
@@ -43,13 +43,12 @@ export function DataTableToolbar<TData>({
               options={option.options}
               key={index}
             />
-          ))
-        )}
+          ))}
         {isFiltered && (
           <Button
             variant="ghost"
             onClick={() => table.resetColumnFilters()}
-            className="h-8 px-2 lg:px-3"
+            className="h-8 px-2 lg:px-3 cursor-pointer"
           >
             Reset
             <X className="ml-2 h-4 w-4" />
@@ -58,5 +57,5 @@ export function DataTableToolbar<TData>({
       </div>
       <DataTableViewOptions table={table} />
     </div>
-  )
+  );
 }

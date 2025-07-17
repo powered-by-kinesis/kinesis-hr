@@ -1,6 +1,6 @@
 // Application Repository - handles all application related API calls
 
-import { ApplicationResponseDTO } from '@/types/application';
+import { ApplicationResponseDTO, UpdateApplicationRequestDTO } from '@/types/application';
 
 export class ApplicationRepository {
   private baseUrl: string;
@@ -49,7 +49,7 @@ export class ApplicationRepository {
 
   async updateApplication(
     id: number,
-    application: ApplicationResponseDTO,
+    application: UpdateApplicationRequestDTO,
   ): Promise<ApplicationResponseDTO> {
     try {
       const res = await fetch(`${this.baseUrl}/api/applications/${id}`, {

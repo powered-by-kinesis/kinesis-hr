@@ -1,8 +1,8 @@
-import { Applicant, InterviewInvitation } from "@prisma/client";
+import { Applicant, InterviewInvitation } from '@prisma/client';
 
 export type ValidationResponseDTO = {
-    success: boolean;
-    data: InterviewInvitation & {
-        applicant: Applicant
-    }
-}
+  success: boolean;
+  data: InterviewInvitation & {
+    applicant: Applicant;
+  };
+};

@@ -28,6 +28,10 @@ export const StageOptions = [
     label: 'Hired',
     value: Stage.HIRED,
   },
+  {
+    label: 'Rejected',
+    value: Stage.REJECTED,
+  },
 ];
 
 export const getStageLabel = (stage: Stage) => {

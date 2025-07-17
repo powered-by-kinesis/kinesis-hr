@@ -52,7 +52,7 @@ export function DeleteAlert({ title, description, action, onConfirm }: DeleteAle
           <AlertDialogCancel className="cursor-pointer">Cancel</AlertDialogCancel>
           <AlertDialogAction
             onClick={handleConfirm}
-            className="bg-destructive text-destructive-foreground hover:bg-destructive/90 cursor-pointer"
+            className="bg-destructive text-white hover:bg-destructive/50 cursor-pointer"
           >
             {action}
           </AlertDialogAction>
