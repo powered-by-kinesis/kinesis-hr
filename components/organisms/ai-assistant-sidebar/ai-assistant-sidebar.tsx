@@ -1,6 +1,6 @@
 'use client';
 
-import { useRef, useEffect, useState } from 'react';
+import { useRef, useEffect, useState, useCallback } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { ScrollArea } from '@/components/ui/scroll-area';
@@ -9,6 +9,8 @@ import { Send, Bot, User, Minimize2 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useAIAssistant } from '@/hooks/use-ai-assistant/use-ai-assistant';
+import ReactMarkdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
 
 interface Message {
   id: string;
@@ -41,6 +43,7 @@ export const AIAssistantSidebar: React.FC<AIAssistantSidebarProps> = ({ classNam
   const [inputValue, setInputValue] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const [conversationId, setConversationId] = useState<string | null>(null); // State for conversation ID
 
   useEffect(() => {
     if (messagesEndRef.current) {
@@ -48,44 +51,122 @@ export const AIAssistantSidebar: React.FC<AIAssistantSidebarProps> = ({ classNam
     }
   }, [messages]);
 
-  const handleSendMessage = async () => {
-    if (!inputValue.trim()) return;
+  const handleSendMessage = useCallback(async () => {
+    const trimmedInput = inputValue.trim();
+    if (!trimmedInput) return;
 
-    const newMessage: Message = {
+    let currentConversationId = conversationId;
+    if (!currentConversationId) {
+      currentConversationId = Date.now().toString();
+      setConversationId(currentConversationId);
+    }
+
+    const newUserMessage: Message = {
       id: Date.now().toString(),
       type: 'user',
-      content: inputValue.trim(),
+      content: trimmedInput,
       timestamp: new Date(),
     };
 
-    setMessages((prev) => [...prev, newMessage]);
+    setMessages((prev) => [...prev, newUserMessage]);
     setInputValue('');
     setIsLoading(true);
 
-    // Simulate AI response
-    setTimeout(() => {
-      const response: Message = {
-        id: (Date.now() + 1).toString(),
+    try {
+      const response = await fetch('/api/chats/v2/send', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          query: trimmedInput,
+          conversation_id: currentConversationId,
+        }),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || `HTTP error! status: ${response.status}`);
+      }
+
+      const reader = response.body?.getReader();
+      if (!reader) {
+        throw new Error('Failed to get response body reader.');
+      }
+
+      const decoder = new TextDecoder();
+
+      while (true) {
+        const { done, value } = await reader.read();
+        if (done) {
+          break;
+        }
+        const chunk = decoder.decode(value, { stream: true });
+
+        const parts = chunk.split('\n\n');
+        for (const part of parts) {
+          let event = 'message'
+          let data = ''
+          const lines = part.split('\n');
+
+          for (const line of lines) {
+            if (line.startsWith('event: ')) {
+              event = line.replace('event: ', '').trim();
+            } else if (line.startsWith('data: ') && line !== 'data: [START]' && line !== 'data: [DONE]') {
+              data += line.replace('data: ', '');
+            }
+          }
+
+          if (event === 'message' && data && data !== '') {
+            setMessages((prevMessages) => {
+              const updated = [...prevMessages];
+              const lastIndex = updated.length - 1;
+              if (updated[lastIndex].type === 'assistant') {
+                updated[lastIndex] = {
+                  ...updated[lastIndex],
+                  content: updated[lastIndex].content + data,
+                };
+              } else {
+                const newMessage: Message = {
+                  id: Date.now().toString(),
+                  type: 'assistant',
+                  content: data,
+                  timestamp: new Date(),
+                };
+                updated.push(newMessage);
+              }
+
+              return updated;
+            });
+          } else if (event === 'done') {
+            break
+          }
+        }
+        setIsLoading(false);
+      }
+    } catch (error: any) {
+      console.error('Error sending message or processing stream:', error);
+      const errorMessage: Message = {
+        id: Date.now().toString(),
         type: 'assistant',
-        content:
-          "I'm a demo AI assistant. In the real app, I'll provide helpful HR-related answers!",
+        content: `Error: ${error.message || 'Failed to get response from AI assistant.'}`,
         timestamp: new Date(),
       };
-      setMessages((prev) => [...prev, response]);
+      setMessages((prev) => [...prev, errorMessage]);
       setIsLoading(false);
-    }, 1000);
-  };
+    }
+  }, [inputValue, conversationId, messages, isLoading]);
 
-  const handleKeyDown = (e: React.KeyboardEvent) => {
+  const handleQuickQuestion = useCallback((question: string) => {
+    setInputValue(question);
+  }, []);
+
+  const handleKeyDown = useCallback((e: React.KeyboardEvent) => {
     if (e.key === 'Enter' && !e.shiftKey) {
       e.preventDefault();
       handleSendMessage();
     }
-  };
-
-  const handleQuickQuestion = (question: string) => {
-    setInputValue(question);
-  };
+  }, [handleSendMessage]);
 
   if (isMinimized) {
     return (
@@ -103,6 +184,7 @@ export const AIAssistantSidebar: React.FC<AIAssistantSidebarProps> = ({ classNam
             duration: 2,
             repeat: Infinity,
             ease: 'easeInOut',
+            times: [0, 0.2, 0.8, 1],
           }}
         >
           <Button
@@ -168,26 +250,25 @@ export const AIAssistantSidebar: React.FC<AIAssistantSidebarProps> = ({ classNam
           </Button>
         </div>
 
-        {/* Quick Questions */}
-        <div className="p-4 border-b  bg-card">
-          <div className="space-y-2">
-            {quickQuestions.map((question, index) => (
-              <Button
-                key={index}
-                variant="outline"
-                size="sm"
-                onClick={() => handleQuickQuestion(question)}
-                className="w-full justify-start text-left h-auto py-2 px-3 cursor-pointer bg-card text-primary hover:bg-primary/10 hover:text-primary text-xs"
-              >
-                {question}
-              </Button>
-            ))}
-          </div>
-        </div>
-
         {/* Messages Area */}
         <div className="flex-1 flex flex-col min-h-0">
-          <ScrollArea className="flex-1 p-4">
+          <ScrollArea className="flex-1 max-h-[80vh] custom-scrollbar p-4">
+            {/* Quick Questions */}
+            <div className="border-b bg-card mb-4 pb-4">
+              <div className="space-y-2">
+                {quickQuestions.map((question, index) => (
+                  <Button
+                    key={index}
+                    variant="outline"
+                    size="sm"
+                    onClick={() => handleQuickQuestion(question)}
+                    className="w-full justify-start text-left h-auto py-2 px-3 cursor-pointer bg-card text-primary hover:bg-primary/10 hover:text-primary text-xs"
+                  >
+                    {question}
+                  </Button>
+                ))}
+              </div>
+            </div>
             <div className="space-y-4">
               {messages.map((message) => (
                 <div
@@ -212,7 +293,7 @@ export const AIAssistantSidebar: React.FC<AIAssistantSidebarProps> = ({ classNam
                         : 'bg-card text-gray-500 border ',
                     )}
                   >
-                    {message.content}
+                    <ReactMarkdown remarkPlugins={[remarkGfm]}>{message.content}</ReactMarkdown>
                   </div>
                   {message.type === 'user' && (
                     <Avatar className="h-8 w-8  flex-shrink-0">
