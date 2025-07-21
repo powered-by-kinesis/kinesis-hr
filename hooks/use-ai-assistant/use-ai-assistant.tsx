@@ -23,7 +23,24 @@ interface AIAssistantProviderProps {
  * It encapsulates the state logic for managing the sidebar's visibility.
  */
 export const AIAssistantProvider = ({ children }: AIAssistantProviderProps) => {
-  const [isMinimized, setIsMinimized] = useState(false);
+  const SESSION_KEY = 'kinesis-ai-assistant-minimized';
+  // Load isMinimized from sessionStorage if available
+  const [isMinimized, setIsMinimized] = useState(() => {
+    if (typeof window !== 'undefined') {
+      const stored = sessionStorage.getItem(SESSION_KEY);
+      if (stored !== null) {
+        return stored === 'true';
+      }
+    }
+    return false;
+  });
+
+  // Save isMinimized to sessionStorage on every update
+  React.useEffect(() => {
+    if (typeof window !== 'undefined') {
+      sessionStorage.setItem(SESSION_KEY, isMinimized ? 'true' : 'false');
+    }
+  }, [isMinimized]);
 
   const toggle = () => setIsMinimized((prev) => !prev);
   const minimize = () => setIsMinimized(true);
