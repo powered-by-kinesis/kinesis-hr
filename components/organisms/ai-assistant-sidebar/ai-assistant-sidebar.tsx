@@ -55,7 +55,8 @@ export const AIAssistantSidebar: React.FC<AIAssistantSidebarProps> = ({ classNam
       {
         id: '1',
         type: 'assistant',
-        content: "Hi there! 👋 I'm your AI assistant. I'm ready to answer any of your HR questions.",
+        content:
+          "Hi there! 👋 I'm your AI assistant. I'm ready to answer any of your HR questions.",
         timestamp: new Date(),
       },
     ];

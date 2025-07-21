@@ -5,7 +5,14 @@ import { SiteHeader } from '@/components/organisms/site-header';
 import { SidebarInset, SidebarProvider } from '@/components/ui/sidebar';
 import { useEffect, useState } from 'react';
 import { jobPostRepository, applicantRepository, applicationRepository } from '@/repositories';
-import { Card, CardHeader, CardTitle, CardDescription, CardFooter, CardAction } from '@/components/ui/card';
+import {
+  Card,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+  CardFooter,
+  CardAction,
+} from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { TrendingUp, TrendingDown } from 'lucide-react';
 import { ApplicationResponseDTO } from '@/types/application';
@@ -45,16 +52,22 @@ export default function HomePage() {
   const totalJobPosts = jobPosts.length;
   const totalApplicants = applicants.length;
   const totalApplications = applications.length;
-  const acceptedApplications = applications.filter((a: ApplicationResponseDTO) => a.currentStage === 'HIRED').length;
-  const rejectedApplications = applications.filter((a: ApplicationResponseDTO) => a.currentStage === 'REJECTED').length;
+  const acceptedApplications = applications.filter(
+    (a: ApplicationResponseDTO) => a.currentStage === 'HIRED',
+  ).length;
+  const rejectedApplications = applications.filter(
+    (a: ApplicationResponseDTO) => a.currentStage === 'REJECTED',
+  ).length;
 
   return (
     <div className="relative min-h-screen bg-background">
       <SidebarProvider
-        style={{
-          '--sidebar-width': 'calc(var(--spacing) * 72)',
-          '--header-height': 'calc(var(--spacing) * 12)',
-        } as React.CSSProperties}
+        style={
+          {
+            '--sidebar-width': 'calc(var(--spacing) * 72)',
+            '--header-height': 'calc(var(--spacing) * 12)',
+          } as React.CSSProperties
+        }
       >
         <AppSidebar variant="inset" />
         <SidebarInset>
@@ -74,7 +87,9 @@ export default function HomePage() {
                   <Card className="h-full">
                     <CardHeader>
                       <CardDescription>Total Job Posts</CardDescription>
-                      <CardTitle className="text-2xl font-semibold tabular-nums">{loading ? '...' : totalJobPosts}</CardTitle>
+                      <CardTitle className="text-2xl font-semibold tabular-nums">
+                        {loading ? '...' : totalJobPosts}
+                      </CardTitle>
                       <CardAction>
                         <Badge variant="outline">
                           <TrendingUp />
@@ -90,7 +105,9 @@ export default function HomePage() {
                   <Card className="h-full">
                     <CardHeader>
                       <CardDescription>Total Candidates</CardDescription>
-                      <CardTitle className="text-2xl font-semibold tabular-nums">{loading ? '...' : totalApplicants}</CardTitle>
+                      <CardTitle className="text-2xl font-semibold tabular-nums">
+                        {loading ? '...' : totalApplicants}
+                      </CardTitle>
                       <CardAction>
                         <Badge variant="outline">
                           <TrendingUp />
@@ -106,7 +123,9 @@ export default function HomePage() {
                   <Card className="h-full">
                     <CardHeader>
                       <CardDescription>Total Applications</CardDescription>
-                      <CardTitle className="text-2xl font-semibold tabular-nums">{loading ? '...' : totalApplications}</CardTitle>
+                      <CardTitle className="text-2xl font-semibold tabular-nums">
+                        {loading ? '...' : totalApplications}
+                      </CardTitle>
                       <CardAction>
                         <Badge variant="outline">
                           <TrendingUp />
@@ -122,7 +141,9 @@ export default function HomePage() {
                   <Card className="h-full">
                     <CardHeader>
                       <CardDescription>Accepted (Hired)</CardDescription>
-                      <CardTitle className="text-2xl font-semibold tabular-nums">{loading ? '...' : acceptedApplications}</CardTitle>
+                      <CardTitle className="text-2xl font-semibold tabular-nums">
+                        {loading ? '...' : acceptedApplications}
+                      </CardTitle>
                       <CardAction>
                         <Badge variant="outline">
                           <TrendingUp />
@@ -138,7 +159,9 @@ export default function HomePage() {
                   <Card className="h-full">
                     <CardHeader>
                       <CardDescription>Rejected</CardDescription>
-                      <CardTitle className="text-2xl font-semibold tabular-nums">{loading ? '...' : rejectedApplications}</CardTitle>
+                      <CardTitle className="text-2xl font-semibold tabular-nums">
+                        {loading ? '...' : rejectedApplications}
+                      </CardTitle>
                       <CardAction>
                         <Badge variant="outline">
                           <TrendingDown />
