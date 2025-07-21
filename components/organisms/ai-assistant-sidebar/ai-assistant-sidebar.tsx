@@ -224,8 +224,9 @@ export const AIAssistantSidebar: React.FC<AIAssistantSidebarProps> = ({ classNam
     <AnimatePresence>
       <motion.div
         className={cn(
-          'fixed lg:right-0 lg:top-0 right-0 bottom-0 lg:h-screen h-[85vh] w-full lg:w-96 bg-card border-l border-t lg:border-t-0 z-50 flex flex-col',
-          'shadow-2xl custom-scrollbar overflow-y-auto focus:outline-none',
+          // Make sidebar take full height and use flex-col for layout
+          'fixed lg:right-0 lg:top-0 right-0 bottom-0 lg:h-screen h-[85vh] w-full lg:w-96 bg-card border-l border-t lg:border-t-0 z-50 flex flex-col h-full',
+          'shadow-2xl custom-scrollbar focus:outline-none',
           className,
         )}
         initial={{ x: '100%' }}
@@ -234,8 +235,8 @@ export const AIAssistantSidebar: React.FC<AIAssistantSidebarProps> = ({ classNam
         transition={{ type: 'spring', bounce: 0.2 }}
         tabIndex={0}
       >
-        {/* Header */}
-        <div className="flex items-center justify-between p-4 border-b bg-card">
+        {/* Header - sticky */}
+        <div className="flex items-center justify-between p-4 border-b bg-card sticky top-0 z-10">
           <div className="flex items-center gap-3">
             <div className="relative">
               <Avatar className="h-8 w-8">
@@ -258,9 +259,9 @@ export const AIAssistantSidebar: React.FC<AIAssistantSidebarProps> = ({ classNam
           </Button>
         </div>
 
-        {/* Messages Area */}
+        {/* Messages Area - only this scrolls */}
         <div className="flex-1 flex flex-col min-h-0">
-          <ScrollArea className="flex-1 max-h-[80vh] custom-scrollbar p-4">
+          <ScrollArea className="flex-1 max-h-full custom-scrollbar p-4">
             {/* Quick Questions */}
             <div className="border-b bg-card mb-4 pb-4">
               <div className="space-y-2">
@@ -338,8 +339,8 @@ export const AIAssistantSidebar: React.FC<AIAssistantSidebarProps> = ({ classNam
             </div>
           </ScrollArea>
 
-          {/* Input Area */}
-          <div className="p-4 border-t  bg-card">
+          {/* Input Area - sticky bottom */}
+          <div className="p-4 border-t bg-card sticky bottom-0 z-10">
             {/* Disclaimer */}
             <div className="mb-3 p-2 bg-card rounded-lg border ">
               <div className="flex items-start gap-2">
