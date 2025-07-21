@@ -96,11 +96,11 @@ export async function POST(request: Request) {
 
         // Embed documents
         try {
-          if (!process.env.EMBEDDING_DOCUMENT_API_URL) {
-            throw new Error('EMBEDDING_DOCUMENT_API_URL is not configured');
+          if (!process.env.API_URL) {
+            throw new Error('API_URL is not configured');
           }
           await axios.post(
-            process.env.EMBEDDING_DOCUMENT_API_URL,
+            process.env.API_URL + '/publisher/publish',
             {
               event: 'store-pdf',
               data: {

@@ -181,8 +181,8 @@ SMTP_FROM=
 ELEVENLABS_API_KEY=
 NEXT_PUBLIC_AGENT_ID=
 
-# Document Processing
-EMBEDDING_DOCUMENT_API_URL=  # URL for the document embedding service
+# LLM API_URL
+API_URL=  #
 ```
 
 4. Initialize the database
