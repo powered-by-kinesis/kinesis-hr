@@ -244,7 +244,7 @@ export function JobPostModal({
                       <FormControl>
                         <Textarea
                           placeholder="Describe the role, responsibilities, and requirements..."
-                          className="min-h-[100px]"
+                          className="max-h-[20dvh] min-h-[10dvh]"
                           {...field}
                         />
                       </FormControl>

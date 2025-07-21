@@ -297,7 +297,7 @@ export const AIAssistantSidebar: React.FC<AIAssistantSidebarProps> = ({ classNam
 
         {/* Messages Area - only this scrolls */}
         <div className="flex-1 flex flex-col min-h-0">
-          <ScrollArea className="flex-1 max-h-full custom-scrollbar p-4">
+          <ScrollArea className="flex-1 max-h-full custom-scrollbar p-4 pb-20">
             {/* Quick Questions */}
             <div className="border-b bg-card mb-4 pb-4">
               <div className="space-y-2">
@@ -377,18 +377,6 @@ export const AIAssistantSidebar: React.FC<AIAssistantSidebarProps> = ({ classNam
 
           {/* Input Area - sticky bottom */}
           <div className="p-4 border-t bg-card sticky bottom-0 z-10">
-            {/* Disclaimer */}
-            <div className="mb-3 p-2 bg-card rounded-lg border ">
-              <div className="flex items-start gap-2">
-                <div className="text-orange-500 text-xs mt-0.5">⚠️</div>
-                <div className="text-xs text-gray-400 leading-relaxed">
-                  Just FYI... You are interacting with an artificial intelligence system and not a
-                  human being. Kinesis HR Assistant can make mistakes. Consider double checking
-                  important information.
-                </div>
-              </div>
-            </div>
-
             {/* Input */}
             <div className="flex gap-2">
               <Input
