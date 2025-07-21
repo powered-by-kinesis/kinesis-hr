@@ -32,14 +32,48 @@ const quickQuestions = [
 
 export const AIAssistantSidebar: React.FC<AIAssistantSidebarProps> = ({ className }) => {
   const { isMinimized, minimize, maximize } = useAIAssistant();
-  const [messages, setMessages] = useState<Message[]>([
-    {
-      id: '1',
-      type: 'assistant',
-      content: "Hi there! 👋 I'm your AI assistant. I'm ready to answer any of your HR questions.",
-      timestamp: new Date(),
-    },
-  ]);
+  const SESSION_KEY = 'kinesis-ai-assistant-messages';
+  const MAX_MESSAGES = 50;
+
+  // Load messages from sessionStorage if available
+  const [messages, setMessages] = useState<Message[]>(() => {
+    if (typeof window !== 'undefined') {
+      try {
+        const stored = sessionStorage.getItem(SESSION_KEY);
+        if (stored) {
+          // Parse and revive Date objects
+          return (JSON.parse(stored) as Message[]).map((msg: Message) => ({
+            ...msg,
+            timestamp: new Date(msg.timestamp),
+          }));
+        }
+      } catch {
+        // Ignore parse errors
+      }
+    }
+    return [
+      {
+        id: '1',
+        type: 'assistant',
+        content: "Hi there! 👋 I'm your AI assistant. I'm ready to answer any of your HR questions.",
+        timestamp: new Date(),
+      },
+    ];
+  });
+
+  // Save messages to sessionStorage on every update
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      try {
+        // Limit to MAX_MESSAGES
+        const limited = messages.slice(-MAX_MESSAGES);
+        sessionStorage.setItem(SESSION_KEY, JSON.stringify(limited));
+      } catch {
+        // Ignore storage errors
+      }
+    }
+  }, [messages]);
+
   const [inputValue, setInputValue] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
