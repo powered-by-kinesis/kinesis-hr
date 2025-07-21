@@ -20,6 +20,14 @@ import { ApplicationTable } from '@/components/organisms/application-table';
 import { InterviewResultsTab } from './interview-results-tab';
 import { SkillAssessment } from './interview-results-tab';
 import { Badge } from '@/components/ui/badge';
+import { ScrollArea } from '@/components/ui/scroll-area';
+import {
+  Select,
+  SelectTrigger,
+  SelectValue,
+  SelectContent,
+  SelectItem,
+} from '@/components/ui/select';
 
 interface Education {
   institution: string;
@@ -90,30 +98,178 @@ export function CandidateDetailsClient({ initialCandidate }: CandidateDetailsCli
           </Breadcrumb>
         </div>
 
-        <Tabs defaultValue="info" className="space-y-4" onValueChange={setActiveTab}>
-          <TabsList className="grid w-full grid-cols-3 lg:w-[400px]">
-            <TabsTrigger value="info" className="cursor-pointer">
-              Candidate Info
-            </TabsTrigger>
-            <TabsTrigger value="interview" className="cursor-pointer">
-              Interview Results
-            </TabsTrigger>
-            <TabsTrigger value="applications" className="cursor-pointer">
-              Applications
-            </TabsTrigger>
-          </TabsList>
+        {/* Responsive tab selection: dropdown on mobile, tabs on desktop */}
+        <div className="block md:hidden mb-4">
+          <Select value={activeTab} onValueChange={setActiveTab}>
+            <SelectTrigger className="w-full">
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="info">Candidate Info</SelectItem>
+              <SelectItem value="interview">Interview Results</SelectItem>
+              <SelectItem value="applications">Applications</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
+        <div className="block md:hidden relative mt-6">
+          {activeTab === 'info' && (
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+              <Card className="lg:col-span-1 h-fit bg-card/50 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+                <CardContent className="p-6">
+                  <div className="flex flex-col items-center mb-6">
+                    <h2 className="text-xl font-bold text-center">{candidate.fullName}</h2>
+                  </div>
 
-          <div className="relative mt-6">
-            <AnimatePresence mode="wait">
-              <motion.div
-                key={activeTab}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -20 }}
-                transition={{ duration: 0.3, ease: 'easeInOut' }}
-              >
-                {activeTab === 'info' && (
-                  <TabsContent value="info" forceMount className="w-full">
+                  <div className="space-y-4">
+                    <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                      <Mail className="w-4 h-4" />
+                      <span>{candidate.email}</span>
+                    </div>
+                    {candidate.phone && (
+                      <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                        <Phone className="w-4 h-4" />
+                        <span>{candidate.phone}</span>
+                      </div>
+                    )}
+                    {candidate.location && (
+                      <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                        <MapPin className="w-4 h-4" />
+                        <span>{candidate.location}</span>
+                      </div>
+                    )}
+
+                    {Array.isArray(candidate.education) && candidate.education.length > 0 && (
+                      <div className="pt-4">
+                        <div className="flex items-center gap-2 mb-2">
+                          <GraduationCap className="w-4 h-4" />
+                          <span className="font-medium">Education</span>
+                        </div>
+                        <div className="space-y-2">
+                          {(candidate.education as unknown as Education[]).map((edu, index) => (
+                            <Badge key={index} variant="secondary" className="mr-2">
+                              {edu.institution}
+                            </Badge>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+
+                    {Array.isArray(candidate.experience) && candidate.experience.length > 0 && (
+                      <div className="pt-4">
+                        <div className="flex items-center gap-2 mb-2">
+                          <Building className="w-4 h-4" />
+                          <span className="font-medium">Experience</span>
+                        </div>
+                        <div className="space-y-2">
+                          {(candidate.experience as unknown as Experience[]).map((exp, index) => (
+                            <Badge key={index} variant="secondary" className="mr-2">
+                              {exp.company}
+                            </Badge>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+
+                    {Array.isArray(candidate.languages) && candidate.languages.length > 0 && (
+                      <div className="pt-4">
+                        <div className="flex items-center gap-2 mb-2">
+                          <Globe className="w-4 h-4" />
+                          <span className="font-medium">Languages</span>
+                        </div>
+                        <div className="space-y-2">
+                          {(candidate.languages as unknown as Language[]).map((lang, index) => (
+                            <Badge key={index} variant="secondary" className="mr-2">
+                              {lang.language}
+                            </Badge>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                </CardContent>
+              </Card>
+
+              <div className="lg:col-span-2 space-y-6">
+                {candidate?.summary && (
+                  <Card>
+                    <CardHeader>
+                      <CardTitle>Summary</CardTitle>
+                    </CardHeader>
+                    <CardContent className="space-y-4">
+                      <ScrollArea className="max-h-[250px]">
+                        <div className="overflow-hidden text-start text-black font-medium p-4">
+                          {candidate.summary}
+                        </div>
+                      </ScrollArea>
+                    </CardContent>
+                  </Card>
+                )}
+                <Card className="bg-card/50 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+                  <CardHeader>
+                    <CardTitle className="flex items-center gap-2">
+                      <FileText className="h-5 w-5" />
+                      Resume/CV
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="aspect-[8.5/11] bg-background/95 rounded-lg flex items-center justify-center relative overflow-hidden shadow-inner">
+                      {resumeUrl ? (
+                        <iframe
+                          src={getDocumentViewerUrl(resumeUrl)}
+                          className="w-full h-full rounded-lg"
+                          title={`${candidate.fullName}'s Resume`}
+                        />
+                      ) : (
+                        <div className="text-center text-muted-foreground">
+                          <FileText className="h-12 w-12 mx-auto mb-2 opacity-50" />
+                          <p>No CV available</p>
+                        </div>
+                      )}
+                    </div>
+                  </CardContent>
+                </Card>
+              </div>
+            </div>
+          )}
+          {activeTab === 'interview' && (
+            <InterviewResultsTab
+              data={{
+                skills: candidate.skills as unknown as SkillAssessment[],
+              }}
+            />
+          )}
+          {activeTab === 'applications' && (
+            <ApplicationTable
+              data={candidate as ApplicantResponseDTO}
+              onDeleteApplication={handleDataMutation}
+              onEditApplication={handleDataMutation}
+            />
+          )}
+        </div>
+        <div className="hidden md:block">
+          <Tabs defaultValue={activeTab} className="space-y-4" onValueChange={setActiveTab}>
+            <TabsList className="grid w-full grid-cols-3 lg:w-[400px]">
+              <TabsTrigger value="info" className="cursor-pointer">
+                Candidate Info
+              </TabsTrigger>
+              <TabsTrigger value="interview" className="cursor-pointer">
+                Interview Results
+              </TabsTrigger>
+              <TabsTrigger value="applications" className="cursor-pointer">
+                Applications
+              </TabsTrigger>
+            </TabsList>
+
+            <div className="relative mt-6">
+              <AnimatePresence mode="wait">
+                <motion.div
+                  key={activeTab}
+                  initial={{ opacity: 0, x: -20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  exit={{ opacity: 0, x: 20 }}
+                  transition={{ duration: 0.3, ease: 'easeInOut' }}
+                >
+                  <TabsContent value="info">
                     <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
                       <Card className="lg:col-span-1 h-fit bg-card/50 backdrop-blur supports-[backdrop-filter]:bg-background/60">
                         <CardContent className="p-6">
@@ -196,63 +352,70 @@ export function CandidateDetailsClient({ initialCandidate }: CandidateDetailsCli
                                 </div>
                               )}
                           </div>
-
-                          {/* <Button className="w-full mt-6 cursor-pointer" size="lg">
-                            Request Interview
-                          </Button> */}
                         </CardContent>
                       </Card>
 
-                      <Card className="lg:col-span-2 bg-card/50 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-                        <CardHeader>
-                          <CardTitle className="flex items-center gap-2">
-                            <FileText className="h-5 w-5" />
-                            Resume/CV
-                          </CardTitle>
-                        </CardHeader>
-                        <CardContent>
-                          <div className="aspect-[8.5/11] bg-background/95 rounded-lg flex items-center justify-center relative overflow-hidden shadow-inner">
-                            {resumeUrl ? (
-                              <iframe
-                                src={getDocumentViewerUrl(resumeUrl)}
-                                className="w-full h-full rounded-lg"
-                                title={`${candidate.fullName}'s Resume`}
-                              />
-                            ) : (
-                              <div className="text-center text-muted-foreground">
-                                <FileText className="h-12 w-12 mx-auto mb-2 opacity-50" />
-                                <p>No CV available</p>
-                              </div>
-                            )}
-                          </div>
-                        </CardContent>
-                      </Card>
+                      <div className="lg:col-span-2 space-y-6">
+                        {candidate?.summary && (
+                          <Card>
+                            <CardHeader>
+                              <CardTitle>Summary</CardTitle>
+                            </CardHeader>
+                            <CardContent className="space-y-4">
+                              <ScrollArea className="max-h-[250px]">
+                                <div className="overflow-hidden text-start text-black font-medium p-4">
+                                  {candidate.summary}
+                                </div>
+                              </ScrollArea>
+                            </CardContent>
+                          </Card>
+                        )}
+                        <Card className="bg-card/50 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+                          <CardHeader>
+                            <CardTitle className="flex items-center gap-2">
+                              <FileText className="h-5 w-5" />
+                              Resume/CV
+                            </CardTitle>
+                          </CardHeader>
+                          <CardContent>
+                            <div className="aspect-[8.5/11] bg-background/95 rounded-lg flex items-center justify-center relative overflow-hidden shadow-inner">
+                              {resumeUrl ? (
+                                <iframe
+                                  src={getDocumentViewerUrl(resumeUrl)}
+                                  className="w-full h-full rounded-lg"
+                                  title={`${candidate.fullName}'s Resume`}
+                                />
+                              ) : (
+                                <div className="text-center text-muted-foreground">
+                                  <FileText className="h-12 w-12 mx-auto mb-2 opacity-50" />
+                                  <p>No CV available</p>
+                                </div>
+                              )}
+                            </div>
+                          </CardContent>
+                        </Card>
+                      </div>
                     </div>
                   </TabsContent>
-                )}
-                {activeTab === 'interview' && (
-                  <TabsContent value="interview" forceMount>
+                  <TabsContent value="interview">
                     <InterviewResultsTab
                       data={{
                         skills: candidate.skills as unknown as SkillAssessment[],
-                        summary: candidate.summary || 'No summary available',
                       }}
                     />
                   </TabsContent>
-                )}
-                {activeTab === 'applications' && (
-                  <TabsContent value="applications" forceMount>
+                  <TabsContent value="applications">
                     <ApplicationTable
                       data={candidate as ApplicantResponseDTO}
                       onDeleteApplication={handleDataMutation}
                       onEditApplication={handleDataMutation}
                     />
                   </TabsContent>
-                )}
-              </motion.div>
-            </AnimatePresence>
-          </div>
-        </Tabs>
+                </motion.div>
+              </AnimatePresence>
+            </div>
+          </Tabs>
+        </div>
       </div>
     </div>
   );
