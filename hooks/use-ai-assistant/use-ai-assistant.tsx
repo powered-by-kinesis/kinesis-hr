@@ -13,6 +13,8 @@ interface AIAssistantContextType {
 // Create the context with a default value (will throw an error if used outside a provider)
 const AIAssistantContext = createContext<AIAssistantContextType | undefined>(undefined);
 
+const SESSION_KEY = 'kinesis-ai-assistant-minimized';
+
 // Define the props for the provider component
 interface AIAssistantProviderProps {
   children: ReactNode;
@@ -23,7 +25,6 @@ interface AIAssistantProviderProps {
  * It encapsulates the state logic for managing the sidebar's visibility.
  */
 export const AIAssistantProvider = ({ children }: AIAssistantProviderProps) => {
-  const SESSION_KEY = 'kinesis-ai-assistant-minimized';
   // Load isMinimized from sessionStorage if available
   const [isMinimized, setIsMinimized] = useState(() => {
     if (typeof window !== 'undefined') {

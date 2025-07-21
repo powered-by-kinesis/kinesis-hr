@@ -30,10 +30,11 @@ const quickQuestions = [
   'How to improve employee retention?',
 ];
 
+const SESSION_KEY = 'kinesis-ai-assistant-messages';
+const MAX_MESSAGES = 50;
+
 export const AIAssistantSidebar: React.FC<AIAssistantSidebarProps> = ({ className }) => {
   const { isMinimized, minimize, maximize } = useAIAssistant();
-  const SESSION_KEY = 'kinesis-ai-assistant-messages';
-  const MAX_MESSAGES = 50;
 
   // Load messages from sessionStorage if available
   const [messages, setMessages] = useState<Message[]>(() => {
