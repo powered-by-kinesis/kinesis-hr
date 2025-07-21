@@ -19,7 +19,12 @@ model User {
   sessions      Session[]
   contexts      Context[]
 
-  Document Document[]
+  documents     Document[]
+
+  applicant     Applicant?
+  stageChanges  ApplicationStageHistory[]
+
+  @@map("users")
 }
 
 model Account {
@@ -39,6 +44,7 @@ model Account {
   user              User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@id([provider, providerAccountId])
+  @@map("accounts")
 }
 
 model Session {
@@ -49,6 +55,8 @@ model Session {
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
   user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("sessions")
 }
 
 model Context {
@@ -61,9 +69,9 @@ model Context {
   deletedAt      DateTime?
   
   user           User      @relation(fields: [userId], references: [id], onDelete: Cascade)
-  documents       ContextDocument[]
-  chats           Chat[]
-  candidates      Candidate[]
+  documents      ContextDocument[]
+  chats          Chat[]
+  candidates     Candidate[]
 
   @@index([userId])
   @@index([deletedAt])
@@ -77,10 +85,13 @@ model Document {
   fileSize  Int
   fileType  String   @db.Text
   createdAt DateTime  @default(now())
-  ownerId  Int
+  ownerId  Int?
 
-  owner    User      @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+  owner    User?      @relation(fields: [ownerId], references: [id], onDelete: Cascade)
   contexts ContextDocument[]
+  applications ApplicationDocument[]
+
+  @@map("documents")
 }
 
 model ContextDocument {
@@ -142,4 +153,144 @@ model Candidate {
   @@index([contextId])
   @@index([deletedAt])
   @@map("candidates")
+}
+
+model Applicant {
+  id           Int           @id @default(autoincrement())
+  userId       Int?          @unique
+  fullName     String
+  email        String        @unique
+  phone        String?
+  appliedAt    DateTime      @default(now())
+  summary     String?
+  skills       Json? // Stores [{ name: String, level: String }]
+  experience   Json? // Stores [{ company: String, role: String, startDate: DateTime, endDate: DateTime, description: String }]
+  languages    Json? // Stores [{ language: String, proficiency: String }]
+  location     String?
+  education    Json? // Stores [{ institution: String, degree: String, startDate: DateTime, endDate: DateTime }]
+
+
+  applications Application[]
+  invitations  InterviewInvitation[] // Add this line
+  user         User?         @relation(fields: [userId], references: [id])
+
+  @@map("applicants")
+  @@index([userId, email])
+}
+
+model JobPost {
+  id             Int           @id @default(autoincrement())
+  title          String
+  description    String
+  location       String?
+  employmentType String
+  status         String 
+  department     String?
+  salaryMin      Decimal?      @db.Decimal(12,2)  // Support up to 9,999,999,999.99
+  salaryMax      Decimal?      @db.Decimal(12,2)
+  currency       String?       // USD, IDR, JPY, etc
+  salaryType     String?       // YEARLY, MONTHLY, HOURLY
+  createdAt      DateTime      @default(now())
+  updatedAt      DateTime      @updatedAt
+
+  applications   Application[]
+  interviews     Interview[]
+
+  @@map("job_posts")
+  @@index([title])
+  @@index([status])
+}
+
+enum Stage {
+  APPLIED
+  AI_SCREENING
+  REVIEW
+  OFFER
+  HIRED
+  REJECTED
+}
+
+model Application {
+  id             Int                       @id @default(autoincrement())
+  applicantId    Int
+  jobPostId      Int
+  currentStage   Stage                     @default(APPLIED)
+  expectedSalary String
+  appliedAt      DateTime                  @default(now())
+  notes          String?
+
+  applicant      Applicant            @relation(fields: [applicantId], references: [id], onDelete: Cascade)
+  jobPost        JobPost                   @relation(fields: [jobPostId], references: [id], onDelete: Cascade)
+  stageHistory   ApplicationStageHistory[]
+  documents      ApplicationDocument[]
+
+  @@map("applications")
+  @@index([jobPostId])
+}
+
+model ApplicationDocument {
+  id            Int         @id @default(autoincrement())
+  applicationId Int
+  documentId    Int
+  
+  application   Application @relation(fields: [applicationId], references: [id], onDelete: Cascade)
+  document      Document    @relation(fields: [documentId], references: [id], onDelete: Cascade)
+
+  @@unique([applicationId, documentId])
+  @@index([applicationId])
+  @@index([documentId])
+  @@map("application_documents")
+}
+
+model ApplicationStageHistory {
+  id            Int          @id @default(autoincrement())
+  applicationId Int
+  stage         Stage
+  changedAt     DateTime     @default(now())
+  changedById   Int?
+  notes         String?
+
+  application   Application  @relation(fields: [applicationId], references: [id], onDelete: Cascade)
+    changedBy     User?        @relation(fields: [changedById], references: [id], onDelete: SetNull)
+
+  @@index([applicationId])
+  @@index([changedById])
+  @@map("application_stage_history")
+}
+
+model Interview {
+  id                 Int      @id @default(autoincrement())
+  interviewName      String
+  skills             Json // Stores [{ name: String, description: String }]
+  customQuestionList Json // Stores [{ question: String, time: Int }]
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt
+  jobPostId          Int?
+  signedUrl          String @default("")
+
+  invitations     InterviewInvitation[] // Add this line
+  jobPost           JobPost? @relation(fields: [jobPostId], references: [id], onDelete: Cascade)
+
+  @@map("interviews")
+}
+
+enum InterviewInvitationStatus {
+  COMPLETED
+  INVITED
+}
+
+model InterviewInvitation {
+  id          Int       @id @default(autoincrement())
+  token       String    @unique
+  applicantId Int
+  interviewId Int
+  createdAt   DateTime  @default(now())
+  expiresAt   DateTime
+  status      InterviewInvitationStatus     @default(INVITED)
+  dateTaken   DateTime? // Nullable, to be set when the interview is completed
+
+  applicant   Applicant @relation(fields: [applicantId], references: [id])
+  interview   Interview @relation(fields: [interviewId], references: [id], onDelete: Cascade) // Added onDelete: Cascade
+
+  @@map("interview_invitations")
 }

@@ -5,7 +5,7 @@ import { AuroraText } from '@/components/magicui/aurora-text';
 import { Container } from '@/components/atoms/container';
 
 interface HeroProps {
-  login: () => void;
+  login: (callbackUrl: string) => void;
   isAuthLoading: boolean;
 }
 
@@ -22,18 +22,19 @@ export function Hero({ login, isAuthLoading }: HeroProps) {
         </h1>
 
         <p className="mt-6 text-base md:text-lg text-muted-foreground max-w-2xl mx-auto">
-          Transform your hiring with intelligent CV analysis. Get detailed candidate insights,
-          comprehensive scoring with justification, key strengths and weaknesses analysis, and smart
-          ranking to make confident hiring decisions faster.
+          Experience the next evolution in talent acquisition. Our AI-powered platform delivers
+          unparalleled candidate analysis, sophisticated evaluation metrics, and data-driven
+          insights empowering you to make exceptional hiring decisions with confidence and
+          precision.
         </p>
 
         <div className="mt-10 space-x-4">
           <Button
             disabled={isAuthLoading}
-            onClick={() => login()}
+            onClick={() => login('/hiring')}
             className="px-6 cursor-pointer text-sm rounded-full bg-gradient-to-br from-blue-500 to-blue-600 text-white hover:bg-gradient-to-br hover:from-blue-600 hover:to-blue-700"
           >
-            Get Started
+            Transform Your Hiring
           </Button>
         </div>
       </Container>

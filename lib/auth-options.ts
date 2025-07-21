@@ -11,22 +11,18 @@ export const authOptions: NextAuthOptions = {
     }),
   ],
   session: {
-    strategy: 'jwt',
+    strategy: 'database',
+    maxAge: 30 * 24 * 60 * 60, // 30 days
   },
   secret: process.env.NEXTAUTH_SECRET,
   callbacks: {
-    async jwt({ token, user }) {
+    async session({ session, user }) {
       if (user) {
-        token.id = Number(user.id);
-      }
-      return token;
-    },
-    async session({ session, token }) {
-      if (token) {
-        session.user.id = Number(token.id);
+        session.user.id = Number(user.id);
       }
       return session;
     },
   },
   adapter: PrismaAdapter(prisma),
+  debug: process.env.NODE_ENV === 'development',
 };

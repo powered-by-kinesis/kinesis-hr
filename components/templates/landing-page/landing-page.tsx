@@ -23,14 +23,13 @@ export function LandingPageTemplate() {
                        dark:bg-[radial-gradient(ellipse_at_top,rgba(56,189,248,0.15),transparent_50%)]"
           />
         </div>
-        <Navbar />
+        <Navbar login={login} isAuthLoading={isAuthLoading} />
         <Hero login={login} isAuthLoading={isAuthLoading} />
       </div>
 
-      <Video
-        src="https://youtu.be/OnNswVfV14w?si=bIRnynkrK8XWYMz0"
-        thumbnail="https://res.cloudinary.com/dpb2qk5lf/image/upload/v1750267525/kinesis-hr/yavrmjnki8qvpbrtvjaj.png"
-      />
+      <div className="max-w-5xl mx-auto">
+        <Video src="https://youtu.be/OnNswVfV14w?si=bIRnynkrK8XWYMz0" thumbnail="/thumbnail.png" />
+      </div>
       <HowItWorks />
       <Features />
       <Footer />
