@@ -23,7 +23,7 @@ export function LandingPageTemplate() {
                        dark:bg-[radial-gradient(ellipse_at_top,rgba(56,189,248,0.15),transparent_50%)]"
           />
         </div>
-        <Navbar />
+        <Navbar login={login} isAuthLoading={isAuthLoading} />
         <Hero login={login} isAuthLoading={isAuthLoading} />
       </div>
 
