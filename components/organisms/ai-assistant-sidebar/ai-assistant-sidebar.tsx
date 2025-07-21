@@ -144,6 +144,7 @@ export const AIAssistantSidebar: React.FC<AIAssistantSidebarProps> = ({ classNam
         }
         setIsLoading(false);
       }
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
       console.error('Error sending message or processing stream:', error);
       const errorMessage: Message = {
@@ -155,7 +156,7 @@ export const AIAssistantSidebar: React.FC<AIAssistantSidebarProps> = ({ classNam
       setMessages((prev) => [...prev, errorMessage]);
       setIsLoading(false);
     }
-  }, [inputValue, conversationId, messages, isLoading]);
+  }, [inputValue, conversationId]);
 
   const handleQuickQuestion = useCallback((question: string) => {
     setInputValue(question);

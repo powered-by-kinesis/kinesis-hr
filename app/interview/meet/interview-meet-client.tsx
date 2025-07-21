@@ -34,7 +34,7 @@ export default function InterviewMeetClient({ token }: { token?: string }) {
             }
             setLoading(false);
         })();
-    }, []);
+    }, [token]);
 
     const onClickStart = async (audioOptions: AudioCaptureOptions) => {
         try {

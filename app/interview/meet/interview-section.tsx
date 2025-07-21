@@ -86,7 +86,7 @@ const InsideSection = ({ onEndCall }: { onEndCall: () => void }) => {
                 room.engine.off('disconnected', onDisconnected);
             }
         };
-    }, [room]);
+    }, [room, onEndCall]);
 
     return (
         <div className="flex items-center justify-center">
