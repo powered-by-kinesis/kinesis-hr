@@ -286,7 +286,12 @@ export function HowItWorks() {
       position: 'right',
       features: [],
       bgAccent: 'from-blue-500 to-blue-600',
-      sources: ['/manage-candidate-1.png', '/manage-candidate-2.png', '/manage-candidate-3.png', '/manage-candidate-4.png'],
+      sources: [
+        '/manage-candidate-1.png',
+        '/manage-candidate-2.png',
+        '/manage-candidate-3.png',
+        '/manage-candidate-4.png',
+      ],
     },
     {
       icon: BotMessageSquare,
@@ -524,9 +529,10 @@ export function HowItWorks() {
                     animate={{ scale: 1 }}
                     transition={{ delay: index * 0.3 + 0.2 }}
                     className={`absolute top-1/2 -translate-y-1/2 w-20 h-1 
-                      bg-gradient-to-r ${step.position === 'left'
-                        ? 'from-primary to-transparent -right-20'
-                        : 'from-transparent to-primary -left-20'
+                      bg-gradient-to-r ${
+                        step.position === 'left'
+                          ? 'from-primary to-transparent -right-20'
+                          : 'from-transparent to-primary -left-20'
                       }`}
                   />
 
@@ -543,14 +549,15 @@ export function HowItWorks() {
                       hover:shadow-2xl hover:scale-110 transition-all duration-300
                       hover:rotate-6`}
                     style={{
-                      boxShadow: `0 20px 40px -10px ${step.bgAccent.includes('blue')
-                        ? 'rgba(59, 130, 246, 0.3)'
-                        : step.bgAccent.includes('purple')
-                          ? 'rgba(147, 51, 234, 0.3)'
-                          : step.bgAccent.includes('green')
-                            ? 'rgba(34, 197, 94, 0.3)'
-                            : 'rgba(249, 115, 22, 0.3)'
-                        }`,
+                      boxShadow: `0 20px 40px -10px ${
+                        step.bgAccent.includes('blue')
+                          ? 'rgba(59, 130, 246, 0.3)'
+                          : step.bgAccent.includes('purple')
+                            ? 'rgba(147, 51, 234, 0.3)'
+                            : step.bgAccent.includes('green')
+                              ? 'rgba(34, 197, 94, 0.3)'
+                              : 'rgba(249, 115, 22, 0.3)'
+                      }`,
                     }}
                   >
                     <step.icon className="text-white w-6 h-6 md:w-8 md:h-8" />

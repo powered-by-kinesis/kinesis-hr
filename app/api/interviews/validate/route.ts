@@ -17,9 +17,9 @@ export async function GET(req: Request) {
         token: token,
         AND: {
           status: {
-            not: "COMPLETED"
-          }
-        }
+            not: 'COMPLETED',
+          },
+        },
       },
       include: {
         applicant: true,
@@ -28,7 +28,10 @@ export async function GET(req: Request) {
     });
 
     if (!invitation) {
-      return NextResponse.json({ error: 'Invalid invitation token or interview ID' }, { status: 404 });
+      return NextResponse.json(
+        { error: 'Invalid invitation token or interview ID' },
+        { status: 404 },
+      );
     }
 
     if (invitation.expiresAt < new Date()) {

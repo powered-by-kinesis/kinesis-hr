@@ -105,14 +105,18 @@ export const AIAssistantSidebar: React.FC<AIAssistantSidebarProps> = ({ classNam
 
         const parts = chunk.split('\n\n');
         for (const part of parts) {
-          let event = 'message'
-          let data = ''
+          let event = 'message';
+          let data = '';
           const lines = part.split('\n');
 
           for (const line of lines) {
             if (line.startsWith('event: ')) {
               event = line.replace('event: ', '').trim();
-            } else if (line.startsWith('data: ') && line !== 'data: [START]' && line !== 'data: [DONE]') {
+            } else if (
+              line.startsWith('data: ') &&
+              line !== 'data: [START]' &&
+              line !== 'data: [DONE]'
+            ) {
               data += line.replace('data: ', '');
             }
           }
@@ -139,7 +143,7 @@ export const AIAssistantSidebar: React.FC<AIAssistantSidebarProps> = ({ classNam
               return updated;
             });
           } else if (event === 'done') {
-            break
+            break;
           }
         }
         setIsLoading(false);
@@ -162,12 +166,15 @@ export const AIAssistantSidebar: React.FC<AIAssistantSidebarProps> = ({ classNam
     setInputValue(question);
   }, []);
 
-  const handleKeyDown = useCallback((e: React.KeyboardEvent) => {
-    if (e.key === 'Enter' && !e.shiftKey) {
-      e.preventDefault();
-      handleSendMessage();
-    }
-  }, [handleSendMessage]);
+  const handleKeyDown = useCallback(
+    (e: React.KeyboardEvent) => {
+      if (e.key === 'Enter' && !e.shiftKey) {
+        e.preventDefault();
+        handleSendMessage();
+      }
+    },
+    [handleSendMessage],
+  );
 
   if (isMinimized) {
     return (

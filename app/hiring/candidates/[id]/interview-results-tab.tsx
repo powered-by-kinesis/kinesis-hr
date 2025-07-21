@@ -60,8 +60,8 @@ export function InterviewResultsTab({ data }: { data: Data }) {
             <CardTitle>AI Analysis</CardTitle>
           </CardHeader>
           <CardContent className="space-y-6">
-
-            {data?.skills && data.skills.length > 0 && (
+            {data?.skills &&
+              data.skills.length > 0 &&
               data.skills.map((skill, index) => (
                 <div key={index} className="flex  flex-col justify-between p-4 border rounded-lg">
                   <div className="flex items-center gap-3">
@@ -72,8 +72,7 @@ export function InterviewResultsTab({ data }: { data: Data }) {
                     {skill.assessment_notes || 'No notes provided'}
                   </div>
                 </div>
-              ))
-            )}
+              ))}
             {/* <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-2">
                 <div className="flex items-center gap-2">

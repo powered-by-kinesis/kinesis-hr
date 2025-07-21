@@ -64,7 +64,6 @@ export function CandidateDetailsClient({ initialCandidate }: CandidateDetailsCli
     router.refresh();
   };
 
-
   const resumeUrl = candidate?.applications?.[0]?.documents?.[0]?.document?.filePath;
 
   if (!candidate) {
