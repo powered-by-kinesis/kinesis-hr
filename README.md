@@ -47,7 +47,7 @@ Kinesis HR is a cutting-edge recruitment platform that combines AI technology wi
 
 - **Next.js 15.3.2** - React framework with App Router
 - **React 19** - Latest React features
-- **TypeScript** - Type safety
+- **TypeScript 5.8** - Type safety
 - **TailwindCSS 4** - Utility-first styling
 - **Radix UI** - Accessible component primitives
 - **Framer Motion** - Smooth animations
@@ -60,6 +60,11 @@ Kinesis HR is a cutting-edge recruitment platform that combines AI technology wi
 - **React Player** - Media playback
 - **Recharts** - Data visualization
 - **React Markdown** - Content rendering
+- **@dnd-kit** (core, sortable, modifiers, utilities) - Drag and drop
+- **CMDK** - Command menu
+- **clsx** & **class-variance-authority** - Utility libraries
+- **vaul** - Drawer component
+- **sonner** - Toast notifications
 
 ### Backend
 
@@ -69,14 +74,24 @@ Kinesis HR is a cutting-edge recruitment platform that combines AI technology wi
 - **NextAuth.js** - Authentication
 - **Nodemailer** - Email services
 - **Cloudinary** - Media management
-- **ElevenLabs** - Voice synthesis
+- **LiveKit** (livekit-client, server-sdk, components-react) - Real-time audio/video
+- **Axios** - HTTP client
+- **date-fns** & **moment** - Date utilities
+- **uuid** - Unique IDs
+- **RabbitMQ** - Message broker for asynchronous communication/microservices
+- **Python** - Programming language for certain backend services
+- **FastAPI** - Modern, fast Python web framework for building APIs
+- **Gemini** - AI/LLM service.
+- **LlamaIndex** - Framework for integrating data with Large Language Models (LLMs)
 
 ### Development Tools
 
 - **TypeScript 5.8** - Type checking
 - **ESLint 9** - Code linting
-- **Prettier** - Code formatting
+- **Prettier 3.5.3** - Code formatting
 - **Turbopack** - Fast builds
+- **ts-node** - TypeScript execution
+- **tw-animate-css** - Tailwind animation utilities
 
 ## 🏗️ Architecture
 
@@ -96,7 +111,6 @@ graph TB
     end
 
     subgraph "Service Layer"
-        H[ElevenLabs Voice]
         I[Cloudinary CDN]
         J[Email Service]
     end
@@ -109,7 +123,6 @@ graph TB
     A --> D
     B --> A
     C --> B
-    D --> H
     D --> I
     D --> J
     D --> L
@@ -120,10 +133,9 @@ graph TB
 
 ### Prerequisites
 
-- Node.js 22.14+
+- Node.js 20+ (recommended: 22.14+)
 - PostgreSQL database
 - Cloudinary account
-- ElevenLabs API key
 
 ### Installation
 
@@ -167,9 +179,6 @@ CLOUDINARY_API_KEY=
 CLOUDINARY_API_SECRET=
 CLOUDINARY_URL=
 
-DIFY_API_KEY=
-DIFY_API_URL=
-
 # SMTP Configuration
 SMTP_HOST=smtp.gmail.com
 SMTP_PORT=587
@@ -178,7 +187,6 @@ SMTP_USER=
 SMTP_PASS=
 SMTP_FROM=
 
-ELEVENLABS_API_KEY=
 NEXT_PUBLIC_AGENT_ID=
 
 # LLM API_URL
@@ -192,11 +200,29 @@ npx prisma generate
 npx prisma migrate dev
 ```
 
-5. Start the development server
+5. (Optional) Seed the database
+
+```bash
+npx ts-node prisma/seed.ts
+```
+
+6. Start the development server
 
 ```bash
 npm run dev
 ```
+
+### Useful NPM Scripts
+
+- `npm run dev` — Start development server with Turbopack
+- `npm run build` — Generate Prisma client and build Next.js app
+- `npm start` — Start production server
+- `npm run lint` — Run ESLint
+- `npm run lint:fix` — Fix lint errors
+- `npm run typecheck` — TypeScript type checking
+- `npm run format` — Format code with Prettier
+- `npm run format:check` — Check code formatting
+- `npm run validate` — Run lint, typecheck, and format:check
 
 ## 📝 Development Guidelines
 
@@ -208,35 +234,18 @@ npm run dev
 - Write comprehensive comments
 - Follow atomic design principles
 
-### Testing
-
-- Write unit tests for critical functions
-- Test components in isolation
-- Ensure responsive design works
-- Verify accessibility compliance
-
-### Performance
-
-- Optimize image loading
-- Implement proper caching
-- Use code splitting
-- Monitor bundle size
-
 ## 🔒 Security
 
 - Secure authentication with NextAuth.js
 - HTTPS enforcement
 - Input validation
 - File upload restrictions
-- Rate limiting
-- Data encryption
 
 ## 📈 Future Roadmap
 
 - Enhanced AI interview capabilities
 - Advanced analytics dashboard
 - Multi-language support
-- Mobile application
 - Integration with ATS systems
 - Automated reference checking
 - Video interview features
