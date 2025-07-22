@@ -30,16 +30,52 @@ const quickQuestions = [
   'How to improve employee retention?',
 ];
 
+const SESSION_KEY = 'kinesis-ai-assistant-messages';
+const MAX_MESSAGES = 50;
+
 export const AIAssistantSidebar: React.FC<AIAssistantSidebarProps> = ({ className }) => {
   const { isMinimized, minimize, maximize } = useAIAssistant();
-  const [messages, setMessages] = useState<Message[]>([
-    {
-      id: '1',
-      type: 'assistant',
-      content: "Hi there! 👋 I'm your AI assistant. I'm ready to answer any of your HR questions.",
-      timestamp: new Date(),
-    },
-  ]);
+
+  // Load messages from sessionStorage if available
+  const [messages, setMessages] = useState<Message[]>(() => {
+    if (typeof window !== 'undefined') {
+      try {
+        const stored = sessionStorage.getItem(SESSION_KEY);
+        if (stored) {
+          // Parse and revive Date objects
+          return (JSON.parse(stored) as Message[]).map((msg: Message) => ({
+            ...msg,
+            timestamp: new Date(msg.timestamp),
+          }));
+        }
+      } catch {
+        // Ignore parse errors
+      }
+    }
+    return [
+      {
+        id: '1',
+        type: 'assistant',
+        content:
+          "Hi there! 👋 I'm your AI assistant. I'm ready to answer any of your HR questions.",
+        timestamp: new Date(),
+      },
+    ];
+  });
+
+  // Save messages to sessionStorage on every update
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      try {
+        // Limit to MAX_MESSAGES
+        const limited = messages.slice(-MAX_MESSAGES);
+        sessionStorage.setItem(SESSION_KEY, JSON.stringify(limited));
+      } catch {
+        // Ignore storage errors
+      }
+    }
+  }, [messages]);
+
   const [inputValue, setInputValue] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
@@ -224,8 +260,9 @@ export const AIAssistantSidebar: React.FC<AIAssistantSidebarProps> = ({ classNam
     <AnimatePresence>
       <motion.div
         className={cn(
-          'fixed lg:right-0 lg:top-0 right-0 bottom-0 lg:h-screen h-[85vh] w-full lg:w-96 bg-card border-l border-t lg:border-t-0 z-50 flex flex-col',
-          'shadow-2xl custom-scrollbar overflow-y-auto focus:outline-none',
+          // Make sidebar take full height and use flex-col for layout
+          'fixed lg:right-0 lg:top-0 right-0 bottom-0 lg:h-screen h-[85vh] w-full lg:w-96 bg-card border-l border-t lg:border-t-0 z-50 flex flex-col h-full',
+          'shadow-2xl custom-scrollbar focus:outline-none',
           className,
         )}
         initial={{ x: '100%' }}
@@ -234,8 +271,8 @@ export const AIAssistantSidebar: React.FC<AIAssistantSidebarProps> = ({ classNam
         transition={{ type: 'spring', bounce: 0.2 }}
         tabIndex={0}
       >
-        {/* Header */}
-        <div className="flex items-center justify-between p-4 border-b bg-card">
+        {/* Header - sticky */}
+        <div className="flex items-center justify-between p-4 border-b bg-card sticky top-0 z-10">
           <div className="flex items-center gap-3">
             <div className="relative">
               <Avatar className="h-8 w-8">
@@ -258,9 +295,9 @@ export const AIAssistantSidebar: React.FC<AIAssistantSidebarProps> = ({ classNam
           </Button>
         </div>
 
-        {/* Messages Area */}
+        {/* Messages Area - only this scrolls */}
         <div className="flex-1 flex flex-col min-h-0">
-          <ScrollArea className="flex-1 max-h-[80vh] custom-scrollbar p-4">
+          <ScrollArea className="flex-1 max-h-full custom-scrollbar p-4 pb-20">
             {/* Quick Questions */}
             <div className="border-b bg-card mb-4 pb-4">
               <div className="space-y-2">
@@ -338,20 +375,8 @@ export const AIAssistantSidebar: React.FC<AIAssistantSidebarProps> = ({ classNam
             </div>
           </ScrollArea>
 
-          {/* Input Area */}
-          <div className="p-4 border-t  bg-card">
-            {/* Disclaimer */}
-            <div className="mb-3 p-2 bg-card rounded-lg border ">
-              <div className="flex items-start gap-2">
-                <div className="text-orange-500 text-xs mt-0.5">⚠️</div>
-                <div className="text-xs text-gray-400 leading-relaxed">
-                  Just FYI... You are interacting with an artificial intelligence system and not a
-                  human being. Kinesis HR Assistant can make mistakes. Consider double checking
-                  important information.
-                </div>
-              </div>
-            </div>
-
+          {/* Input Area - sticky bottom */}
+          <div className="p-4 border-t bg-card sticky bottom-0 z-10">
             {/* Input */}
             <div className="flex gap-2">
               <Input
