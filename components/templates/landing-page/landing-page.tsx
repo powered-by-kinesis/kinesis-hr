@@ -28,7 +28,7 @@ export function LandingPageTemplate() {
       </div>
 
       <div className="max-w-5xl mx-auto">
-        <Video src="https://youtu.be/OnNswVfV14w?si=bIRnynkrK8XWYMz0" thumbnail="/thumbnail.png" />
+        <Video src="https://youtu.be/yPJR6dhhftk?si=CbVmcQQCMS9zQfiJ" thumbnail="/thumbnail.png" />
       </div>
       <HowItWorks />
       <Features />
