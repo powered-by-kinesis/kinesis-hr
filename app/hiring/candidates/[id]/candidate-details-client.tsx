@@ -89,25 +89,30 @@ export function CandidateDetailsClient({ initialCandidate }: CandidateDetailsCli
   const viewerOptions = getPDFViewerOptions(resumeUrl || null);
 
   // Try next viewer (used by both error and timeout)
-  const tryNextViewer = React.useCallback((reason: 'error' | 'timeout') => {
-    console.warn(`PDF viewer ${currentViewerIndex + 1} failed (${reason}), trying next option...`);
+  const tryNextViewer = React.useCallback(
+    (reason: 'error' | 'timeout') => {
+      console.warn(
+        `PDF viewer ${currentViewerIndex + 1} failed (${reason}), trying next option...`,
+      );
 
-    // Clear existing timeout
-    if (timeoutRef.current) {
-      clearTimeout(timeoutRef.current);
-      timeoutRef.current = null;
-    }
+      // Clear existing timeout
+      if (timeoutRef.current) {
+        clearTimeout(timeoutRef.current);
+        timeoutRef.current = null;
+      }
 
-    // Try next viewer option
-    if (currentViewerIndex < viewerOptions.length - 1) {
-      setCurrentViewerIndex(prev => prev + 1);
-      setIsCVLoading(true);
-    } else {
-      // All options failed
-      setIsCVLoading(false);
-      setHasError(true);
-    }
-  }, [currentViewerIndex, viewerOptions.length]);
+      // Try next viewer option
+      if (currentViewerIndex < viewerOptions.length - 1) {
+        setCurrentViewerIndex((prev) => prev + 1);
+        setIsCVLoading(true);
+      } else {
+        // All options failed
+        setIsCVLoading(false);
+        setHasError(true);
+      }
+    },
+    [currentViewerIndex, viewerOptions.length],
+  );
 
   // Handle CV loading success
   const handleCVLoad = React.useCallback(() => {
@@ -309,7 +314,10 @@ export function CandidateDetailsClient({ initialCandidate }: CandidateDetailsCli
                             <div className="absolute inset-0 flex items-center justify-center bg-background/95 z-10">
                               <div className="text-center text-muted-foreground">
                                 <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto mb-2"></div>
-                                <p>Loading CV... {currentViewerIndex > 0 && `(trying alternative viewer)`}</p>
+                                <p>
+                                  Loading CV...{' '}
+                                  {currentViewerIndex > 0 && `(trying alternative viewer)`}
+                                </p>
                               </div>
                             </div>
                           )}
@@ -503,7 +511,10 @@ export function CandidateDetailsClient({ initialCandidate }: CandidateDetailsCli
                                     <div className="absolute inset-0 flex items-center justify-center bg-background/95 z-10">
                                       <div className="text-center text-muted-foreground">
                                         <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto mb-2"></div>
-                                        <p>Loading CV... {currentViewerIndex > 0 && `(trying alternative viewer)`}</p>
+                                        <p>
+                                          Loading CV...{' '}
+                                          {currentViewerIndex > 0 && `(trying alternative viewer)`}
+                                        </p>
                                       </div>
                                     </div>
                                   )}
