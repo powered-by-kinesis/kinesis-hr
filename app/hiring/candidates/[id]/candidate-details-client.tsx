@@ -53,9 +53,18 @@ interface CandidateDetailsClientProps {
   initialCandidate: ApplicantResponseDTO | null;
 }
 
-const getDocumentViewerUrl = (url: string | null): string => {
-  if (!url) return '';
-  return `https://docs.google.com/gview?url=${encodeURIComponent(url)}&embedded=true`;
+// Fallback viewer options
+const getPDFViewerOptions = (url: string | null) => {
+  if (!url) return [];
+
+  return [
+    // Primary: Google Docs viewer
+    `https://docs.google.com/gview?url=${encodeURIComponent(url)}&embedded=true`,
+    // Fallback 1: Mozilla PDF.js
+    `https://mozilla.github.io/pdf.js/web/viewer.html?file=${encodeURIComponent(url)}`,
+    // Fallback 2: Direct PDF (if browser supports)
+    url,
+  ];
 };
 
 export function CandidateDetailsClient({ initialCandidate }: CandidateDetailsClientProps) {
@@ -63,6 +72,10 @@ export function CandidateDetailsClient({ initialCandidate }: CandidateDetailsCli
   const [candidate, setCandidate] = React.useState(initialCandidate);
   const { isMinimized: isAIAssistantMinimized } = useAIAssistant();
   const [activeTab, setActiveTab] = React.useState('info');
+  const [isCVLoading, setIsCVLoading] = React.useState(true);
+  const [currentViewerIndex, setCurrentViewerIndex] = React.useState(0);
+  const [hasError, setHasError] = React.useState(false);
+  const timeoutRef = React.useRef<NodeJS.Timeout | null>(null);
 
   React.useEffect(() => {
     setCandidate(initialCandidate);
@@ -73,6 +86,88 @@ export function CandidateDetailsClient({ initialCandidate }: CandidateDetailsCli
   };
 
   const resumeUrl = candidate?.applications?.[0]?.documents?.[0]?.document?.filePath;
+  const viewerOptions = getPDFViewerOptions(resumeUrl || null);
+
+  // Try next viewer (used by both error and timeout)
+  const tryNextViewer = React.useCallback(
+    (reason: 'error' | 'timeout') => {
+      console.warn(
+        `PDF viewer ${currentViewerIndex + 1} failed (${reason}), trying next option...`,
+      );
+
+      // Clear existing timeout
+      if (timeoutRef.current) {
+        clearTimeout(timeoutRef.current);
+        timeoutRef.current = null;
+      }
+
+      // Try next viewer option
+      if (currentViewerIndex < viewerOptions.length - 1) {
+        setCurrentViewerIndex((prev) => prev + 1);
+        setIsCVLoading(true);
+      } else {
+        // All options failed
+        setIsCVLoading(false);
+        setHasError(true);
+      }
+    },
+    [currentViewerIndex, viewerOptions.length],
+  );
+
+  // Handle CV loading success
+  const handleCVLoad = React.useCallback(() => {
+    if (timeoutRef.current) {
+      clearTimeout(timeoutRef.current);
+      timeoutRef.current = null;
+    }
+    setIsCVLoading(false);
+    setHasError(false);
+  }, []);
+
+  // Handle CV loading error
+  const handleCVError = React.useCallback(() => {
+    tryNextViewer('error');
+  }, [tryNextViewer]);
+
+  // Reset states when resume URL changes
+  React.useEffect(() => {
+    if (resumeUrl) {
+      setIsCVLoading(true);
+      setCurrentViewerIndex(0);
+      setHasError(false);
+    } else {
+      // Clear timeout if no resume URL
+      if (timeoutRef.current) {
+        clearTimeout(timeoutRef.current);
+        timeoutRef.current = null;
+      }
+    }
+  }, [resumeUrl]);
+
+  // Start timeout when viewer changes
+  React.useEffect(() => {
+    if (isCVLoading && resumeUrl && !hasError) {
+      // Clear any existing timeout
+      if (timeoutRef.current) {
+        clearTimeout(timeoutRef.current);
+        timeoutRef.current = null;
+      }
+
+      const timeout = currentViewerIndex === 0 ? 5000 : 5000;
+
+      timeoutRef.current = setTimeout(() => {
+        tryNextViewer('timeout');
+      }, timeout);
+    }
+
+    return () => {
+      // Cleanup timeout on unmount
+      if (timeoutRef.current) {
+        clearTimeout(timeoutRef.current);
+        timeoutRef.current = null;
+      }
+    };
+  }, [currentViewerIndex, isCVLoading, resumeUrl, hasError, tryNextViewer]);
 
   if (!candidate) {
     return <div className="p-6">Candidate not found.</div>;
@@ -214,11 +309,42 @@ export function CandidateDetailsClient({ initialCandidate }: CandidateDetailsCli
                   <CardContent>
                     <div className="aspect-[8.5/11] bg-background/95 rounded-lg flex items-center justify-center relative overflow-hidden shadow-inner">
                       {resumeUrl ? (
-                        <iframe
-                          src={getDocumentViewerUrl(resumeUrl)}
-                          className="w-full h-full rounded-lg"
-                          title={`${candidate.fullName}'s Resume`}
-                        />
+                        <>
+                          {isCVLoading && (
+                            <div className="absolute inset-0 flex items-center justify-center bg-background/95 z-10">
+                              <div className="text-center text-muted-foreground">
+                                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto mb-2"></div>
+                                <p>
+                                  Loading CV...{' '}
+                                  {currentViewerIndex > 0 && `(trying alternative viewer)`}
+                                </p>
+                              </div>
+                            </div>
+                          )}
+                          {hasError ? (
+                            <div className="text-center text-muted-foreground p-4">
+                              <FileText className="h-12 w-12 mx-auto mb-2 opacity-50" />
+                              <p className="mb-2">Failed to load CV</p>
+                              <a
+                                href={resumeUrl}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="text-primary hover:underline text-sm"
+                              >
+                                Download CV instead →
+                              </a>
+                            </div>
+                          ) : (
+                            <iframe
+                              key={currentViewerIndex} // Force re-render when viewer changes
+                              src={viewerOptions[currentViewerIndex] || ''}
+                              className="w-full h-full rounded-lg"
+                              title={`${candidate.fullName}'s Resume`}
+                              onLoad={handleCVLoad}
+                              onError={handleCVError}
+                            />
+                          )}
+                        </>
                       ) : (
                         <div className="text-center text-muted-foreground">
                           <FileText className="h-12 w-12 mx-auto mb-2 opacity-50" />
@@ -380,11 +506,42 @@ export function CandidateDetailsClient({ initialCandidate }: CandidateDetailsCli
                           <CardContent>
                             <div className="aspect-[8.5/11] bg-background/95 rounded-lg flex items-center justify-center relative overflow-hidden shadow-inner">
                               {resumeUrl ? (
-                                <iframe
-                                  src={getDocumentViewerUrl(resumeUrl)}
-                                  className="w-full h-full rounded-lg"
-                                  title={`${candidate.fullName}'s Resume`}
-                                />
+                                <>
+                                  {isCVLoading && (
+                                    <div className="absolute inset-0 flex items-center justify-center bg-background/95 z-10">
+                                      <div className="text-center text-muted-foreground">
+                                        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto mb-2"></div>
+                                        <p>
+                                          Loading CV...{' '}
+                                          {currentViewerIndex > 0 && `(trying alternative viewer)`}
+                                        </p>
+                                      </div>
+                                    </div>
+                                  )}
+                                  {hasError ? (
+                                    <div className="text-center text-muted-foreground p-4">
+                                      <FileText className="h-12 w-12 mx-auto mb-2 opacity-50" />
+                                      <p className="mb-2">Failed to load CV</p>
+                                      <a
+                                        href={resumeUrl}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        className="text-primary hover:underline text-sm"
+                                      >
+                                        Download CV instead →
+                                      </a>
+                                    </div>
+                                  ) : (
+                                    <iframe
+                                      key={currentViewerIndex}
+                                      src={viewerOptions[currentViewerIndex] || ''}
+                                      className="w-full h-full rounded-lg"
+                                      title={`${candidate.fullName}'s Resume`}
+                                      onLoad={handleCVLoad}
+                                      onError={handleCVError}
+                                    />
+                                  )}
+                                </>
                               ) : (
                                 <div className="text-center text-muted-foreground">
                                   <FileText className="h-12 w-12 mx-auto mb-2 opacity-50" />

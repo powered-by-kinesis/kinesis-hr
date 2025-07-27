@@ -97,37 +97,176 @@ Kinesis HR is a cutting-edge recruitment platform that combines AI technology wi
 
 ```mermaid
 graph TB
-    subgraph "Frontend Layer"
-        A[Next.js App Router]
-        B[React Components]
-        C[TailwindCSS]
+    subgraph "Client Layer"
+        A[Next.js 15 App Router]
+        B[React 19 Components]
+        C[TailwindCSS + Radix UI]
+        D[Framer Motion]
+        E[React Hook Form + Zod]
+    end
+
+    subgraph "Authentication Layer"
+        F[NextAuth.js]
+        G[Google OAuth]
     end
 
     subgraph "API Layer"
-        D[Next.js API Routes]
-        E[Authentication]
-        F[File Upload]
-        G[AI Services]
+        H[Next.js API Routes]
+        I[TypeScript Endpoints]
+        J[Prisma Client]
     end
 
-    subgraph "Service Layer"
-        I[Cloudinary CDN]
-        J[Email Service]
+    subgraph "AI/ML Services"
+        K[Gemini AI/LLM]
+        L[LlamaIndex]
+        M[FastAPI Python Services]
+        N[AI Interview Engine]
+    end
+
+    subgraph "Real-time Services"
+        O[LiveKit Audio/Video]
+        P[WebRTC Communication]
+        Q[Interview Streaming]
+    end
+
+    subgraph "Message Queue"
+        R[RabbitMQ]
+        S[Async Processing]
+    end
+
+    subgraph "External Services"
+        T[Cloudinary CDN]
+        U[Nodemailer SMTP]
+        V[File Storage]
     end
 
     subgraph "Database Layer"
-        K[PostgreSQL]
-        L[Prisma ORM]
+        W[PostgreSQL]
+        X[Prisma ORM]
     end
 
-    A --> D
+    %% Client connections
+    A --> H
     B --> A
     C --> B
-    D --> I
-    D --> J
-    D --> L
-    L --> K
+    D --> B
+    E --> B
+    A --> F
+
+    %% Auth flow
+    F --> G
+    F --> H
+
+    %% API connections
+    H --> J
+    H --> K
+    H --> T
+    H --> U
+    H --> R
+
+    %% AI services
+    K --> L
+    L --> M
+    M --> N
+    N --> H
+
+    %% Real-time
+    O --> P
+    P --> Q
+    Q --> H
+
+    %% Message processing
+    R --> S
+    S --> M
+
+    %% Database
+    J --> X
+    X --> W
+
+    %% File handling
+    T --> V
+    V --> W
 ```
+
+### Architecture Components
+
+#### 🎨 Client Layer
+
+- **Next.js 15**: Modern React framework with App Router for optimal performance
+- **React 19**: Latest React features with concurrent rendering
+- **TailwindCSS + Radix UI**: Utility-first styling with accessible components
+- **Framer Motion**: Smooth animations and transitions
+- **React Hook Form + Zod**: Type-safe form handling and validation
+
+#### 🔐 Authentication Layer
+
+- **NextAuth.js**: Secure authentication with session management
+- **Google OAuth**: Social login integration
+- **JWT Tokens**: Stateless authentication for API endpoints
+
+#### 🛠️ API Layer
+
+- **Next.js API Routes**: Serverless API endpoints
+- **TypeScript**: Full type safety across the application
+- **Prisma Client**: Type-safe database operations
+
+#### 🤖 AI/ML Services
+
+- **Gemini AI**: Advanced language model for interview processing
+- **LlamaIndex**: Framework for integrating data with LLMs
+- **FastAPI**: High-performance Python API for AI services
+- **AI Interview Engine**: Custom logic for automated interviews
+
+#### 📡 Real-time Services
+
+- **LiveKit**: Professional-grade audio/video infrastructure
+- **WebRTC**: Peer-to-peer communication
+- **Interview Streaming**: Real-time interview sessions
+
+#### 📬 Message Queue
+
+- **RabbitMQ**: Reliable message broker for async operations
+- **Background Processing**: Heavy tasks handled asynchronously
+
+#### 🌐 External Services
+
+- **Cloudinary**: Media management and CDN
+- **Nodemailer**: SMTP email service
+- **File Storage**: Document and media storage
+
+#### 🗄️ Database Layer
+
+- **PostgreSQL**: Robust relational database
+- **Prisma ORM**: Modern database toolkit with migrations
+
+### 🔄 Data Flow Examples
+
+#### Candidate Application Flow
+
+1. **Candidate** submits application via React form
+2. **Next.js API** validates data using Zod schemas
+3. **Prisma** stores candidate data in PostgreSQL
+4. **Cloudinary** handles CV/document uploads
+
+#### AI Interview Flow
+
+1. **Recruiter** initiates interview via dashboard
+2. **LiveKit** creates real-time audio/video session
+3. **AI Engine** generates dynamic questions
+4. **LlamaIndex** processes candidate responses
+5. **Gemini** evaluates answers in real-time
+6. **WebRTC** streams interview data
+7. **RabbitMQ** queues AI analysis tasks
+8. **FastAPI + Gemini** processes candidate profile
+9. **Results** stored back to database via Prisma
+
+#### Real-time Communication
+
+1. **User actions** trigger WebSocket events
+2. **LiveKit** manages peer-to-peer connections
+3. **RabbitMQ** handles background processing
+4. **AI services** process data asynchronously
+5. **UI updates** reflect real-time changes
 
 ## 🚀 Getting Started
 
