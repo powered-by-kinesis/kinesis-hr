@@ -10,7 +10,6 @@ import { cn } from '@/lib/utils';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useAIAssistant } from '@/hooks/use-ai-assistant/use-ai-assistant';
 import ReactMarkdown from 'react-markdown';
-import remarkGfm from 'remark-gfm';
 import { AssistantMessage } from './assistent-message';
 
 interface Message {
@@ -141,7 +140,7 @@ export const AIAssistantSidebar: React.FC<AIAssistantSidebarProps> = ({ classNam
 
         const buffer = decoder.decode(value, { stream: true });
 
-        const parts = buffer.split('\n\n')
+        const parts = buffer.split('\n\n');
         for (const part of parts) {
           const lines = part.split('\n');
           for (const line of lines) {
@@ -151,7 +150,7 @@ export const AIAssistantSidebar: React.FC<AIAssistantSidebarProps> = ({ classNam
                 const jsonData = JSON.parse(data);
                 if (jsonData['type'] == 'message') {
                   setMessages((prevMessages) => {
-                    const updated = [...prevMessages]
+                    const updated = [...prevMessages];
                     const lastIndex = updated.length - 1;
                     if (updated[lastIndex].type === 'assistant') {
                       updated[lastIndex] = {
@@ -174,7 +173,6 @@ export const AIAssistantSidebar: React.FC<AIAssistantSidebarProps> = ({ classNam
               } catch (error) {
                 console.error('Error parsing data:', error);
               }
-
             }
           }
         }
@@ -333,13 +331,11 @@ export const AIAssistantSidebar: React.FC<AIAssistantSidebarProps> = ({ classNam
                         : 'bg-card text-gray-500 border ',
                     )}
                   >
-                    {
-                      message.type === 'user' ? (
-                        <ReactMarkdown>{message.content}</ReactMarkdown>
-                      ) : (
-                        <AssistantMessage content={message.content} />
-                      )
-                    }
+                    {message.type === 'user' ? (
+                      <ReactMarkdown>{message.content}</ReactMarkdown>
+                    ) : (
+                      <AssistantMessage content={message.content} />
+                    )}
                   </div>
                   {message.type === 'user' && (
                     <Avatar className="h-8 w-8  flex-shrink-0">
