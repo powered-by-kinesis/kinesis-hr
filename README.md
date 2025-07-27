@@ -47,7 +47,7 @@ Kinesis HR is a cutting-edge recruitment platform that combines AI technology wi
 
 - **Next.js 15.3.2** - React framework with App Router
 - **React 19** - Latest React features
-- **TypeScript** - Type safety
+- **TypeScript 5.8** - Type safety
 - **TailwindCSS 4** - Utility-first styling
 - **Radix UI** - Accessible component primitives
 - **Framer Motion** - Smooth animations
@@ -60,6 +60,11 @@ Kinesis HR is a cutting-edge recruitment platform that combines AI technology wi
 - **React Player** - Media playback
 - **Recharts** - Data visualization
 - **React Markdown** - Content rendering
+- **@dnd-kit** (core, sortable, modifiers, utilities) - Drag and drop
+- **CMDK** - Command menu
+- **clsx** & **class-variance-authority** - Utility libraries
+- **vaul** - Drawer component
+- **sonner** - Toast notifications
 
 ### Backend
 
@@ -69,61 +74,207 @@ Kinesis HR is a cutting-edge recruitment platform that combines AI technology wi
 - **NextAuth.js** - Authentication
 - **Nodemailer** - Email services
 - **Cloudinary** - Media management
-- **ElevenLabs** - Voice synthesis
+- **LiveKit** (livekit-client, server-sdk, components-react) - Real-time audio/video
+- **Axios** - HTTP client
+- **date-fns** & **moment** - Date utilities
+- **uuid** - Unique IDs
+- **RabbitMQ** - Message broker for asynchronous communication/microservices
+- **Python** - Programming language for certain backend services
+- **FastAPI** - Modern, fast Python web framework for building APIs
+- **Gemini** - AI/LLM service.
+- **LlamaIndex** - Framework for integrating data with Large Language Models (LLMs)
 
 ### Development Tools
 
 - **TypeScript 5.8** - Type checking
 - **ESLint 9** - Code linting
-- **Prettier** - Code formatting
+- **Prettier 3.5.3** - Code formatting
 - **Turbopack** - Fast builds
+- **ts-node** - TypeScript execution
+- **tw-animate-css** - Tailwind animation utilities
 
 ## 🏗️ Architecture
 
 ```mermaid
 graph TB
-    subgraph "Frontend Layer"
-        A[Next.js App Router]
-        B[React Components]
-        C[TailwindCSS]
+    subgraph "Client Layer"
+        A[Next.js 15 App Router]
+        B[React 19 Components]
+        C[TailwindCSS + Radix UI]
+        D[Framer Motion]
+        E[React Hook Form + Zod]
+    end
+
+    subgraph "Authentication Layer"
+        F[NextAuth.js]
+        G[Google OAuth]
     end
 
     subgraph "API Layer"
-        D[Next.js API Routes]
-        E[Authentication]
-        F[File Upload]
-        G[AI Services]
+        H[Next.js API Routes]
+        I[TypeScript Endpoints]
+        J[Prisma Client]
     end
 
-    subgraph "Service Layer"
-        H[ElevenLabs Voice]
-        I[Cloudinary CDN]
-        J[Email Service]
+    subgraph "AI/ML Services"
+        K[Gemini AI/LLM]
+        L[LlamaIndex]
+        M[FastAPI Python Services]
+        N[AI Interview Engine]
+    end
+
+    subgraph "Real-time Services"
+        O[LiveKit Audio/Video]
+        P[WebRTC Communication]
+        Q[Interview Streaming]
+    end
+
+    subgraph "Message Queue"
+        R[RabbitMQ]
+        S[Async Processing]
+    end
+
+    subgraph "External Services"
+        T[Cloudinary CDN]
+        U[Nodemailer SMTP]
+        V[File Storage]
     end
 
     subgraph "Database Layer"
-        K[PostgreSQL]
-        L[Prisma ORM]
+        W[PostgreSQL]
+        X[Prisma ORM]
     end
 
-    A --> D
+    %% Client connections
+    A --> H
     B --> A
     C --> B
-    D --> H
-    D --> I
-    D --> J
-    D --> L
-    L --> K
+    D --> B
+    E --> B
+    A --> F
+
+    %% Auth flow
+    F --> G
+    F --> H
+
+    %% API connections
+    H --> J
+    H --> K
+    H --> T
+    H --> U
+    H --> R
+
+    %% AI services
+    K --> L
+    L --> M
+    M --> N
+    N --> H
+
+    %% Real-time
+    O --> P
+    P --> Q
+    Q --> H
+
+    %% Message processing
+    R --> S
+    S --> M
+
+    %% Database
+    J --> X
+    X --> W
+
+    %% File handling
+    T --> V
+    V --> W
 ```
+
+### Architecture Components
+
+#### 🎨 Client Layer
+
+- **Next.js 15**: Modern React framework with App Router for optimal performance
+- **React 19**: Latest React features with concurrent rendering
+- **TailwindCSS + Radix UI**: Utility-first styling with accessible components
+- **Framer Motion**: Smooth animations and transitions
+- **React Hook Form + Zod**: Type-safe form handling and validation
+
+#### 🔐 Authentication Layer
+
+- **NextAuth.js**: Secure authentication with session management
+- **Google OAuth**: Social login integration
+- **JWT Tokens**: Stateless authentication for API endpoints
+
+#### 🛠️ API Layer
+
+- **Next.js API Routes**: Serverless API endpoints
+- **TypeScript**: Full type safety across the application
+- **Prisma Client**: Type-safe database operations
+
+#### 🤖 AI/ML Services
+
+- **Gemini AI**: Advanced language model for interview processing
+- **LlamaIndex**: Framework for integrating data with LLMs
+- **FastAPI**: High-performance Python API for AI services
+- **AI Interview Engine**: Custom logic for automated interviews
+
+#### 📡 Real-time Services
+
+- **LiveKit**: Professional-grade audio/video infrastructure
+- **WebRTC**: Peer-to-peer communication
+- **Interview Streaming**: Real-time interview sessions
+
+#### 📬 Message Queue
+
+- **RabbitMQ**: Reliable message broker for async operations
+- **Background Processing**: Heavy tasks handled asynchronously
+
+#### 🌐 External Services
+
+- **Cloudinary**: Media management and CDN
+- **Nodemailer**: SMTP email service
+- **File Storage**: Document and media storage
+
+#### 🗄️ Database Layer
+
+- **PostgreSQL**: Robust relational database
+- **Prisma ORM**: Modern database toolkit with migrations
+
+### 🔄 Data Flow Examples
+
+#### Candidate Application Flow
+
+1. **Candidate** submits application via React form
+2. **Next.js API** validates data using Zod schemas
+3. **Prisma** stores candidate data in PostgreSQL
+4. **Cloudinary** handles CV/document uploads
+
+#### AI Interview Flow
+
+1. **Recruiter** initiates interview via dashboard
+2. **LiveKit** creates real-time audio/video session
+3. **AI Engine** generates dynamic questions
+4. **LlamaIndex** processes candidate responses
+5. **Gemini** evaluates answers in real-time
+6. **WebRTC** streams interview data
+7. **RabbitMQ** queues AI analysis tasks
+8. **FastAPI + Gemini** processes candidate profile
+9. **Results** stored back to database via Prisma
+
+#### Real-time Communication
+
+1. **User actions** trigger WebSocket events
+2. **LiveKit** manages peer-to-peer connections
+3. **RabbitMQ** handles background processing
+4. **AI services** process data asynchronously
+5. **UI updates** reflect real-time changes
 
 ## 🚀 Getting Started
 
 ### Prerequisites
 
-- Node.js 22.14+
+- Node.js 20+ (recommended: 22.14+)
 - PostgreSQL database
 - Cloudinary account
-- ElevenLabs API key
 
 ### Installation
 
@@ -167,9 +318,6 @@ CLOUDINARY_API_KEY=
 CLOUDINARY_API_SECRET=
 CLOUDINARY_URL=
 
-DIFY_API_KEY=
-DIFY_API_URL=
-
 # SMTP Configuration
 SMTP_HOST=smtp.gmail.com
 SMTP_PORT=587
@@ -178,7 +326,6 @@ SMTP_USER=
 SMTP_PASS=
 SMTP_FROM=
 
-ELEVENLABS_API_KEY=
 NEXT_PUBLIC_AGENT_ID=
 
 # LLM API_URL
@@ -192,11 +339,29 @@ npx prisma generate
 npx prisma migrate dev
 ```
 
-5. Start the development server
+5. (Optional) Seed the database
+
+```bash
+npx ts-node prisma/seed.ts
+```
+
+6. Start the development server
 
 ```bash
 npm run dev
 ```
+
+### Useful NPM Scripts
+
+- `npm run dev` — Start development server with Turbopack
+- `npm run build` — Generate Prisma client and build Next.js app
+- `npm start` — Start production server
+- `npm run lint` — Run ESLint
+- `npm run lint:fix` — Fix lint errors
+- `npm run typecheck` — TypeScript type checking
+- `npm run format` — Format code with Prettier
+- `npm run format:check` — Check code formatting
+- `npm run validate` — Run lint, typecheck, and format:check
 
 ## 📝 Development Guidelines
 
@@ -208,35 +373,18 @@ npm run dev
 - Write comprehensive comments
 - Follow atomic design principles
 
-### Testing
-
-- Write unit tests for critical functions
-- Test components in isolation
-- Ensure responsive design works
-- Verify accessibility compliance
-
-### Performance
-
-- Optimize image loading
-- Implement proper caching
-- Use code splitting
-- Monitor bundle size
-
 ## 🔒 Security
 
 - Secure authentication with NextAuth.js
 - HTTPS enforcement
 - Input validation
 - File upload restrictions
-- Rate limiting
-- Data encryption
 
 ## 📈 Future Roadmap
 
 - Enhanced AI interview capabilities
 - Advanced analytics dashboard
 - Multi-language support
-- Mobile application
 - Integration with ATS systems
 - Automated reference checking
 - Video interview features

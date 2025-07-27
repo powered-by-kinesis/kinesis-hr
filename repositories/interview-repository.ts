@@ -178,7 +178,11 @@ export class InterviewRepository {
         throw new Error('Invalid response format from validation endpoint');
       }
       if (!res.ok) {
-        throw new Error(!validationData.success ? "Failed to validate invitation" : `Failed to validate invitation: ${res.status} ${res.statusText}`);
+        throw new Error(
+          !validationData.success
+            ? 'Failed to validate invitation'
+            : `Failed to validate invitation: ${res.status} ${res.statusText}`,
+        );
       }
 
       return validationData;
