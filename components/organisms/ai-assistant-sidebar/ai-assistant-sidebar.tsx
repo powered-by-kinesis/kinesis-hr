@@ -11,6 +11,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useAIAssistant } from '@/hooks/use-ai-assistant/use-ai-assistant';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
+import { AssistantMessage } from './assistent-message';
 
 interface Message {
   id: string;
@@ -57,7 +58,7 @@ export const AIAssistantSidebar: React.FC<AIAssistantSidebarProps> = ({ classNam
         id: '1',
         type: 'assistant',
         content:
-          "Hi there! 👋 I'm your AI assistant. I'm ready to answer any of your HR questions.",
+          "Answer:Hi there! 👋 I'm your AI assistant. I'm ready to answer any of your HR questions.",
         timestamp: new Date(),
       },
     ];
@@ -137,52 +138,46 @@ export const AIAssistantSidebar: React.FC<AIAssistantSidebarProps> = ({ classNam
         if (done) {
           break;
         }
-        const chunk = decoder.decode(value, { stream: true });
 
-        const parts = chunk.split('\n\n');
+        const buffer = decoder.decode(value, { stream: true });
+
+        const parts = buffer.split('\n\n')
         for (const part of parts) {
-          let event = 'message';
-          let data = '';
           const lines = part.split('\n');
-
           for (const line of lines) {
-            if (line.startsWith('event: ')) {
-              event = line.replace('event: ', '').trim();
-            } else if (
-              line.startsWith('data: ') &&
-              line !== 'data: [START]' &&
-              line !== 'data: [DONE]'
-            ) {
-              data += line.replace('data: ', '');
-            }
-          }
-
-          if (event === 'message' && data && data !== '') {
-            setMessages((prevMessages) => {
-              const updated = [...prevMessages];
-              const lastIndex = updated.length - 1;
-              if (updated[lastIndex].type === 'assistant') {
-                updated[lastIndex] = {
-                  ...updated[lastIndex],
-                  content: updated[lastIndex].content + data,
-                };
-              } else {
-                const newMessage: Message = {
-                  id: Date.now().toString(),
-                  type: 'assistant',
-                  content: data,
-                  timestamp: new Date(),
-                };
-                updated.push(newMessage);
+            if (line.startsWith('data: ')) {
+              try {
+                const data = line.replace('data: ', '').trim();
+                const jsonData = JSON.parse(data);
+                if (jsonData['type'] == 'message') {
+                  setMessages((prevMessages) => {
+                    const updated = [...prevMessages]
+                    const lastIndex = updated.length - 1;
+                    if (updated[lastIndex].type === 'assistant') {
+                      updated[lastIndex] = {
+                        ...updated[lastIndex],
+                        content: updated[lastIndex].content + jsonData['content'],
+                      };
+                    } else {
+                      const newMessage: Message = {
+                        id: Date.now().toString(),
+                        type: 'assistant',
+                        content: jsonData['content'],
+                        timestamp: new Date(),
+                      };
+                      updated.push(newMessage);
+                    }
+                    return updated;
+                  });
+                  setIsLoading(false);
+                }
+              } catch (error) {
+                console.error('Error parsing data:', error);
               }
 
-              return updated;
-            });
-          } else if (event === 'done') {
-            break;
+            }
           }
         }
-        setIsLoading(false);
       }
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
@@ -338,7 +333,13 @@ export const AIAssistantSidebar: React.FC<AIAssistantSidebarProps> = ({ classNam
                         : 'bg-card text-gray-500 border ',
                     )}
                   >
-                    <ReactMarkdown remarkPlugins={[remarkGfm]}>{message.content}</ReactMarkdown>
+                    {
+                      message.type === 'user' ? (
+                        <ReactMarkdown>{message.content}</ReactMarkdown>
+                      ) : (
+                        <AssistantMessage content={message.content} />
+                      )
+                    }
                   </div>
                   {message.type === 'user' && (
                     <Avatar className="h-8 w-8  flex-shrink-0">
