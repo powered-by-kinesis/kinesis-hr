@@ -21,7 +21,6 @@ import { DeleteAlert } from '../delete-alert';
 type CandidateData = ApplicantResponseDTO;
 
 export const GetCandidatesTableColumns = (onDelete: () => void): ColumnDef<CandidateData>[] => {
-
   const handleDelete = async (id: number) => {
     try {
       await applicationRepository.deleteApplication(id);
