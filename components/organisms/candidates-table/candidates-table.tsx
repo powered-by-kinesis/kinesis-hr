@@ -15,8 +15,6 @@ interface CandidatesTableProps {
 export function CandidatesTable({ data, onDelete, isLoading }: CandidatesTableProps) {
   const columns = GetCandidatesTableColumns(onDelete);
 
-  console.log('data', data);
-
   return (
     <>
       <DataTable columns={columns} data={data} searchColumn="fullName" isLoading={isLoading} />
