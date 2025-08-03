@@ -46,7 +46,13 @@ export default function ApplicantAnnouncementPage() {
     setLoading(true);
 
     try {
-      const response = await fetch(`/api/applicants/check?email=${encodeURIComponent(email)}`);
+      const response = await fetch('/api/applicants/check', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email }),
+      });
       const data = await response.json();
 
       if (!response.ok) {
@@ -56,9 +62,7 @@ export default function ApplicantAnnouncementPage() {
       setApplicant(data);
     } catch (err: unknown) {
       if (err instanceof Error) {
-        toast.error(err.message);
-      } else {
-        toast.error('Data not found. Please contact the HR Manager');
+        toast.error('Data not found, please check your email or contact support');
       }
     } finally {
       setLoading(false);
