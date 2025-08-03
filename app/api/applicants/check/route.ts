@@ -18,13 +18,18 @@ export async function POST(request: Request) {
           mode: 'insensitive',
         },
       },
-      include: {
+      select: {
+        id: true,
+        fullName: true,
+        email: true,
         applications: {
-          include: {
-            jobPost: true,
-            documents: {
-              include: {
-                document: true,
+          select: {
+            id: true,
+            currentStage: true,
+            jobPost: {
+              select: {
+                id: true,
+                title: true,
               },
             },
           },

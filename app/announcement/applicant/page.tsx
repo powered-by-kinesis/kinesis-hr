@@ -28,7 +28,6 @@ interface Applicant {
   id: number;
   fullName: string;
   email: string;
-  appliedAt: string;
   applications: Application[];
 }
 
@@ -54,7 +53,6 @@ export default function ApplicantAnnouncementPage() {
         body: JSON.stringify({ email }),
       });
       const data = await response.json();
-
       if (!response.ok) {
         throw new Error(data.error || 'Failed to check status');
       }
