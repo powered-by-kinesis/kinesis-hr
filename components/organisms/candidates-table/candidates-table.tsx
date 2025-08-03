@@ -8,15 +8,16 @@ import { DataTable } from '@/components/organisms/data-table/data-table';
 type CandidateData = ApplicantResponseDTO;
 interface CandidatesTableProps {
   data: CandidateData[];
-  onDelete?: () => void;
+  onDelete: () => void;
+  isLoading?: boolean;
 }
 
-export function CandidatesTable({ data, onDelete }: CandidatesTableProps) {
+export function CandidatesTable({ data, onDelete, isLoading }: CandidatesTableProps) {
   const columns = getCandidatesTableColumns(onDelete);
 
   return (
     <>
-      <DataTable columns={columns} data={data} searchColumn="fullName" />
+      <DataTable columns={columns} data={data} searchColumn="fullName" isLoading={isLoading} />
     </>
   );
 }

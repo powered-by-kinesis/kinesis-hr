@@ -94,7 +94,7 @@ export const InviteApplicantModal: React.FC<InviteApplicantModalProps> = ({
       const result = await applicantRepository.sendInvitation(selectedApplicant.email, interviewId);
 
       if (!result.success) {
-        throw new Error(result.error?.message || 'Failed to send invitation');
+        throw new Error((result.error as string) || 'Failed to send invitation');
       }
 
       toast.success('Invitation sent successfully!');

@@ -13,11 +13,17 @@ import { JobPostModal } from '@/components/organisms/job-post-modal';
 
 interface JobPostsTableProps {
   data: JobPostResponseDTO[];
-  onJobPostCreated?: () => void; // Callback for when new job post is created
-  onJobPostDeleted?: () => void; // Callback for when job post is deleted
+  onJobPostCreated?: () => void;
+  onJobPostDeleted?: () => void;
+  isLoading?: boolean;
 }
 
-export function JobPostsTable({ data, onJobPostCreated, onJobPostDeleted }: JobPostsTableProps) {
+export function JobPostsTable({
+  data,
+  onJobPostCreated,
+  onJobPostDeleted,
+  isLoading,
+}: JobPostsTableProps) {
   const [isEditModalOpen, setIsEditModalOpen] = React.useState(false);
   const [selectedJobPost, setSelectedJobPost] = React.useState<JobPostResponseDTO | null>(null);
 
@@ -71,7 +77,13 @@ export function JobPostsTable({ data, onJobPostCreated, onJobPostDeleted }: JobP
         jobPost={selectedJobPost || undefined}
         onClose={handleCloseModal}
       />
-      <DataTable columns={columns} data={data} options={statusOptions} searchColumn="title" />
+      <DataTable
+        columns={columns}
+        data={data}
+        options={statusOptions}
+        searchColumn="title"
+        isLoading={isLoading}
+      />
     </div>
   );
 }

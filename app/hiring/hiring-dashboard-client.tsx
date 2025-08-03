@@ -2,7 +2,6 @@
 
 import * as React from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { useRouter } from 'next/navigation';
 import { cn } from '@/lib/utils';
 import { useAIAssistant } from '@/hooks/use-ai-assistant/use-ai-assistant';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -10,6 +9,7 @@ import { JobPostsTable } from '@/components/organisms/job-posts-table';
 import { CandidatesTable } from '@/components/organisms/candidates-table';
 import { JobPostResponseDTO } from '@/types/job-post';
 import { ApplicantResponseDTO } from '@/types/applicant';
+import { handleMutation as handleHiringMutation } from '@/utils/mutation/mutation';
 
 interface HiringDashboardClientProps {
   initialJobPosts: JobPostResponseDTO[];
@@ -20,7 +20,6 @@ export function HiringDashboardClient({
   initialJobPosts,
   initialCandidates,
 }: HiringDashboardClientProps) {
-  const router = useRouter();
   const [activeTab, setActiveTab] = React.useState('job-openings');
   const { isMinimized: isAIAssistantMinimized } = useAIAssistant();
 
@@ -35,8 +34,18 @@ export function HiringDashboardClient({
     setCandidatesData(initialCandidates);
   }, [initialJobPosts, initialCandidates]);
 
-  const handleDataMutation = () => {
-    router.refresh();
+  const [isTableLoading, setIsTableLoading] = React.useState(false);
+
+  const handleMutation = async (action: string) => {
+    try {
+      setIsTableLoading(true);
+      const result = await handleHiringMutation(action);
+      if (!result.success) {
+        console.error(`Failed to handle ${action}`);
+      }
+    } finally {
+      setIsTableLoading(false);
+    }
   };
 
   return (
@@ -76,8 +85,9 @@ export function HiringDashboardClient({
                   <TabsContent value="job-openings" forceMount>
                     <JobPostsTable
                       data={jobPostsData}
-                      onJobPostCreated={handleDataMutation}
-                      onJobPostDeleted={handleDataMutation}
+                      onJobPostCreated={() => handleMutation('job post creation')}
+                      onJobPostDeleted={() => handleMutation('job post deletion')}
+                      isLoading={isTableLoading}
                     />
                   </TabsContent>
                 </motion.div>
@@ -92,7 +102,11 @@ export function HiringDashboardClient({
                   transition={{ duration: 0.3, ease: 'easeInOut' }}
                 >
                   <TabsContent value="candidates" forceMount>
-                    <CandidatesTable data={candidatesData} onDelete={handleDataMutation} />
+                    <CandidatesTable
+                      data={candidatesData}
+                      onDelete={() => handleMutation('candidate deletion')}
+                      isLoading={isTableLoading}
+                    />
                   </TabsContent>
                 </motion.div>
               )}
