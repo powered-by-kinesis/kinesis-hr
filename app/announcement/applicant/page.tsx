@@ -93,7 +93,7 @@ export default function ApplicantAnnouncementPage() {
               />
               <Button
                 onClick={handleCheckStatus}
-                disabled={loading}
+                disabled={loading || !email}
                 className="cursor-pointer w-full md:w-auto"
               >
                 {loading ? 'Checking...' : 'Check Status'}

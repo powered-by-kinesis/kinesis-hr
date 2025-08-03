@@ -9,10 +9,12 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'Email is required' }, { status: 400 });
     }
 
+    const emailWithoutSpaces = email.replace(/\s/g, '');
+
     const applicant = await prisma.applicant.findFirst({
       where: {
         email: {
-          equals: email,
+          equals: emailWithoutSpaces,
           mode: 'insensitive',
         },
       },
