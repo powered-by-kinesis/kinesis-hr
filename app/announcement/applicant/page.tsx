@@ -4,7 +4,6 @@ import * as React from 'react';
 import { Container } from '@/components/atoms/container';
 import { Text } from '@/components/atoms/text';
 import { Card } from '@/components/ui/card';
-import { Alert } from '@/components/ui/alert';
 import { Input } from '@/components/atoms/input';
 import { Button } from '@/components/ui/button';
 import { useState } from 'react';
@@ -14,6 +13,7 @@ import { User, Mail } from 'lucide-react';
 import Link from 'next/link';
 import { CurrentStageBadge } from '@/components/molecules/badge';
 import { Stage } from '@/constants/enums/stage';
+import { toast } from 'sonner';
 
 interface Application {
   id: number;
@@ -35,17 +35,15 @@ interface Applicant {
 export default function ApplicantAnnouncementPage() {
   const [email, setEmail] = useState('');
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState('');
   const [applicant, setApplicant] = useState<Applicant | null>(null);
 
   const handleCheckStatus = async () => {
     if (!email) {
-      setError('Please enter your email address');
+      toast.error('Please enter your email address');
       return;
     }
 
     setLoading(true);
-    setError('');
 
     try {
       const response = await fetch(`/api/applicants/check?email=${encodeURIComponent(email)}`);
@@ -58,9 +56,9 @@ export default function ApplicantAnnouncementPage() {
       setApplicant(data);
     } catch (err: unknown) {
       if (err instanceof Error) {
-        setError(err.message);
+        toast.error(err.message);
       } else {
-        setError('Data not found. Please contact the HR Manager');
+        toast.error('Data not found. Please contact the HR Manager');
       }
     } finally {
       setLoading(false);
@@ -97,11 +95,6 @@ export default function ApplicantAnnouncementPage() {
                 {loading ? 'Checking...' : 'Check Status'}
               </Button>
             </div>
-            {error && (
-              <Alert variant="destructive">
-                <Text variant="small">{error}</Text>
-              </Alert>
-            )}
             {applicant && (
               <div className="space-y-4 mt-4">
                 <Card className="p-4 md:p-6 hover:bg-accent/50 transition-colors">
