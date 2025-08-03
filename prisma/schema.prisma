@@ -224,6 +224,7 @@ model Application {
   stageHistory   ApplicationStageHistory[]
   documents      ApplicationDocument[]
 
+  @@unique([applicantId, jobPostId])
   @@map("applications")
   @@index([jobPostId])
 }

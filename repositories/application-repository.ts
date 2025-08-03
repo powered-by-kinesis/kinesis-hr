@@ -64,16 +64,30 @@ export class ApplicationRepository {
     }
   }
 
-  async deleteApplication(id: number): Promise<{ message: string }> {
+  async deleteApplication(
+    applicationId: number,
+    candidateId: number,
+  ): Promise<{ success: boolean }> {
     try {
-      const res = await fetch(`${this.baseUrl}/api/applications/${id}`, {
+      const response = await fetch(`${this.baseUrl}/api/applications/${applicationId}`, {
         method: 'DELETE',
         cache: 'no-store',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ candidateId }),
       });
-      return res.json();
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        console.error('Server error:', errorData);
+        return { success: false };
+      }
+
+      return { success: true };
     } catch (error) {
       console.error('Error deleting application:', error);
-      throw error;
+      return { success: false };
     }
   }
 }

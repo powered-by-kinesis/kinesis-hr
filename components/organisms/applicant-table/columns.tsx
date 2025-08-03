@@ -16,29 +16,20 @@ import { ApplicantResponseDTO } from '@/types/applicant';
 import { DataTableColumnHeader } from '../data-table/data-table-column-header';
 import { formatDate } from '@/utils/format-date';
 import { toast } from 'sonner';
-import { applicationRepository } from '@/repositories/application-repository';
+import { applicantRepository } from '@/repositories/applicant-repository';
 import { DeleteAlert } from '../delete-alert';
-import { useParams } from 'next/navigation';
 
-type CandidateData = ApplicantResponseDTO;
+type ApplicantData = ApplicantResponseDTO;
 
-export const GetCandidatesTableColumns = (onDelete: () => void): ColumnDef<CandidateData>[] => {
-  const params = useParams();
-  const applicationId = parseInt(params.id as string, 10);
-
-  const handleDelete = async (candidateId: number) => {
+export const getApplicantTableColumns = (onDelete: () => void): ColumnDef<ApplicantData>[] => {
+  const handleDelete = async (id: number) => {
     try {
-      const success = await applicationRepository.deleteApplication(applicationId, candidateId);
-      console.log('SUCCESS', success);
-      if (success.success) {
-        toast.success('Candidate deleted successfully!');
-        onDelete?.();
-      } else {
-        toast.error('Failed to delete candidate');
-      }
+      await applicantRepository.deleteApplicant(id);
+      toast.success('Applicant deleted successfully!');
+      onDelete?.();
     } catch (error) {
-      console.error('Error deleting candidate:', error);
-      toast.error('Failed to delete candidate');
+      console.error('Error deleting applicant:', error);
+      toast.error('Failed to delete applicant');
     }
   };
   return [
@@ -150,9 +141,9 @@ export const GetCandidatesTableColumns = (onDelete: () => void): ColumnDef<Candi
             {/* <DropdownMenuItem className="cursor-pointer">Edit Candidate</DropdownMenuItem> */}
             <DropdownMenuSeparator />
             <DeleteAlert
-              title="Delete Candidate"
+              title="Delete"
               description={`Are you sure you want to delete "${row.original.fullName}"? This action cannot be undone.`}
-              action="Delete Candidate"
+              action="Delete"
               onConfirm={() => handleDelete(row.original.id)}
             />
           </DropdownMenuContent>

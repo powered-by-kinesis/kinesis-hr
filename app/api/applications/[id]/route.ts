@@ -49,16 +49,52 @@ export async function PUT(request: Request, { params }: { params: Promise<{ id: 
 }
 
 export async function DELETE(request: Request, { params }: { params: Promise<{ id: string }> }) {
-  const { id } = await params;
   try {
-    await prisma.application.delete({
+    const { id } = await params;
+    const { candidateId } = await request.json();
+
+    if (!candidateId) {
+      return NextResponse.json({ message: 'Candidate ID is required' }, { status: 400 });
+    }
+
+    if (!id || isNaN(parseInt(id, 10))) {
+      return NextResponse.json({ message: 'Invalid application ID' }, { status: 400 });
+    }
+
+    const jobPostId = parseInt(id, 10);
+
+    // First check if the application exists
+    const existingApplication = await prisma.application.findUnique({
       where: {
-        id: parseInt(id, 10),
+        applicantId_jobPostId: {
+          applicantId: candidateId,
+          jobPostId: jobPostId,
+        },
       },
     });
 
-    return new NextResponse(null, { status: 204 });
+    if (!existingApplication) {
+      return NextResponse.json({ message: 'Application not found' }, { status: 404 });
+    }
+
+    await prisma.application.delete({
+      where: {
+        applicantId_jobPostId: {
+          applicantId: candidateId,
+          jobPostId: jobPostId,
+        },
+      },
+    });
+
+    return NextResponse.json({ success: true }, { status: 200 });
   } catch (error) {
-    return NextResponse.json({ message: 'Error deleting application', error }, { status: 500 });
+    console.error('Error deleting application:', error);
+    return NextResponse.json(
+      {
+        message: 'Error deleting application',
+        error: error instanceof Error ? error.message : 'Unknown error',
+      },
+      { status: 500 },
+    );
   }
 }
