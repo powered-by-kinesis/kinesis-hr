@@ -104,7 +104,7 @@ export default function JobPostDetailPage() {
   return (
     <div className="min-h-screen bg-muted/20 dark:bg-muted/50">
       <motion.div
-        className="container mx-auto px-4 py-12 max-w-7xl"
+        className="container mx-auto px-4 py-4 md:py-12 max-w-7xl"
         variants={containerVariants}
         initial="hidden"
         animate="visible"
