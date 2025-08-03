@@ -46,6 +46,7 @@ export async function POST(req: Request) {
       <p>You are invited to take an AI interview. Please click the link below to start:</p>
       <p><a href="${interviewLink}">Start Interview</a></p>
       <p>This link is valid for 7 days.</p>
+      <p>You can track your progress in the <a href="${process.env.NEXT_PUBLIC_BASE_URL}/announcement/applicant">Announcement Page</a>.</p>
       <p>Best regards,</p>
       <p>The Kinesis HR Team</p>
     `;
