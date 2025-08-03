@@ -16,10 +16,22 @@ import { ApplicantResponseDTO } from '@/types/applicant';
 import { DataTableColumnHeader } from '../data-table/data-table-column-header';
 import { formatDate } from '@/utils/format-date';
 import { toast } from 'sonner';
+import { applicantRepository } from '@/repositories/applicant-repository';
+import { DeleteAlert } from '../delete-alert';
 
 type CandidateData = ApplicantResponseDTO;
 
-export const getCandidatesTableColumns = (): ColumnDef<CandidateData>[] => {
+export const getCandidatesTableColumns = (onDelete?: () => void): ColumnDef<CandidateData>[] => {
+  const handleDelete = async (id: number) => {
+    try {
+      await applicantRepository.deleteApplicant(id);
+      toast.success('Candidate deleted successfully!');
+      onDelete?.();
+    } catch (error) {
+      console.error('Error deleting candidate:', error);
+      toast.error('Failed to delete candidate');
+    }
+  };
   return [
     {
       id: 'select',
@@ -128,9 +140,12 @@ export const getCandidatesTableColumns = (): ColumnDef<CandidateData>[] => {
             </DropdownMenuItem>
             <DropdownMenuItem className="cursor-pointer">Edit Candidate</DropdownMenuItem>
             <DropdownMenuSeparator />
-            <DropdownMenuItem className="text-destructive cursor-pointer">
-              Delete Candidate
-            </DropdownMenuItem>
+            <DeleteAlert
+              title="Delete"
+              description={`Are you sure you want to delete "${row.original.fullName}"? This action cannot be undone.`}
+              action="Delete"
+              onConfirm={() => handleDelete(row.original.id)}
+            />
           </DropdownMenuContent>
         </DropdownMenu>
       ),

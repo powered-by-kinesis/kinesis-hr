@@ -92,7 +92,7 @@ export function HiringDashboardClient({
                   transition={{ duration: 0.3, ease: 'easeInOut' }}
                 >
                   <TabsContent value="candidates" forceMount>
-                    <CandidatesTable data={candidatesData} />
+                    <CandidatesTable data={candidatesData} onDelete={handleDataMutation} />
                   </TabsContent>
                 </motion.div>
               )}
