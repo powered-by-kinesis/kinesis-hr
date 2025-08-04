@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import * as React from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { cn } from '@/lib/utils';
 import { useAIAssistant } from '@/hooks/use-ai-assistant/use-ai-assistant';
@@ -20,21 +20,21 @@ export function HiringDashboardClient({
   initialJobPosts,
   initialApplicants,
 }: HiringDashboardClientProps) {
-  const [activeTab, setActiveTab] = useState('job-openings');
+  const [activeTab, setActiveTab] = React.useState('job-openings');
   const { isMinimized: isAIAssistantMinimized } = useAIAssistant();
 
   // State to hold the data, initialized from props
-  const [jobPostsData, setJobPostsData] = useState(initialJobPosts);
-  const [applicantsData, setApplicantsData] = useState(initialApplicants);
+  const [jobPostsData, setJobPostsData] = React.useState(initialJobPosts);
+  const [applicantsData, setApplicantsData] = React.useState(initialApplicants);
 
   // This effect syncs the client state with the new server-provided props
   // after router.refresh() is called.
-  useEffect(() => {
+  React.useEffect(() => {
     setJobPostsData(initialJobPosts);
     setApplicantsData(initialApplicants);
   }, [initialJobPosts, initialApplicants]);
 
-  const [isTableLoading, setIsTableLoading] = useState(false);
+  const [isTableLoading, setIsTableLoading] = React.useState(false);
 
   const handleMutation = async (action: string) => {
     try {
