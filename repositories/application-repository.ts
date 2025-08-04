@@ -64,13 +64,12 @@ export class ApplicationRepository {
     }
   }
 
-  async deleteApplication(id: number): Promise<{ message: string }> {
+  async deleteApplication(id: number): Promise<void> {
     try {
-      const res = await fetch(`${this.baseUrl}/api/applications/${id}`, {
+      await fetch(`${this.baseUrl}/api/applications/${id}`, {
         method: 'DELETE',
         cache: 'no-store',
       });
-      return res.json();
     } catch (error) {
       console.error('Error deleting application:', error);
       throw error;
