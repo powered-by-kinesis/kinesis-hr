@@ -6,7 +6,6 @@ import { DataTable } from '@/components/organisms/data-table/data-table';
 import { StatusOptions } from '@/types/status-options';
 import { InterviewInvitationResponseDTO } from '@/types/interview/InterviewInvitationResponseDTO';
 import { InterviewInvitationDetailModal } from '@/components/organisms/interview-invitation-detail-modal/interview-invitation-detail-modal';
-
 interface AiInterviewerTableProps {
   data: InterviewInvitationResponseDTO[];
   setLoading: (loading: boolean) => void;
