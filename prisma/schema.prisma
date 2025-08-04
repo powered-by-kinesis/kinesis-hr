@@ -224,6 +224,7 @@ model Application {
   stageHistory   ApplicationStageHistory[]
   documents      ApplicationDocument[]
 
+  @@unique([applicantId, jobPostId])
   @@map("applications")
   @@index([jobPostId])
 }
@@ -289,7 +290,7 @@ model InterviewInvitation {
   status      InterviewInvitationStatus     @default(INVITED)
   dateTaken   DateTime? // Nullable, to be set when the interview is completed
 
-  applicant   Applicant @relation(fields: [applicantId], references: [id])
+  applicant   Applicant @relation(fields: [applicantId], references: [id], onDelete: Cascade)
   interview   Interview @relation(fields: [interviewId], references: [id], onDelete: Cascade) // Added onDelete: Cascade
 
   @@map("interview_invitations")

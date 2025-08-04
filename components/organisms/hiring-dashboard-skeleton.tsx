@@ -16,15 +16,15 @@ export function HiringDashboardSkeleton() {
           <Skeleton className="mt-2 h-4 w-1/2 rounded-lg" />
         </div>
 
+        <div className="flex justify-end mb-4">
+          <Skeleton className="h-10 w-1/10 rounded-lg" />
+        </div>
+
         {/* Tabs and Toolbar Skeleton */}
         <div className="space-y-4">
-          <div className="grid h-10 w-full grid-cols-2 rounded-md border p-1">
-            <Skeleton className="h-full w-full rounded-sm" />
-            <div className="h-full w-full rounded-sm bg-muted"></div>
-          </div>
           <div className="flex justify-between">
             <Skeleton className="h-10 w-1/3 rounded-md" />
-            <Skeleton className="h-10 w-32 rounded-md" />
+            <Skeleton className="h-10 w-1/15 rounded-md" />
           </div>
         </div>
 

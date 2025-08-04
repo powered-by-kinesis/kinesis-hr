@@ -5,8 +5,9 @@ import { SkillLevel } from '@/constants/enums/skill-level';
 export type InterviewInvitationResponseDTO = InterviewInvitation & {
   applicant: ApplicantResponseDTO & {
     skills?: {
-      name: string;
-      level: SkillLevel;
+      skill_name: string;
+      skill_level: SkillLevel;
+      assessment_notes: string;
     }[];
   };
   interview: Interview;

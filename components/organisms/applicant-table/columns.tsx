@@ -7,6 +7,7 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
+  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { Button } from '@/components/ui/button';
@@ -15,20 +16,20 @@ import { ApplicantResponseDTO } from '@/types/applicant';
 import { DataTableColumnHeader } from '../data-table/data-table-column-header';
 import { formatDate } from '@/utils/format-date';
 import { toast } from 'sonner';
-import { applicationRepository } from '@/repositories/application-repository';
+import { applicantRepository } from '@/repositories/applicant-repository';
 import { DeleteAlert } from '../delete-alert';
 
-type CandidateData = ApplicantResponseDTO;
+type ApplicantData = ApplicantResponseDTO;
 
-export const GetCandidatesTableColumns = (onDelete: () => void): ColumnDef<CandidateData>[] => {
+export const getApplicantTableColumns = (onDelete: () => void): ColumnDef<ApplicantData>[] => {
   const handleDelete = async (id: number) => {
     try {
-      await applicationRepository.deleteApplication(id);
-      toast.success('Application deleted successfully!');
+      await applicantRepository.deleteApplicant(id);
+      toast.success('Applicant deleted successfully!');
       onDelete?.();
     } catch (error) {
-      console.error('Error deleting application:', error);
-      toast.error('Failed to delete application. Please try again.');
+      console.error('Error deleting applicant:', error);
+      toast.error('Failed to delete applicant');
     }
   };
   return [
@@ -138,10 +139,11 @@ export const GetCandidatesTableColumns = (onDelete: () => void): ColumnDef<Candi
               </Link>
             </DropdownMenuItem>
             {/* <DropdownMenuItem className="cursor-pointer">Edit Candidate</DropdownMenuItem> */}
+            <DropdownMenuSeparator />
             <DeleteAlert
-              title="Delete Candidate"
+              title="Delete"
               description={`Are you sure you want to delete "${row.original.fullName}"? This action cannot be undone.`}
-              action="Delete Candidate"
+              action="Delete"
               onConfirm={() => handleDelete(row.original.id)}
             />
           </DropdownMenuContent>
