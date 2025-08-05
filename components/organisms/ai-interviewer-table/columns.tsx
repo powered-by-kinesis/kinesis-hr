@@ -129,7 +129,7 @@ export const getInterviewTableColumns = (
             >
               View Details
             </DropdownMenuItem>
-            <DropdownMenuItem className="cursor-pointer">Edit</DropdownMenuItem>
+            {/* <DropdownMenuItem className="cursor-pointer">Edit</DropdownMenuItem> */}
             <DeleteAlert
               title="Delete"
               description={`Are you sure you want to delete "${row.original.applicant.fullName}"? This action cannot be undone.`}

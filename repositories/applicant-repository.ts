@@ -119,7 +119,7 @@ export class ApplicantRepository {
   async sendInvitation(
     email: string,
     interviewId: string,
-  ): Promise<{ success: boolean; messageId?: string; error?: any }> {
+  ): Promise<{ success: boolean; messageId?: string; error?: unknown }> {
     try {
       const res = await fetch(`${this.baseUrl}/api/applicants/invite`, {
         method: 'POST',
@@ -140,6 +140,23 @@ export class ApplicantRepository {
     } catch (error) {
       console.error('Error sending invitation:', error);
       return { success: false, error };
+    }
+  }
+
+  async deleteApplicant(id: number): Promise<boolean> {
+    try {
+      const res = await fetch(`${this.baseUrl}/api/applicants/${id}`, {
+        method: 'DELETE',
+      });
+
+      if (!res.ok) {
+        throw new Error(`Failed to delete applicant: ${res.status} ${res.statusText}`);
+      }
+
+      return true;
+    } catch (error) {
+      console.error('Error deleting applicant:', error);
+      throw error;
     }
   }
 }

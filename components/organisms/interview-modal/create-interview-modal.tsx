@@ -54,6 +54,7 @@ export function CreateInterviewModal({ isOpen, onClose, onSubmit }: CreateInterv
   const [isLoadingApplicants, setIsLoadingApplicants] = React.useState(true);
   const [selectedApplicantIds, setSelectedApplicantIds] = React.useState<number[]>([]);
   const [applicantSearchQuery, setApplicantSearchQuery] = React.useState('');
+  const [isLoading, setIsLoading] = React.useState(false);
 
   const form = useForm<CreateInterviewRequestDTO>({
     resolver: zodResolver(CreateInterviewRequestDTO),
@@ -126,6 +127,7 @@ export function CreateInterviewModal({ isOpen, onClose, onSubmit }: CreateInterv
     }
 
     try {
+      setIsLoading(true);
       await onSubmit({ ...data, applicantIds: selectedApplicantIds });
       toast.success('Interview created and invitations sent successfully!');
       form.reset();
@@ -134,6 +136,8 @@ export function CreateInterviewModal({ isOpen, onClose, onSubmit }: CreateInterv
     } catch (error) {
       console.error('Error creating interview or sending invitations:', error);
       toast.error('Failed to create interview or send invitations.');
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -484,8 +488,8 @@ export function CreateInterviewModal({ isOpen, onClose, onSubmit }: CreateInterv
                 </Button>
               )}
               {currentStep === 4 && (
-                <Button className="cursor-pointer" type="submit">
-                  Create Interview
+                <Button className="cursor-pointer" type="submit" disabled={isLoading}>
+                  {isLoading ? 'Creating...' : 'Create Interview'}
                 </Button>
               )}
             </DialogFooter>

@@ -2,41 +2,50 @@
 
 import * as React from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { useRouter } from 'next/navigation';
 import { cn } from '@/lib/utils';
 import { useAIAssistant } from '@/hooks/use-ai-assistant/use-ai-assistant';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { JobPostsTable } from '@/components/organisms/job-posts-table';
-import { CandidatesTable } from '@/components/organisms/candidates-table';
+import { ApplicantTable } from '@/components/organisms/applicant-table';
 import { JobPostResponseDTO } from '@/types/job-post';
 import { ApplicantResponseDTO } from '@/types/applicant';
+import { handleMutation as handleHiringMutation } from '@/utils/mutation/mutation';
 
 interface HiringDashboardClientProps {
   initialJobPosts: JobPostResponseDTO[];
-  initialCandidates: ApplicantResponseDTO[];
+  initialApplicants: ApplicantResponseDTO[];
 }
 
 export function HiringDashboardClient({
   initialJobPosts,
-  initialCandidates,
+  initialApplicants,
 }: HiringDashboardClientProps) {
-  const router = useRouter();
   const [activeTab, setActiveTab] = React.useState('job-openings');
   const { isMinimized: isAIAssistantMinimized } = useAIAssistant();
 
   // State to hold the data, initialized from props
   const [jobPostsData, setJobPostsData] = React.useState(initialJobPosts);
-  const [candidatesData, setCandidatesData] = React.useState(initialCandidates);
+  const [applicantsData, setApplicantsData] = React.useState(initialApplicants);
 
   // This effect syncs the client state with the new server-provided props
   // after router.refresh() is called.
   React.useEffect(() => {
     setJobPostsData(initialJobPosts);
-    setCandidatesData(initialCandidates);
-  }, [initialJobPosts, initialCandidates]);
+    setApplicantsData(initialApplicants);
+  }, [initialJobPosts, initialApplicants]);
 
-  const handleDataMutation = () => {
-    router.refresh();
+  const [isTableLoading, setIsTableLoading] = React.useState(false);
+
+  const handleMutation = async (action: string) => {
+    try {
+      setIsTableLoading(true);
+      const result = await handleHiringMutation(action);
+      if (!result.success) {
+        console.error(`Failed to handle ${action}`);
+      }
+    } finally {
+      setIsTableLoading(false);
+    }
   };
 
   return (
@@ -50,7 +59,7 @@ export function HiringDashboardClient({
         <div className="mb-6">
           <h1 className="text-2xl font-semibold tracking-tight">Hiring Dashboard</h1>
           <p className="text-muted-foreground">
-            Manage job openings, candidates, and talent pipeline
+            Manage job openings, applicants, and talent pipeline
           </p>
         </div>
 
@@ -59,8 +68,8 @@ export function HiringDashboardClient({
             <TabsTrigger value="job-openings" className="flex items-center gap-2 cursor-pointer">
               Job Openings
             </TabsTrigger>
-            <TabsTrigger value="candidates" className="flex items-center gap-2 cursor-pointer">
-              Candidates
+            <TabsTrigger value="applicants" className="flex items-center gap-2 cursor-pointer">
+              Applicants
             </TabsTrigger>
           </TabsList>
           <div className="relative mt-6">
@@ -76,23 +85,28 @@ export function HiringDashboardClient({
                   <TabsContent value="job-openings" forceMount>
                     <JobPostsTable
                       data={jobPostsData}
-                      onJobPostCreated={handleDataMutation}
-                      onJobPostDeleted={handleDataMutation}
+                      onJobPostCreated={() => handleMutation('job post creation')}
+                      onJobPostDeleted={() => handleMutation('job post deletion')}
+                      isLoading={isTableLoading}
                     />
                   </TabsContent>
                 </motion.div>
               )}
 
-              {activeTab === 'candidates' && (
+              {activeTab === 'applicants' && (
                 <motion.div
-                  key="candidates"
+                  key="applicants"
                   initial={{ opacity: 0, x: -20 }}
                   animate={{ opacity: 1, x: 0 }}
                   exit={{ opacity: 0, x: 20 }}
                   transition={{ duration: 0.3, ease: 'easeInOut' }}
                 >
-                  <TabsContent value="candidates" forceMount>
-                    <CandidatesTable data={candidatesData} />
+                  <TabsContent value="applicants" forceMount>
+                    <ApplicantTable
+                      data={applicantsData}
+                      onDelete={() => handleMutation('applicant deletion')}
+                      isLoading={isTableLoading}
+                    />
                   </TabsContent>
                 </motion.div>
               )}

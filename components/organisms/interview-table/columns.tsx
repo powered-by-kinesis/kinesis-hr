@@ -7,13 +7,13 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { Button } from '@/components/ui/button';
 import { MoreVertical } from 'lucide-react';
 import { formatDate } from '@/utils/format-date';
 import Link from 'next/link';
+import { DeleteAlert } from '@/components/organisms/delete-alert/delete-alert';
 
 export const getInterviewsTableColumns = (
   onEditInterview: (interview: InterviewResponseDTO) => void,
@@ -76,7 +76,7 @@ export const getInterviewsTableColumns = (
       cell: ({ row }) => (
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant="ghost" className="h-8 w-8 p-0" size="icon">
+            <Button variant="ghost" className="h-8 w-8 p-0 cursor-pointer" size="icon">
               <MoreVertical className="h-4 w-4" />
               <span className="sr-only">Open menu</span>
             </Button>
@@ -88,13 +88,12 @@ export const getInterviewsTableColumns = (
             >
               Edit
             </DropdownMenuItem>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem
-              onClick={() => onDeleteInterview(row.original.id)}
-              className="text-destructive cursor-pointer"
-            >
-              Delete Interview
-            </DropdownMenuItem>
+            <DeleteAlert
+              title="Delete Interview"
+              description={`Are you sure you want to delete "${row.original.interviewName}"? This action cannot be undone.`}
+              action="Delete"
+              onConfirm={() => onDeleteInterview(row.original.id)}
+            />
           </DropdownMenuContent>
         </DropdownMenu>
       ),

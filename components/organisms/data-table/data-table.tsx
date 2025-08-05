@@ -27,6 +27,7 @@ import {
 
 import { DataTableToolbar } from './data-table-toolbar';
 import { DataTablePagination } from './data-table-pagination';
+import { DataTableLoading } from './data-table-loading';
 import { StatusOptions } from '@/types/status-options';
 
 interface DataTableProps<TData, TValue> {
@@ -34,6 +35,7 @@ interface DataTableProps<TData, TValue> {
   data: TData[];
   options?: StatusOptions[];
   searchColumn?: string;
+  isLoading?: boolean;
 }
 
 export function DataTable<TData, TValue>({
@@ -41,6 +43,7 @@ export function DataTable<TData, TValue>({
   data,
   options,
   searchColumn,
+  isLoading,
 }: DataTableProps<TData, TValue>) {
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([]);
@@ -71,7 +74,8 @@ export function DataTable<TData, TValue>({
   return (
     <div className="space-y-4">
       <DataTableToolbar table={table} options={options} searchColumn={searchColumn} />
-      <div className="rounded-md border">
+      <div className="relative rounded-md border">
+        {isLoading && <DataTableLoading />}
         <Table>
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (

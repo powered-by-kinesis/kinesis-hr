@@ -170,9 +170,12 @@ export function InterviewInvitationDetailModal({
                   <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
                     {applicant.skills.map((skill, index) => (
                       <div key={index} className="p-4 rounded-lg border bg-card/50">
-                        <div className="flex items-center justify-between mb-2">
-                          <span className="font-medium">{skill.name}</span>
-                          <SkillLevelBadge level={skill.level} />
+                        <div className="flex flex-col gap-2 mb-2">
+                          <div className="flex items-center justify-between  gap-2">
+                            <span className="font-medium">{skill.skill_name}</span>
+                            <SkillLevelBadge level={skill.skill_level} />
+                          </div>
+                          <p className="text-sm text-foreground/80">{skill.assessment_notes}</p>
                         </div>
                       </div>
                     ))}
@@ -222,17 +225,15 @@ export function InterviewInvitationDetailModal({
 
                   {/* Required Skills */}
                   {Array.isArray(interview.skills) && interview.skills.length > 0 && (
-                    <div className="p-4 rounded-lg bg-card border">
+                    <div className="py-4 rounded-lg bg-card">
                       <h4 className="text-lg font-medium text-foreground mb-4">Required Skills</h4>
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         {(interview.skills as unknown as InterviewSkill[]).map((skill, index) => (
-                          <div key={index} className="p-4 rounded-lg bg-accent/10 backdrop-blur-sm">
-                            <div className="flex items-center justify-between mb-2">
-                              <h5 className="font-medium text-foreground">{skill.name}</h5>
-                              <Badge variant="outline" className="bg-primary/10">
-                                Required
-                              </Badge>
-                            </div>
+                          <div
+                            key={index}
+                            className="p-4 rounded-lg bg-accent/10 backdrop-blur-sm border"
+                          >
+                            <h5 className="font-medium text-foreground">{skill.name}</h5>
                             <p className="text-sm text-foreground/80">{skill.description}</p>
                           </div>
                         ))}
