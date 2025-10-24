@@ -12,7 +12,7 @@ export function LandingPageTemplate() {
   // const { isAuthLoading, login } = useAuth();
   const isAuthLoading = false;
   const login = () => {
-    window.open(process.env.NEXT_PUBLIC_APP_AUTH_URL, "_blank")
+    window.location.href = process.env.NEXT_PUBLIC_APP_AUTH_URL ?? '#';
   }
 
   return (
