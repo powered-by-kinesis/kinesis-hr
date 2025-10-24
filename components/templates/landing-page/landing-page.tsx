@@ -6,11 +6,14 @@ import { Navbar } from '@/components/organisms/navbar';
 import { HowItWorks } from '@/components/organisms/how-it-works';
 import { Features } from '@/components/organisms/features';
 import { Footer } from '@/components/organisms/footer';
-import { useAuth } from '@/hooks/use-auth';
 import { Loading } from '@/components/molecules/loading';
 
 export function LandingPageTemplate() {
-  const { isAuthLoading, login } = useAuth();
+  // const { isAuthLoading, login } = useAuth();
+  const isAuthLoading = false;
+  const login = () => {
+    window.open(process.env.NEXT_PUBLIC_APP_AUTH_URL, "_blank")
+  }
 
   return (
     <main>
